@@ -1,13 +1,8 @@
 ---
 const { currentLang } = Astro.props;
-const otherLang = currentLang === "th" ? "en" : "th";
+const otherLang = currentLang === 'th' ? 'en' : 'th';
 ---
 
-<div class="mt-6 text-center">
-  <a
-    href={`/?lang=${otherLang}`}
-    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-  >
-    {otherLang === "th" ? "ภาษาไทย" : "English"}
-  </a>
-</div>
+<a href={`/${otherLang}`} class="text-blue-600 underline">
+  Switch to {otherLang.toUpperCase()}
+</a>

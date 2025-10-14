@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # history vscode extension
 .history/
+
+# env
+.env.local

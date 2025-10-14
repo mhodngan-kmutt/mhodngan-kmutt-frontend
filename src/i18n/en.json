@@ -1,4 +1,5 @@
 {
+  "siteTitle": "My Blog",
   "greeting": "Hello",
-  "description": "Welcome to our multilingual Astro site!"
+  "readMore": "Read more"
 }

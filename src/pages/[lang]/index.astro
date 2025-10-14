@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Greeting from '../../components/Welcome.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import PostCard from '../../components/PostCard.astro';
+import type { Post } from '../../lib/api';
+import { getPosts } from '../../lib/api';
+
+export async function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'th' } }];
+}
+
+const { lang } = Astro.params;
+const currentLang = lang === 'th' ? 'th' : 'en';
+
+const posts: Post[] = await getPosts();
+---
+
+<Layout title="MhodNgan">
+  <div class="flex justify-between items-center mb-6">
+    <Greeting lang={currentLang} />
+    <LanguageSwitcher currentLang={currentLang} />
+  </div>
+
+  <section class="space-y-4">
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</Layout>

@@ -1,16 +1,17 @@
 ---
-import "../styles/global.css";
-const { title = "Astro i18n Example" } = Astro.props;
+import '../styles/global.css';
+const { title = 'MhodNgan' } = Astro.props;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
   </head>
-  <body
-    class="bg-gray-50 text-gray-900 min-h-screen flex flex-col items-center justify-center"
-  >
-    <slot />
+  <body class="min-h-screen bg-gray-50 text-gray-900">
+    <main class="max-w-3xl mx-auto p-4">
+      <slot />
+    </main>
   </body>
 </html>

@@ -1,17 +1,16 @@
 ---
-export const prerender = false;
-
-import Layout from "../layouts/Layout.astro";
-import Greeting from "../components/Welcome.astro";
-import LanguageSwitcher from "../components/LanguageSwitcher.astro";
-
-const params = new URL(Astro.request.url).searchParams;
-const lang = params.get("lang") || Astro.cookies.get("lang")?.value || "en";
-
-Astro.cookies.set("lang", lang, { path: "/" });
+export const prerender = true;
 ---
 
-<Layout title="Multilingual Site">
-  <Greeting lang={lang} />
-  <LanguageSwitcher currentLang={lang} />
-</Layout>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      window.location.href = '/en';
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/en">/en</a>...</p>
+  </body>
+</html>

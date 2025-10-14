@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPostBySlug, getPosts } from '../../lib/api';
+import type { Post } from '../../lib/api';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const posts: Post[] = await getPosts();
+
+  return posts.flatMap((post) => [
+    { params: { slug: post.slug, lang: 'en' } },
+    { params: { slug: post.slug, lang: 'th' } },
+  ]);
+}
+
+const { slug, lang } = Astro.params;
+
+if (!slug) {
+  throw new Error('Slug parameter is missing');
+}
+
+const post: Post = await getPostBySlug(slug);
+---
+
+<Layout title={`MhodNgan — ${post.title}`}>
+  <article class="prose mx-auto bg-white p-8 rounded shadow">
+    <h1>{post.title}</h1>
+    <div set:html={post.content} />
+  </article>
+</Layout>
