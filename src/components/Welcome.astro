@@ -1,7 +1,9 @@
 ---
-import i18n from '../i18n/i18n';
-const { lang = 'en' } = Astro.props;
-i18n.changeLanguage(lang);
+const { t } = Astro.props;
 ---
 
-<h1 class="text-3xl font-bold">{i18n.t('greeting')} 👋</h1>
+<section id="hero" class="bg-main-primary text-main-black p-4 rounded shadow">
+  <h1 class="text-3xl font-bold">
+    {t('greeting')} 👋
+  </h1>
+</section>

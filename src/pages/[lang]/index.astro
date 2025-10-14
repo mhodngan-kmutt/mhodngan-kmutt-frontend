@@ -1,10 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Greeting from '../../components/Welcome.astro';
+import HeroSection from '../../components/home/hero/HeroSection.astro';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
 import PostCard from '../../components/PostCard.astro';
 import type { Post } from '../../lib/api';
 import { getPosts } from '../../lib/api';
+import i18n from '../../i18n/i18n';
 
 export async function getStaticPaths() {
   return [{ params: { lang: 'en' } }, { params: { lang: 'th' } }];
@@ -13,16 +15,28 @@ export async function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang = lang === 'th' ? 'th' : 'en';
 
+i18n.changeLanguage(currentLang);
+
 const posts: Post[] = await getPosts();
+
+const t = i18n.t.bind(i18n);
 ---
 
 <Layout title="MhodNgan">
-  <div class="flex justify-between items-center mb-6">
-    <Greeting lang={currentLang} />
-    <LanguageSwitcher currentLang={currentLang} />
-  </div>
+  <HeroSection t={t} />
+  <Greeting t={t} />
+  <LanguageSwitcher currentLang={currentLang} />
+
+  <!-- <nav class="mb-6">
+    <a
+      href={`/${currentLang}/project`}
+      class="text-blue-600 hover:text-blue-800 underline font-medium"
+    >
+      {t('nav.project')}
+    </a>
+  </nav>
 
   <section class="space-y-4">
-    {posts.map((post) => <PostCard post={post} />)}
-  </section>
+    {posts.map((post) => <PostCard post={post} t={t} />)}
+  </section> -->
 </Layout>

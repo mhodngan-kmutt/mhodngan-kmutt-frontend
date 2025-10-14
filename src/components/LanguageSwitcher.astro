@@ -1,8 +1,27 @@
 ---
-const { currentLang } = Astro.props;
-const otherLang = currentLang === 'th' ? 'en' : 'th';
+/**
+ * Props:
+ * - currentLang: current language code (e.g. 'en', 'th')
+ * - supportedLangs (optional): array of available language codes (default ['en', 'th'])
+ */
+
+const { currentLang, supportedLangs = ['en', 'th'] } = Astro.props;
+
+// Determine the next language to switch to (toggle-style)
+const otherLangIndex = (supportedLangs.indexOf(currentLang) + 1) % supportedLangs.length;
+const otherLang = supportedLangs[otherLangIndex];
+
+// Get current URL and pathname
+const currentUrl = Astro.url;
+const pathname = currentUrl.pathname;
+
+// Replace the first segment (/en/... or /th/...) with the target language
+const newPath = pathname.replace(/^\/([a-z]{2})(\/|$)/, `/${otherLang}$2`);
+
+// Preserve query string (?id=123)
+const targetUrl = `${newPath}${currentUrl.search}`;
 ---
 
-<a href={`/${otherLang}`} class="text-blue-600 underline">
+<a href={targetUrl} class="text-blue-600 underline hover:text-blue-800 transition">
   Switch to {otherLang.toUpperCase()}
 </a>

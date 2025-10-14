@@ -1,5 +1,15 @@
 {
-  "siteTitle": "My Blog",
   "greeting": "Hello",
-  "readMore": "Read more"
+  "project": {
+    "title": "Projects",
+    "header": "Our Projects",
+    "description": "Here you can explore our recent work and case studies."
+  },
+  "nav": {
+    "project": "View Projects"
+  },
+  "hero": {
+    "date": "November 2025, Bangkok, Thailand",
+    "place": "KMUTT Campus — Main Auditorium"
+  }
 }
