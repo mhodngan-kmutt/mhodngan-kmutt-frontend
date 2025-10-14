@@ -51,7 +51,7 @@ const mockPosts: Post[] = [
 ];
 
 // ตัวแปรสลับโหมด mock / api จริง
-const USE_MOCK = import.meta.env.PUBLIC_USE_MOCK === 'true';
+const USE_MOCK = import.meta.env.PUBLIC_USE_MOCK === 'true' || !import.meta.env.PUBLIC_API_URL;
 
 // ฟังก์ชันหลัก
 export async function getPosts(): Promise<Post[]> {
