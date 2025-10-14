@@ -50,7 +50,7 @@ jobs:
           working-directory: ./
 
       - name: Deploy to Vercel (Preview)
-        if: github.ref == 'refs/heads/dev' || github.event_name == 'pull_request'
+        if: github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || startsWith(github.ref, 'refs/heads/setup-')
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
