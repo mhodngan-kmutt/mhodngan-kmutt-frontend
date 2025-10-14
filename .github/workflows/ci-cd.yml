@@ -24,18 +24,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'pnpm'
 
-      # 3. Enable Corepack and install pnpm reliably
-      - name: Setup Corepack + pnpm
-        uses: actions/setup-node@v3
+      # 3. Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          node-version: '20'
-          cache: 'pnpm'
-      - name: Activate Corepack
-        run: corepack enable
-      - name: Install pnpm
-        run: corepack prepare pnpm@latest --activate
+          version: 8 # or your required pnpm version
+          run_install: false
 
       # 4. Install dependencies
       - name: Install dependencies
