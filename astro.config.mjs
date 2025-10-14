@@ -1,6 +1,11 @@
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@astrojs/react'; // add React integration for shadcn/lucide
 
 export default defineConfig({
-  integrations: [tailwind()],
+  integrations: [react()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

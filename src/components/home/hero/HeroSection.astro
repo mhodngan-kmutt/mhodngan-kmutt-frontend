@@ -1,15 +1,73 @@
 ---
-const { t } = Astro.props;
+import projectOfTheMonth from '../../../mocks/project_of_the_month.json';
+import projectImage from '../../../assets/images/mocks/ProjectOfTheMonthMocks.png';
+import avatarMock from '../../../assets/images/mocks/ProfileMocks.svg';
+import ContributorAvatars from '../../../components/common/ContributorAvatars';
+// const res = await fetch('https://api.example.com/project_of_the_month');
+// const projectOfTheMonth = await res.json();
+
+const { t, lang } = Astro.props;
+
+interface Contributor {
+  name: string;
+  role: string;
+  avatar: string;
+}
+
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+  views: number;
+  likes: number;
+  Contributor: Contributor[];
+}
+
+const firstProject = projectOfTheMonth.list[0] as Project;
+
+const bestInList: Project = {
+  ...firstProject,
+  image: projectImage.src,
+  Contributor:
+    firstProject.Contributor?.map((c) => ({
+      ...c,
+      avatar: avatarMock.src,
+    })) || [],
+};
 ---
 
-<section id="hero" class="mx-auto max-w-7xl px-4 py-8">
-  <div class="flex flex-col items-center gap-4">
-    <h1 class="text-center font-prompt text-2xl font-[800] sm:text-3xl" data-fade-up style="--i:1">
-      {t('hero.date')}
-    </h1>
-
-    <p class="whitespace-pre-line text-center font-ibm text-base" data-fade-up style="--i:1.5">
-      {t('hero.place')}
+<section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-16 bg-main-neutral">
+  <!-- Project metadata -->
+  <div class="flex justify-center items-center gap-2">
+    <p>{t('home.hero.topic')}</p>
+    <div
+      class="flex justify-center items-center px-2 rounded-lg border border-supporting-light-orange"
+    >
+      {projectOfTheMonth.month}
+    </div>
+    <p>
+      {t('home.hero.view')}
+      {bestInList.views} | {t('home.hero.like')}
+      {bestInList.likes}
     </p>
+  </div>
+
+  <!-- Project title -->
+  <h1 class="text-center">{bestInList.title}</h1>
+
+  <!-- Contributor avatars -->
+  <ContributorAvatars client:load contributors={bestInList.Contributor} />
+
+  <!-- Project image -->
+  <div class="w-full h-[600px] my-4">
+    <a href={`/${lang}${bestInList.link}`}>
+      <img
+        src={bestInList.image}
+        alt={bestInList.title}
+        class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
+      />
+    </a>
   </div>
 </section>

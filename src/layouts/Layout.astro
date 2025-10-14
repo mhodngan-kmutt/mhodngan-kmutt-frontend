@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-const { title = 'MhodNgan' } = Astro.props;
+const { title = 'MhodNgan', class: extraClass = '' } = Astro.props;
 ---
 
 <html lang="en">
@@ -8,9 +8,13 @@ const { title = 'MhodNgan' } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body class="min-h-screen text-main-secondary">
-    <main class="max-w-3xl mx-auto p-4">
+  <body class="min-h-screen ${extraClass}">
+    <main class={`flex flex-col justify-center bg-main-background text-main-neutral2`}>
       <slot />
     </main>
   </body>
