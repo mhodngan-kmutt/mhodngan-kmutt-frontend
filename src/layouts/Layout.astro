@@ -8,9 +8,12 @@ const { title = 'MhodNgan' } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   </head>
-  <body class="min-h-screen bg-gray-50 text-gray-900">
-    <main class="max-w-3xl mx-auto p-4">
+  <body class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 text-gray-900 font-sans">
+    <main class="max-w-5xl mx-auto px-6 py-12">
       <slot />
     </main>
   </body>

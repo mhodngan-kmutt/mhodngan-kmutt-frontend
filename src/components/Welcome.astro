@@ -4,4 +4,12 @@ const { lang = 'en' } = Astro.props;
 i18n.changeLanguage(lang);
 ---
 
-<h1 class="text-3xl font-bold">{i18n.t('greeting')} 👋</h1>
+<div class="mb-12">
+  <h1 class="text-5xl md:text-6xl font-display font-bold text-gray-900 mb-4">
+    {i18n.t('greeting')}
+    <span class="text-primary-500">.</span>
+  </h1>
+  <p class="text-xl text-gray-600 max-w-2xl">
+    {lang === 'th' ? 'สำรวจแนวคิดสถาปัตยกรรมและการออกแบบที่น่าสนใจ' : 'Explore inspiring architecture and design concepts'}
+  </p>
+</div>

@@ -17,12 +17,12 @@ const posts: Post[] = await getPosts();
 ---
 
 <Layout title="MhodNgan">
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex justify-between items-start mb-8">
     <Greeting lang={currentLang} />
     <LanguageSwitcher currentLang={currentLang} />
   </div>
 
-  <section class="space-y-4">
+  <section class="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
     {posts.map((post) => <PostCard post={post} />)}
   </section>
 </Layout>
