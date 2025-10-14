@@ -1,0 +1,11 @@
+---
+import i18n from "../i18n/i18n";
+
+const { lang } = Astro.props;
+i18n.changeLanguage(lang);
+---
+
+<section class="p-8 text-center">
+  <h1 class="text-3xl font-bold text-blue-600 mb-4">{i18n.t("greeting")}</h1>
+  <p class="text-gray-600">{i18n.t("description")}</p>
+</section>

@@ -1,0 +1,16 @@
+---
+import "../styles/global.css";
+const { title = "Astro i18n Example" } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+  </head>
+  <body
+    class="bg-gray-50 text-gray-900 min-h-screen flex flex-col items-center justify-center"
+  >
+    <slot />
+  </body>
+</html>
