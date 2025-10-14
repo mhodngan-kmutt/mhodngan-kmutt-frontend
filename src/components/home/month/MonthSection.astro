@@ -3,6 +3,8 @@ import projectOfTheMonth from '../../../mocks/project_of_the_month.json';
 import projectImage from '../../../assets/images/mocks/ProjectImageMocks.png';
 import avatarMock from '../../../assets/images/mocks/ProfileMocks.svg';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
+import ButtonIcon from '@/components/common/button/ButtonIcon';
+import { ArrowRightIcon } from 'lucide-react';
 
 const { t, lang } = Astro.props;
 
@@ -23,12 +25,12 @@ const projects = projectOfTheMonth.list.map((p) => ({
 }));
 ---
 
-<section id="YearSection" class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
+<section id="MonthSection" class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
   <!-- Topic -->
   <div class="flex flex-col items-center gap-2 text-center">
-    <p>{t('home.year.smallTopic')}</p>
-    <h1>{t('home.year.topic')}</h1>
-    <div class="lead">{t('home.year.subTopic')}</div>
+    <p>{t('home.month.smallTopic')}</p>
+    <h1>{t('home.month.topic')}</h1>
+    <div class="lead">{t('home.month.subTopic')}</div>
   </div>
 
   <!-- List of Cards -->
@@ -49,5 +51,15 @@ const projects = projectOfTheMonth.list.map((p) => ({
         />
       ))
     }
+  </div>
+
+  <!-- Explore More -->
+  <div class="flex justify-center items-center gap-5">
+    <p>{t('home.month.viewAll')}</p>
+    <ButtonIcon
+      text={t('home.month.navigate')}
+      icon={ArrowRightIcon}
+      link={`/${lang}/projectOfTheMonth`}
+    />
   </div>
 </section>

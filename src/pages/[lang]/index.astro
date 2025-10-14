@@ -1,7 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Greeting from '../../components/Welcome.astro';
-import HeroSection from '../../components/home/hero/HeroSection.astro';
+import HeroSection from '@/components/home/hero/HeroSection.astro';
+import MonthSection from '@/components/home/month/MonthSection.astro';
+import YearSection from '@/components/home/year/YearSection.astro';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
 import PostCard from '../../components/PostCard.astro';
 import type { Post } from '../../lib/api';
@@ -22,10 +23,11 @@ const posts: Post[] = await getPosts();
 const t = i18n.t.bind(i18n);
 ---
 
-<Layout title="MhodNgan">
-  <HeroSection t={t} />
-  <Greeting t={t} />
-  <LanguageSwitcher currentLang={currentLang} />
+<Layout title="MhodNgan" class="overflow-y-scroll">
+  <HeroSection t={t} lang={currentLang} />
+  <MonthSection t={t} lang={currentLang} />
+  <YearSection t={t} lang={currentLang} />
+  <!-- <LanguageSwitcher currentLang={currentLang} /> -->
 
   <!-- <nav class="mb-6">
     <a

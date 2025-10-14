@@ -1,15 +1,35 @@
 {
-  "greeting": "Hello",
   "project": {
     "title": "Projects",
     "header": "Our Projects",
     "description": "Here you can explore our recent work and case studies."
   },
   "nav": {
-    "project": "View Projects"
+    "project": "View Project"
   },
-  "hero": {
-    "date": "November 2025, Bangkok, Thailand",
-    "place": "KMUTT Campus — Main Auditorium"
+  "home": {
+    "hero": {
+      "topic": "Project of the Month",
+      "view": "View",
+      "like": "Like"
+    },
+    "month": {
+      "smallTopic": "Latest",
+      "topic": "Month",
+      "subTopic": "Popular projects on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Project of the month"
+    },
+    "year": {
+      "smallTopic": "Latest",
+      "topic": "Year",
+      "subTopic": "Popular projects on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Project of the year"
+    }
+  },
+  "card": {
+    "certified": "Certified by",
+    "contributors": "Contributors"
   }
 }
