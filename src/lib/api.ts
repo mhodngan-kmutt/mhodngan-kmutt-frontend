@@ -1,5 +1,3 @@
-// src/lib/api.ts
-
 export interface Post {
   id: string;
   slug: string;
@@ -50,16 +48,27 @@ const mockPosts: Post[] = [
   },
 ];
 
-// ตัวแปรสลับโหมด mock / api จริง
+// Toggle mock mode / real API
 const USE_MOCK = import.meta.env.PUBLIC_USE_MOCK === 'true';
 
-// ฟังก์ชันหลัก
+function getApiUrl(): string {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error('PUBLIC_API_URL environment variable is not defined');
+  }
+  return apiUrl;
+}
+
 export async function getPosts(): Promise<Post[]> {
   if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300)); // จำลอง delay
+    await new Promise((r) => setTimeout(r, 300)); // Simulate delay
     return mockPosts;
   }
-  const res = await fetch(`${import.meta.env.PUBLIC_API_URL}/posts`);
+  const apiUrl = getApiUrl();
+  const res = await fetch(`${apiUrl}/posts`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts: ${res.status} ${res.statusText}`);
+  }
   return res.json();
 }
 
@@ -70,6 +79,10 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     if (!post) throw new Error(`Post not found: ${slug}`);
     return post;
   }
-  const res = await fetch(`${import.meta.env.PUBLIC_API_URL}/posts/${slug}`);
+  const apiUrl = getApiUrl();
+  const res = await fetch(`${apiUrl}/posts/${slug}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch post by slug: ${res.status} ${res.statusText}`);
+  }
   return res.json();
 }
