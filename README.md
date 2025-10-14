@@ -44,3 +44,13 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## 🤝 Contributing
+
+1. Clone this repo
+2. Create a new branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m "feat: describe your feature"`
+4. Push to your branch: `git push origin feature/your-feature`
+5. Create a Pull Request
+
+Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) style (`feat:`, `fix:`, `chore:`, etc.).
