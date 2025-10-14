@@ -1,6 +1,5 @@
 name: Astro CI/CD
 
-# Run workflow on push to dev (staging) and main (production)
 on:
   push:
     branches:
@@ -14,30 +13,36 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup Node.js (use your local version)
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # match your local Node.js version
-          cache: 'pnpm'
+          node-version: '20' # Match your local Node.js version
+          cache: 'pnpm' # Enable caching for pnpm dependencies
 
-      # 3. Install dependencies
+      # 3. Install pnpm globally
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # 4. Install dependencies
       - name: Install dependencies
         run: pnpm install
 
-      # 4. Build Astro project
+      # 5. Build Astro project
       - name: Build project
         run: pnpm run build
 
-      # 5. Deploy to GitHub Pages
+      # 6. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          # Deploy to production for main, staging for dev
           publish_branch: ${{ github.ref == 'refs/heads/main' && 'gh-pages' || 'gh-pages-staging' }}
