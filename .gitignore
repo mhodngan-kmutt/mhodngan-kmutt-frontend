@@ -28,3 +28,11 @@ pnpm-debug.log*
 
 # env
 .env.local
+.env
+
+# vscode
+.vscode/
+
+# others
+VERCEL_DEPLOYMENT.md
+.vercel
