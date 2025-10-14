@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - 'setup-**'
   pull_request:
     branches:
       - main
