@@ -43,8 +43,8 @@ jobs:
         env:
           PUBLIC_USE_MOCK: 'true'
           PUBLIC_API_URL: 'http://localhost:3000'
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: 'https://hztzzcgxckhoohjvztfo.supabase.co'
+          SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6dHp6Y2d4Y2tob29oanZ6dGZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTEyMDAsImV4cCI6MjA3NjA4NzIwMH0.k2uyQM5MMYT4x8VOejwPpsaRa2Gtmhijfy_IyO2A0Zw'
 
       # 6. Deploy to Vercel Production (main branch)
       - name: Deploy to Vercel (Production)
