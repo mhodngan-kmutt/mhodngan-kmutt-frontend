@@ -8,6 +8,11 @@ const protectedRoutes = ['/en/admin', '/en/profile'];
 export const onRequest = defineMiddleware(async (context, next) => {
   const { url, cookies, redirect, locals } = context;
 
+  // Skip auth check during build/prerendering
+  if (!import.meta.env.PUBLIC_SUPABASE_URL || !import.meta.env.PUBLIC_SUPABASE_ANON_KEY) {
+    return next();
+  }
+
   // Create Supabase server client
   const supabase = createSupabaseServerClient(cookies);
 
