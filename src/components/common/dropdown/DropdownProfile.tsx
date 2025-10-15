@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { CircleUser } from 'lucide-react';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export function DropdownProfile() {
+type DropdownProfileProps = {
+  // name: string;
+  // email?: string;
+  onLogout: () => void;
+};
+
+export function DropdownProfile({ onLogout }: DropdownProfileProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,20 +26,22 @@ export function DropdownProfile() {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-auto bg-white border-1 border-neutral-200 " align="end">
+      <DropdownMenuContent className="w-auto bg-white border-1 border-neutral-200" align="end">
         <DropdownMenuSeparator />
+
         {/* My Project */}
         <DropdownMenuItem asChild>
-          <a href="en/project" className="w-full cursor-pointer hover:bg-neutral-200">
+          <a href="/en/project" className="w-full cursor-pointer hover:bg-neutral-200">
             My Project
           </a>
         </DropdownMenuItem>
 
         {/* Sign out */}
-        <DropdownMenuItem asChild>
-          <a href="en/signout" className="w-full cursor-pointer hover:bg-neutral-200">
-            Sign out
-          </a>
+        <DropdownMenuItem
+          onSelect={onLogout}
+          className="w-full cursor-pointer text-red-600 hover:bg-neutral-200"
+        >
+          Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

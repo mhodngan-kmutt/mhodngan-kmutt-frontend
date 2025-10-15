@@ -1,15 +1,14 @@
 ---
-import React, { useState } from 'react';
-import ButtonIcon from '../button/ButtonIcon.tsx';
-import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { Searchbar } from '../../ui/searchbar.tsx';
 import headerLogo from '../../../assets/logo/1.svg';
-import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
+import AuthHeaderButton from './AuthHeaderButton.tsx';
 ---
 
-<header class="flex w-full justify-between items-center px-3 py-2 h-">
+<header class="flex w-full justify-between items-center px-3 py-2">
   <div class="flex gap-x-3 items-center">
-    <a href="/" class="flex w-15 h-13 items-center"><img src={headerLogo.src} alt="Logo" /></a>
+    <a href="/" class="flex w-15 h-13 items-center">
+      <img src={headerLogo.src} alt="Logo" />
+    </a>
     <a href="/" class="small">Explore</a>
     <Searchbar
       placeholder="Search..."
@@ -17,10 +16,5 @@ import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
     />
   </div>
 
-  <!-- Sign in button -->
-  <a href="">
-    <ButtonIcon text="Sign in" icon={GoogleIcon} />
-  </a>
-
-  <!-- <DropdownProfile client:load /> -->
+  <AuthHeaderButton client:load />
 </header>
