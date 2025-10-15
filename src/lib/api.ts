@@ -1,75 +1,65 @@
-// src/lib/api.ts
+import projectsJson from "../mocks/projects.json";
+import projectsOfTheMonthJson from "../mocks/project_of_the_month.json";
 
-export interface Post {
-  id: string;
+// ---------- Interfaces ----------
+export interface Contributor {
+  name: string;
+  role: string;
+  avatar: string;
+}
+
+export interface Professor {
+  name: string;
+  avatar: string;
+}
+
+export interface Project {
+  id: number;
   slug: string;
   title: string;
-  excerpt: string;
-  content?: string;
-  created_at?: string;
+  description: string;
+  image: string;
+  link: string;
+  views: number;
+  likes: number;
+  team: string;
+  Contributor: Contributor[];
+  Professors: Professor[];
 }
 
-// mock data
-const mockPosts: Post[] = [
-  {
-    id: '1',
-    slug: 'astro-getting-started',
-    title: 'Getting Started with Astro',
-    excerpt: 'Learn how to build fast and modern websites using Astro framework.',
-    content: `
-      <p>Astro is a modern static site builder that helps you create fast websites.</p>
-      <p>It uses the concept of islands architecture and supports frameworks like React, Svelte, and Vue.</p>
-    `,
-    created_at: '2025-10-10',
-  },
-  {
-    id: '2',
-    slug: 'tailwind-integration',
-    title: 'How to Use Tailwind CSS in Astro',
-    excerpt: 'Set up Tailwind CSS in your Astro project quickly and easily.',
-    content: `
-      <p>Tailwind CSS can be integrated into Astro with just a few steps.</p>
-      <ul>
-        <li>Install Tailwind via pnpm</li>
-        <li>Configure tailwind.config.mjs</li>
-        <li>Import styles in layout</li>
-      </ul>
-    `,
-    created_at: '2025-10-11',
-  },
-  {
-    id: '3',
-    slug: 'astro-i18n-guide',
-    title: 'Astro i18n Setup Guide',
-    excerpt: 'Implement i18n (multi-language support) with JSON translation files in Astro.',
-    content: `
-      <p>You can use <code>en.json</code> and <code>th.json</code> to handle text translation.</p>
-      <p>Then switch languages dynamically without creating separate pages.</p>
-    `,
-    created_at: '2025-10-12',
-  },
-];
-
-// ตัวแปรสลับโหมด mock / api จริง
-const USE_MOCK = import.meta.env.PUBLIC_USE_MOCK === 'true';
-
-// ฟังก์ชันหลัก
-export async function getPosts(): Promise<Post[]> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300)); // จำลอง delay
-    return mockPosts;
-  }
-  const res = await fetch(`${import.meta.env.PUBLIC_API_URL}/posts`);
-  return res.json();
+// ---------- Utility ----------
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "");
 }
 
-export async function getPostBySlug(slug: string): Promise<Post> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    const post = mockPosts.find((p) => p.slug === slug);
-    if (!post) throw new Error(`Post not found: ${slug}`);
-    return post;
-  }
-  const res = await fetch(`${import.meta.env.PUBLIC_API_URL}/posts/${slug}`);
-  return res.json();
+// ---------- Prepare Data ----------
+const projects: Project[] = projectsJson.list.map((project) => ({
+  ...project,
+  slug: generateSlug(project.title),
+}));
+
+const projectsOfTheMonth: Project[] = projectsOfTheMonthJson.list.map((project) => ({
+  ...project,
+  slug: generateSlug(project.title),
+}));
+
+// ---------- API Functions ----------
+export async function getProjects(): Promise<Project[]> {
+  await new Promise((r) => setTimeout(r, 100));
+  return projects;
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project> {
+  await new Promise((r) => setTimeout(r, 100));
+  const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
+  if (!project) throw new Error(`Project not found: ${slug}`);
+  return project;
+}
+
+export async function getProjectsOfTheMonth(): Promise<Project[]> {
+  await new Promise((r) => setTimeout(r, 100));
+  return projectsOfTheMonth;
 }

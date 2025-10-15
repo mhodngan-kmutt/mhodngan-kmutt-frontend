@@ -1,12 +1,4 @@
 {
-  "project": {
-    "title": "Projects",
-    "header": "Our Projects",
-    "description": "Here you can explore our recent work and case studies."
-  },
-  "nav": {
-    "project": "View Project"
-  },
   "home": {
     "hero": {
       "topic": "Project of the Month",
@@ -31,5 +23,8 @@
   "card": {
     "certified": "Certified by",
     "contributors": "Contributors"
+  },
+  "project": {
+    "navigateBack": "Back to Projects"
   }
 }
