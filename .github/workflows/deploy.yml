@@ -37,12 +37,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. Build project
+      # 5. Build project (with Supabase ENV)
       - name: Build project
         run: pnpm run build
         env:
           PUBLIC_USE_MOCK: 'true'
           PUBLIC_API_URL: 'http://localhost:3000'
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       # 6. Deploy to Vercel Production (main branch)
       - name: Deploy to Vercel (Production)
