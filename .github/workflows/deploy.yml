@@ -16,35 +16,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup pnpm reliably
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      # 3. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
 
-      # 4. Install dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. Build project
       - name: Build project
         run: pnpm run build
         env:
-          PUBLIC_USE_MOCK: 'true'
           PUBLIC_API_URL: 'http://localhost:3000'
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
-      # 6. Deploy to Vercel Production (main branch)
       - name: Deploy to Vercel (Production)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: amondnet/vercel-action@v25
@@ -55,7 +50,6 @@ jobs:
           vercel-args: '--prod'
           working-directory: ./
 
-      # 7. Deploy to Vercel Preview (dev branch, pull requests, setup-* branches)
       - name: Deploy to Vercel (Preview)
         if: github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || startsWith(github.ref, 'refs/heads/setup-')
         uses: amondnet/vercel-action@v25
