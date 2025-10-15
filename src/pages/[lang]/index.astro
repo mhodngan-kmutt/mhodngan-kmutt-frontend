@@ -4,6 +4,7 @@ import HeroSection from '@/components/home/hero/HeroSection.astro';
 import MonthSection from '@/components/home/month/MonthSection.astro';
 import YearSection from '@/components/home/year/YearSection.astro';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import AuthTest from '../../components/AuthTest';
 import i18n from '../../i18n/i18n';
 
 export async function getStaticPaths() {
@@ -19,6 +20,7 @@ const t = i18n.t.bind(i18n);
 ---
 
 <Layout title="MhodNgan" class="overflow-y-scroll">
+  <AuthTest client:load />
   <HeroSection t={t} lang={currentLang} />
   <MonthSection t={t} lang={currentLang} />
   <YearSection t={t} lang={currentLang} />
