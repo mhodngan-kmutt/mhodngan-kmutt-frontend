@@ -25,6 +25,8 @@
     "contributors": "Contributors"
   },
   "project": {
-    "navigateBack": "Back to Projects"
+    "navigateBack": "Back to Projects",
+    "contributors": "Contributors",
+    "professors": "Professors"
   }
 }

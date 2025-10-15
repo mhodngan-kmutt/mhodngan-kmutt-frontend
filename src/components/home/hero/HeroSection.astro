@@ -1,29 +1,12 @@
 ---
-import projectOfTheMonth from '../../../mocks/project_of_the_month.json';
+import { getProjectsOfTheMonth } from '@/lib/api';
 import ContributorAvatars from '../../../components/common/ContributorAvatars';
-// const res = await fetch('https://api.example.com/project_of_the_month');
-// const projectOfTheMonth = await res.json();
 
 const { t, lang } = Astro.props;
 
-interface Contributor {
-  name: string;
-  role: string;
-  avatar: string;
-}
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-  views: number;
-  likes: number;
-  Contributor: Contributor[];
-}
-
-const bestInList = projectOfTheMonth.list[0] as Project;
+// get date from API mock
+const projects = await getProjectsOfTheMonth();
+const bestInList = projects[0];
 ---
 
 <section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-16 bg-main-neutral">
@@ -33,7 +16,7 @@ const bestInList = projectOfTheMonth.list[0] as Project;
     <div
       class="flex justify-center items-center px-2 rounded-lg border border-supporting-light-orange"
     >
-      {projectOfTheMonth.month}
+      {bestInList.link.includes('month') ? bestInList.link : 'Oct, 2025'}
     </div>
     <p>
       {t('home.hero.view')}
@@ -50,11 +33,12 @@ const bestInList = projectOfTheMonth.list[0] as Project;
 
   <!-- Project image -->
   <div class="w-full h-[600px] my-4">
-    <a href={`/${lang}${bestInList.link}`}>
+    <a href={`/${lang}/project/${bestInList.slug}`}>
       <img
         src={bestInList.image}
         alt={bestInList.title}
         class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
+        loading="lazy"
       />
     </a>
   </div>
