@@ -1,26 +1,13 @@
 ---
-import projectOfTheMonth from '../../../mocks/project_of_the_month.json';
-import projectImage from '../../../assets/images/mocks/ProjectImageMocks.png';
-import avatarMock from '../../../assets/images/mocks/ProfileMocks.svg';
+import { getProjectsOfTheMonth } from '@/lib/api';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
+import ButtonIcon from '@/components/common/button/ButtonIcon';
+import { ArrowRightIcon } from 'lucide-react';
 
 const { t, lang } = Astro.props;
 
-// map list
-const projects = projectOfTheMonth.list.map((p) => ({
-  ...p,
-  image: projectImage.src, // mock image
-  Contributor:
-    p.Contributor?.map((c) => ({
-      ...c,
-      avatar: avatarMock.src,
-    })) || [],
-  Professors:
-    p.Professors?.map((prof) => ({
-      ...prof,
-      avatar: avatarMock.src,
-    })) || [],
-}));
+// get date from API mock
+const projects = await getProjectsOfTheMonth();
 ---
 
 <section id="YearSection" class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
@@ -45,9 +32,17 @@ const projects = projectOfTheMonth.list.map((p) => ({
           professors={p.Professors}
           contributors={p.Contributor}
           teamName={p.team}
-          link={`/${lang}${p.link}`}
+          link={`/${lang}/project/${p.slug}`}
         />
       ))
     }
+  </div>
+
+  <!-- Explore More -->
+  <div class="flex justify-center items-center gap-5 mt-6">
+    <p>{t('home.year.viewAll')}</p>
+    <a href={`/${lang}/project`}>
+      <ButtonIcon text={t('home.year.navigate')} icon={ArrowRightIcon} />
+    </a>
   </div>
 </section>

@@ -1,7 +1,5 @@
 ---
 import projectOfTheMonth from '../../../mocks/project_of_the_month.json';
-import projectImage from '../../../assets/images/mocks/ProjectOfTheMonthMocks.png';
-import avatarMock from '../../../assets/images/mocks/ProfileMocks.svg';
 import ContributorAvatars from '../../../components/common/ContributorAvatars';
 // const res = await fetch('https://api.example.com/project_of_the_month');
 // const projectOfTheMonth = await res.json();
@@ -25,17 +23,7 @@ interface Project {
   Contributor: Contributor[];
 }
 
-const firstProject = projectOfTheMonth.list[0] as Project;
-
-const bestInList: Project = {
-  ...firstProject,
-  image: projectImage.src,
-  Contributor:
-    firstProject.Contributor?.map((c) => ({
-      ...c,
-      avatar: avatarMock.src,
-    })) || [],
-};
+const bestInList = projectOfTheMonth.list[0] as Project;
 ---
 
 <section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-16 bg-main-neutral">

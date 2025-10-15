@@ -1,0 +1,80 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { getProjects, getProjectBySlug } from '../../../../lib/api';
+import ContributorAvatars from '@/components/common/ContributorAvatars';
+import ButtonIcon from '@/components/common/button/ButtonIcon';
+import { ArrowLeftIcon, Heart, Eye } from 'lucide-react';
+import i18n from '../../../../i18n/i18n';
+
+// generate paths
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  const languages = ['en', 'th'];
+
+  return projects.flatMap((p) =>
+    languages.map((lang) => ({
+      params: { slug: String(p.slug), lang },
+    }))
+  );
+}
+
+// load params and project
+const { slug, lang } = Astro.params as { slug: string; lang: string };
+const currentLang = lang === 'th' ? 'th' : 'en';
+i18n.changeLanguage(currentLang);
+const t = i18n.t.bind(i18n);
+
+const project = await getProjectBySlug(slug);
+---
+
+<Layout title={project.title}>
+  <section class="flex flex-col gap-6 py-6 px-16">
+    <a href={`/${currentLang}/project`}>
+      <ButtonIcon text={t('project.navigateBack') || 'Back to Projects'} icon={ArrowLeftIcon} />
+    </a>
+
+    <div class="max-w-4xl mx-auto flex flex-col gap-6 bg-white rounded-xl shadow-lg p-6">
+      <div class="relative h-[300px] w-full rounded-xl overflow-hidden">
+        <img
+          src={project.image}
+          alt={project.title}
+          class="absolute inset-0 w-full h-full object-cover object-top rounded-xl transition duration-300 hover:scale-105"
+          loading="lazy"
+        />
+      </div>
+
+      <h1 class="text-2xl font-bold">{project.title}</h1>
+      <p class="text-gray-600">{project.description}</p>
+
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <Heart class="w-5 h-5 text-orange-400" />
+          <span>{project.likes}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <Eye class="w-5 h-5 text-orange-400" />
+          <span>{project.views}</span>
+        </div>
+      </div>
+
+      <div class="flex gap-6 items-center">
+        <div>
+          <div class="text-sm font-medium text-gray-500">{t('project.team') || 'Team'}</div>
+          <div class="text-gray-700">{project.team}</div>
+        </div>
+        <div>
+          <div class="text-sm font-medium text-gray-500">
+            {t('project.contributors') || 'Contributors'}
+          </div>
+          <ContributorAvatars client:load contributors={project.Contributor} />
+        </div>
+        <div>
+          <div class="text-sm font-medium text-gray-500">
+            {t('project.professors') || 'Professors'}
+          </div>
+          <ContributorAvatars client:load contributors={project.Professors} />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
