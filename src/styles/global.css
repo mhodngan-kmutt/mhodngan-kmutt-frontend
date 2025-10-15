@@ -79,6 +79,46 @@ button {
   cursor: pointer;
 }
 
+.btn-secondary {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
+  border-right: 0.5px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
+  border-bottom: 2px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
+  border-left: 0.5px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
+  background: var(--main-secondary, rgba(14, 165, 233, 1));
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.btn-secondary:hover {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-right: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-bottom: 2px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-left: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  background: var(--supporting-dark-sky, rgba(3, 105, 161, 1));
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.btn-tertiary {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--main-neutral, rgba(229, 229, 229, 1));
+  border-right: 0.5px solid var(--main-neutral, rgba(229, 229, 229, 1));
+  border-bottom: 2px solid var(--main-neutral, rgba(229, 229, 229, 1));
+  border-left: 0.5px solid var(--main-neutral, rgba(229, 229, 229, 1));
+  background: var(--main-white, rgba(255, 255, 255, 1));
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.btn-tertiary:hover {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-right: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-bottom: 2px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-left: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  background: var(--main-neutral, rgba(229, 229, 229, 1));
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
 .btn-icon {
   border-radius: 8px;
   border-top: 0.25px solid var(--main-neutral, #E5E5E5);

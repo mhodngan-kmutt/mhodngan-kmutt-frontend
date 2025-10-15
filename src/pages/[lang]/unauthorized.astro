@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { AlertCircle } from 'lucide-react';
+import { Image } from 'astro:assets';
+import dizzyDuckImage from '../../assets/images/3.svg'
+import { Button } from '@/components/ui/button'
+import i18n from '../../i18n/i18n';
+
+// generate paths
+export async function getStaticPaths() {
+  const languages = ['en', 'th'];
+  return languages.map((lang) => ({
+    params: { lang },
+  }));
+}
+
+// load params and project
+const { slug, lang } = Astro.params as { slug: string; lang: string };
+const currentLang = lang === 'th' ? 'th' : 'en';
+i18n.changeLanguage(currentLang);
+---
+
+<Layout title="Unauthorized">
+  <div class="flex flex-col items-center justify-center text-center h-screen gap-4">
+    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-supporting-error/20">
+      <AlertCircle className="w-6 h-6 text-supporting-error" />
+    </div>
+    <h1 class="text-4xl font-bold">401 - Unauthorized</h1>
+    <Image src={dizzyDuckImage} alt={"dizzyDuckImage"} width="240" />
+    <div class="text-center">
+      <p class="subtle">You don't have permission to access this page</p>
+      <p class="subtle">Your current role doesn't allow access to this resource.</p>
+    </div>
+    <div class="flex flex-col gap-2 w-[600px]">
+      <a href={`/${currentLang}/`}>
+        <Button aria-label='Back to Homepage' className='btn-secondary w-full'>
+          <span class="text-main-white">
+            Back to Homepage
+          </span>
+        </Button>
+      </a>
+      <a href={`/${currentLang}/signin`}>
+        <Button aria-label='Sign in with Google' className='btn-tertiary w-full'}>
+          Sign in with Google
+        </Button>
+      </a>
+    </div>
+  </div>
+</Layout>
