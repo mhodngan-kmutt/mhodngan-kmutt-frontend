@@ -10,13 +10,11 @@ export default function AuthHeaderButton() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ตรวจสอบสถานะเริ่มต้นของผู้ใช้
     getUser()
       .then((userData) => setUser(userData))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
 
-    // ฟัง event การเปลี่ยนแปลงของ auth state
     const { data: authListener } = onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
@@ -54,7 +52,7 @@ export default function AuthHeaderButton() {
   if (user) {
     const name = user.user_metadata?.full_name || 'User';
     const email = user.email || '';
-    return <DropdownProfile name={name} email={email} onLogout={handleLogout} />;
+    return <DropdownProfile onLogout={handleLogout} />;
   }
 
   return (

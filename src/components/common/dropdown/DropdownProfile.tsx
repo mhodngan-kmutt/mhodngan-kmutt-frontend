@@ -11,8 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 type DropdownProfileProps = {
-  // name: string;
-  // email?: string;
   onLogout: () => void;
 };
 
