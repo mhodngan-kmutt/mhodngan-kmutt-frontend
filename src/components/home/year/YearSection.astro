@@ -1,7 +1,6 @@
 ---
 import { getProjectsOfTheMonth } from '@/lib/api';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
-import ButtonIcon from '@/components/common/button/ButtonIcon';
 import { ArrowRightIcon } from 'lucide-react';
 
 const { t, lang } = Astro.props;
@@ -42,7 +41,10 @@ const projects = await getProjectsOfTheMonth();
   <div class="flex justify-center items-center gap-5 mt-6">
     <p>{t('home.year.viewAll')}</p>
     <a href={`/${lang}/project`}>
-      <ButtonIcon text={t('home.year.navigate')} icon={ArrowRightIcon} />
+      <button class="btn-icon" type="button" aria-label={t('home.year.navigate')}>
+        <ArrowRightIcon size={20} />
+        <span class="small">{t('home.year.navigate')}</span>
+      </button>
     </a>
   </div>
 </section>

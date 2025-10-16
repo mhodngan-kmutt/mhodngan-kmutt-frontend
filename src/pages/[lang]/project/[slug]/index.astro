@@ -2,7 +2,6 @@
 import Layout from '../../../../layouts/Layout.astro';
 import { getProjects, getProjectBySlug } from '../../../../lib/api';
 import ContributorAvatars from '@/components/common/ContributorAvatars';
-import ButtonIcon from '@/components/common/button/ButtonIcon';
 import { ArrowLeftIcon, Heart, Eye } from 'lucide-react';
 import i18n from '../../../../i18n/i18n';
 
@@ -14,7 +13,7 @@ export async function getStaticPaths() {
   return projects.flatMap((p) =>
     languages.map((lang) => ({
       params: { slug: String(p.slug), lang },
-    }))
+    })),
   );
 }
 
@@ -30,7 +29,10 @@ const project = await getProjectBySlug(slug);
 <Layout title={project.title}>
   <section class="flex flex-col gap-6 py-6 px-16">
     <a href={`/${currentLang}/project`}>
-      <ButtonIcon text={t('project.navigateBack') || 'Back to Projects'} icon={ArrowLeftIcon} />
+      <button class="btn-icon" type="button" aria-label={t('project.navigateBack')}>
+        <ArrowLeftIcon size={20} />
+        <span class="small">{t('project.navigateBack')}</span>
+      </button>
     </a>
 
     <div class="max-w-4xl mx-auto flex flex-col gap-6 bg-white rounded-xl shadow-lg p-6">
@@ -48,11 +50,11 @@ const project = await getProjectBySlug(slug);
 
       <div class="flex items-center gap-6">
         <div class="flex items-center gap-2">
-          <Heart class="w-5 h-5 text-orange-400" />
+          <Heart className="w-5 h-5 text-orange-400" />
           <span>{project.likes}</span>
         </div>
         <div class="flex items-center gap-2">
-          <Eye class="w-5 h-5 text-orange-400" />
+          <Eye className="w-5 h-5 text-orange-400" />
           <span>{project.views}</span>
         </div>
       </div>

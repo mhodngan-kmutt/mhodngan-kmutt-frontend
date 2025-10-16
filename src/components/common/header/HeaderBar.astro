@@ -2,6 +2,8 @@
 import { Searchbar } from '../../ui/searchbar.tsx';
 import headerLogo from '../../../assets/logo/1.svg';
 import AuthHeaderButton from './AuthHeaderButton.tsx';
+
+const { lang } = Astro.props;
 ---
 
 <header class="flex w-full justify-between items-center px-3 py-2">
@@ -16,5 +18,5 @@ import AuthHeaderButton from './AuthHeaderButton.tsx';
     />
   </div>
 
-  <AuthHeaderButton client:load />
+  <AuthHeaderButton client:load lang={lang} />
 </header>
