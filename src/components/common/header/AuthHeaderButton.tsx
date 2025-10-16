@@ -1,46 +1,76 @@
 import { useEffect, useState } from 'react';
-import { signInWithGoogle, signOut, getUser, onAuthStateChange } from '../../../lib/auth.ts';
+import { signInWithGoogle, signOut, getSession, getUser, onAuthStateChange, verifyKmuttEmail } from '../../../lib/auth.ts';
 import type { User } from '@supabase/supabase-js';
-import ButtonIcon from '../button/ButtonIcon.tsx';
 import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
 
-export default function AuthHeaderButton() {
+interface AuthHeaderButtonProps {
+  lang: string;
+}
+
+export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getUser()
-      .then((userData) => setUser(userData))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+    const initAuth = async () => {
+      try {
+        // Wait for Supabase session to be ready
+        const sessionData = await getSession();
+        const userData = sessionData?.user || (await getUser());
 
-    const { data: authListener } = onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
+        if (userData) {
+          const valid = await verifyKmuttEmail(lang);
+          if (valid) {
+            setUser(userData);
+          } else {
+            // Unauthorized, redirect handled in verifyKmuttEmail
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('❌ Auth init error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
+
+    const { data: authListener } = onAuthStateChange(async (_event, session) => {
+      console.log('🔄 Auth state changed:', session);
+      const currentUser = session?.user || null;
+      if (currentUser) {
+        const valid = await verifyKmuttEmail(lang);
+        if (valid) setUser(currentUser);
+      } else {
+        setUser(null);
+      }
     });
 
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, []);
+  }, [lang]);
 
   const handleLogin = async () => {
     try {
+      console.log('🟢 Attempting Google sign-in...');
       await signInWithGoogle();
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login error:', error);
       alert('Failed to sign in.');
     }
   };
 
   const handleLogout = async () => {
     try {
+      console.log('🔴 Signing out user...');
       await signOut();
       setUser(null);
-
       window.location.reload();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('❌ Logout error:', error);
       alert('Failed to sign out.');
     }
   };
@@ -51,13 +81,17 @@ export default function AuthHeaderButton() {
 
   if (user) {
     const name = user.user_metadata?.full_name || 'User';
-    const email = user.email || '';
-    return <DropdownProfile onLogout={handleLogout} />;
+    const avatarUrl = user.user_metadata?.avatar_url || null;
+
+    console.log('👤 Logged in user:', { name, avatarUrl });
+
+    return <DropdownProfile onLogout={handleLogout} name={name} avatarUrl={avatarUrl} />;
   }
 
   return (
-    <button onClick={handleLogin}>
-      <ButtonIcon text="Sign in" icon={GoogleIcon} />
+    <button className="btn-icon" type="button" aria-label="Sign in" onClick={handleLogin}>
+      <GoogleIcon className="w-5 h-5" />
+      <span className="small">Sign in</span>
     </button>
   );
 }
