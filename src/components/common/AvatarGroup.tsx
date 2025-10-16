@@ -3,20 +3,20 @@
 import React from 'react'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
-interface Contributor {
+interface Users {
   name: string
   avatar: string
 }
 
-interface ContributorAvatarsProps {
-  contributors: Contributor[]
+interface AvatarGroupProps {
+  contributors: Users[]
   className?: string
 }
 
-export default function ContributorAvatars({
+export default function AvatarGroup({
   contributors,
   className = '',
-}: ContributorAvatarsProps) {
+}: AvatarGroupProps) {
   return (
     <div className="flex justify-center -space-x-5">
       {contributors.map((c, i) => (

@@ -1,6 +1,6 @@
 ---
 import { getProjectsOfTheMonth } from '@/lib/api';
-import ContributorAvatars from '../../../components/common/ContributorAvatars';
+import AvatarGroup from '../../common/AvatarGroup';
 import HeaderBar from '../../common/header/HeaderBar.astro';
 
 const { t, lang } = Astro.props;
@@ -31,7 +31,7 @@ const bestInList = projects[0];
   <h1 class="text-center">{bestInList.title}</h1>
 
   <!-- Contributor avatars -->
-  <ContributorAvatars client:load contributors={bestInList.Contributor} />
+  <AvatarGroup client:load contributors={bestInList.Contributor} />
 
   <!-- Project image -->
   <div class="w-full h-[600px] my-4">

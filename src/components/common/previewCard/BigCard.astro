@@ -1,6 +1,6 @@
 ---
 import { Heart, Eye } from 'lucide-react';
-import ContributorAvatars from '../ContributorAvatars';
+import AvatarGroup from '../AvatarGroup';
 
 const {
   t,
@@ -48,13 +48,13 @@ const {
       <div class="flex gap-1 items-center">
         <div class="detail text-supporting-support">{t('card.certified')}</div>
         <div class="flex justify-center -space-x-5">
-          <ContributorAvatars client:load contributors={professors} className="w-5 h-5" />
+          <AvatarGroup client:load contributors={professors} className="w-5 h-5" />
         </div>
       </div>
     </div>
     <div class="flex px-4 py-3 rounded-xl border-2 border-main-background h-[72px]">
       <div class="flex w-full gap-2.5">
-        <ContributorAvatars client:load contributors={contributors} />
+        <AvatarGroup client:load contributors={contributors} />
         <div class="w-full gap-1">
           <div class="small">{t('card.contributors')}</div>
           <div class="detail text-supporting-support">{teamName}</div>

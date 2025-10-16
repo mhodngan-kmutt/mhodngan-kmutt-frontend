@@ -24,7 +24,7 @@ export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfilePr
             <AvatarImage src={avatarUrl || ''} alt={name} />
             <AvatarFallback>{name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="small ml-2">{name}</span>
+          <span className="small">{name}</span>
         </button>
       </DropdownMenuTrigger>
 
