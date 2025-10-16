@@ -3,6 +3,7 @@ import { signInWithGoogle, signOut, getSession, getUser, onAuthStateChange, veri
 import type { User } from '@supabase/supabase-js';
 import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
+import { Skeleton } from '@/components/ui/skeleton.tsx';
 
 interface AuthHeaderButtonProps {
   lang: string;
@@ -76,7 +77,9 @@ export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
   };
 
   if (loading) {
-    return <p className="text-gray-600">Loading...</p>;
+    return (
+      <Skeleton className="h-10 w-10 rounded-full bg-main-background" />
+    )
   }
 
   if (user) {
