@@ -28,21 +28,16 @@ export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfilePr
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        className="w-auto bg-main-white border border-main-neutral"
-        align="end"
-      >
-        <DropdownMenuSeparator />
-
+      <DropdownMenuContent className="w-auto bg-main-white border border-main-neutral" align="end">
         <DropdownMenuItem asChild>
-          <a href="/en/project" className="w-full cursor-pointer hover:bg-main-neutral">
+          <a href="/en/project" className="w-full cursor-pointer hover:bg-neutral-100">
             My Project
           </a>
         </DropdownMenuItem>
 
         <DropdownMenuItem
           onSelect={onLogout}
-          className="w-full cursor-pointer text-main-primary hover:bg-main-neutral"
+          className="w-full cursor-pointer text-main-primary hover:bg-neutral-100"
         >
           Sign out
         </DropdownMenuItem>
@@ -50,5 +45,3 @@ export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfilePr
     </DropdownMenu>
   );
 }
-
-
