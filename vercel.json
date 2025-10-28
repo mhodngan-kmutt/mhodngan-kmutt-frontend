@@ -4,16 +4,12 @@
     {
       "src": "dist/**/*",
       "use": "@vercel/static"
-    },
-    {
-      "src": "dist/server/**/*.mjs",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/dist/$1"
+      "dest": "/$1"
     }
   ]
 }

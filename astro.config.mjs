@@ -1,13 +1,16 @@
-// astro.config.mjs
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import react from '@astrojs/react'; // add React integration for shadcn/lucide
-import vercel from '@astrojs/vercel';
+import react from '@astrojs/react';
+import vercel from '@astrojs/vercel/static'; // <-- เปลี่ยนจาก serverless เป็น static
 
 export default defineConfig({
-  output: 'server',
+  output: 'static',
   adapter: vercel(),
   integrations: [react()],
+  trailingSlash: 'always', // generate /en/ /th/
+  build: {
+    format: 'directory', // folder structure per route
+  },
   vite: {
     plugins: [tailwindcss()],
   },
