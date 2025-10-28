@@ -77,18 +77,17 @@ export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
   };
 
   if (loading) {
-    return (
-      <Skeleton className="h-10 w-10 rounded-full bg-main-background" />
-    )
+    return <Skeleton className="h-10 w-10 rounded-full bg-main-background" />;
   }
 
   if (user) {
-    const name = user.user_metadata?.full_name || 'User';
+    const fullName = user.user_metadata?.full_name || 'User';
+    const firstName = fullName.split(' ')[0]; // take the first word
     const avatarUrl = user.user_metadata?.avatar_url || null;
 
-    console.log('👤 Logged in user:', { name, avatarUrl });
+    console.log('👤 Logged in user:', { firstName, avatarUrl });
 
-    return <DropdownProfile onLogout={handleLogout} name={name} avatarUrl={avatarUrl} />;
+    return <DropdownProfile onLogout={handleLogout} name={firstName} avatarUrl={avatarUrl} />;
   }
 
   return (
