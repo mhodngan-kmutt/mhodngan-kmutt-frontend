@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5️ Build project (ใช้ env จาก GitHub Secrets)
+      # 5️ Build project
       - name: Build project
         run: pnpm run build
         env:
@@ -45,7 +45,7 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
-      # 6️ Deploy Production (เฉพาะ branch main)
+      # 6️ Deploy Production (main branch)
       - name: Deploy to Vercel (Production)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: amondnet/vercel-action@v25
@@ -54,13 +54,13 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
-          working-directory: ./
+          working-directory: ./dist/client   # <-- ชี้ไปที่ folder build
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
-      # 7️ Deploy Preview (branch dev หรือ setup-* หรือ pull request)
+      # 7️ Deploy Preview (dev, setup-*, pull request)
       - name: Deploy to Vercel (Preview)
         if: github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/setup-') || github.event_name == 'pull_request'
         uses: amondnet/vercel-action@v25
@@ -68,7 +68,7 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
+          working-directory: ./dist/client   # <-- ชี้ไปที่ folder build
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
