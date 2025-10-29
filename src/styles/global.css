@@ -141,3 +141,23 @@ button {
   background: var(--Main-Neutral, #E5E5E5);
   box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
+
+.btn-primary {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--main-neutral, #C2410C);
+  border-right: 0.5px solid var(--main-neutral, #C2410C);
+  border-bottom: 2px solid var(--main-neutral, #C2410C);
+  border-left: 0.5px solid var(--main-neutral, #C2410C);
+  background: var(--color-main-primary, #F97316);
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  color: #E5E5E5;
+}
+.btn-primary:hover {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--Supporting-Support, #404040);
+  border-right: 0.5px solid var(--Supporting-Support, #404040);
+  border-bottom: 2px solid var(--Supporting-Support, #404040);
+  border-left: 0.5px solid var(--Supporting-Support, #404040);
+  background: var(--color-supporting-dark-orange, #C2410C);
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
