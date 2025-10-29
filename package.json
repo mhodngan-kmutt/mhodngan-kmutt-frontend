@@ -9,7 +9,8 @@
     "astro": "astro",
     "format": "prettier --write .",
     "prepare": "husky install",
-    "test": "echo \"No tests yet\""
+    "test": "echo \"No tests yet\"",
+    "lint": "eslint . --ext .js,.ts,.astro"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.0",
@@ -21,7 +22,6 @@
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.75.0",
     "@tailwindcss/vite": "^4.1.14",
-    "astro": "^5.14.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "i18next": "^25.6.0",
@@ -35,11 +35,22 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@eslint/js": "^9.38.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "astro": "^5.14.4",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.4.0",
+    "eslint-plugin-prettier": "^5.5.4",
     "husky": "^8.0.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.14",
-    "tailwindcss-language-server": "^0.0.1"
+    "tailwindcss-language-server": "^0.0.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2",
+    "vitest": "^4.0.5"
   }
 }
