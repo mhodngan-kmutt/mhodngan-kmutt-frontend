@@ -1,0 +1,50 @@
+---
+import { getProjectsOfTheMonth } from '@/lib/api';
+import BigCard from '@/components/common/previewCard/BigCard.astro';
+import { ArrowRightIcon } from 'lucide-react';
+
+const { t, lang } = Astro.props;
+
+// get date from API mock
+const projects = await getProjectsOfTheMonth();
+---
+
+<section id="YearSection" class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
+  <!-- Topic -->
+  <div class="flex flex-col items-center gap-2 text-center">
+    <p>{t('home.year.smallTopic')}</p>
+    <h1>{t('home.year.topic')}</h1>
+    <div class="lead">{t('home.year.subTopic')}</div>
+  </div>
+
+  <!-- List of Cards -->
+  <div class="flex flex-wrap gap-6 justify-center">
+    {
+      projects.map((p) => (
+        <BigCard
+          t={t}
+          projectImage={p.image}
+          title={p.title}
+          explanation={p.description}
+          likes={p.likes}
+          views={p.views}
+          professors={p.Professors}
+          contributors={p.Contributor}
+          teamName={p.team}
+          link={`/${lang}/project/${p.slug}`}
+        />
+      ))
+    }
+  </div>
+
+  <!-- Explore More -->
+  <div class="flex justify-center items-center gap-5 mt-6">
+    <p>{t('home.year.viewAll')}</p>
+    <a href={`/${lang}/project`}>
+      <button class="btn-icon" type="button" aria-label={t('home.year.navigate')}>
+        <ArrowRightIcon size={20} />
+        <span class="small">{t('home.year.navigate')}</span>
+      </button>
+    </a>
+  </div>
+</section>

@@ -1,0 +1,53 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BigCard from '@/components/common/previewCard/BigCard.astro';
+import i18n from '../../../i18n/i18n';
+import { getProjects } from '../../../lib/api';
+
+// generate paths
+export async function getStaticPaths() {
+  const languages = ['en', 'th'];
+  return languages.map((lang) => ({
+    params: { lang },
+  }));
+}
+
+// load params and project
+const { lang } = Astro.params;
+const currentLang = lang === 'th' ? 'th' : 'en';
+i18n.changeLanguage(currentLang);
+const t = i18n.t.bind(i18n);
+
+const projects = await getProjects();
+---
+
+<Layout title={t('home.month.topic')} class="overflow-y-scroll">
+  <section class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
+    <!-- Topic -->
+    <div class="flex flex-col items-center gap-2 text-center">
+      <p>{t('home.month.smallTopic')}</p>
+      <h1>{t('home.month.topic')}</h1>
+      <div class="lead">{t('home.month.subTopic')}</div>
+    </div>
+
+    <!-- List of Cards -->
+    <div class="flex flex-wrap gap-6 justify-center">
+      {
+        projects.map((p) => (
+          <BigCard
+            t={t}
+            projectImage={p.image}
+            title={p.title}
+            explanation={p.description}
+            likes={p.likes}
+            views={p.views}
+            professors={p.Professors}
+            contributors={p.Contributor}
+            teamName={p.team}
+            link={`/${currentLang}/project/${p.slug}`}
+          />
+        ))
+      }
+    </div>
+  </section>
+</Layout>

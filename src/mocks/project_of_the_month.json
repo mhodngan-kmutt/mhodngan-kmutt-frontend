@@ -1,0 +1,117 @@
+{
+  "title": "Project of the Month",
+  "month": "Oct, 2025",
+  "list": [
+    {
+      "id": 1,
+      "title": "Smart Campus Management System",
+      "description": "A comprehensive system to manage campus resources efficiently.",
+      "image": "/images/mocks/ProjectOfTheMonthMocks.png",
+      "link": "/project",
+      "views": 700,
+      "likes": 300,
+      "team": "Moohan Gen Alpha Form",
+      "Contributor": [
+        {
+          "name": "Jane Doe",
+          "role": "Project Manager",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "John Smith",
+          "role": "Lead Developer",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "Alice Johnson",
+          "role": "UI/UX Designer",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        }
+      ],
+      "Professors": [
+        {
+          "name": "Mu Ham",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "Mu Dev",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "AI-Powered Learning Platform",
+      "description": "An adaptive learning platform that personalizes content for students.",
+      "image": "/images/mocks/ProjectOfTheMonthMocks.png",
+      "link": "/project",
+      "views": 200,
+      "likes": 100,
+      "team": "Moohan Gen Alpha Form",
+      "Contributor": [
+        {
+          "name": "Jane Doe",
+          "role": "Project Manager",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "John Smith",
+          "role": "Lead Developer",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "Alice Johnson",
+          "role": "UI/UX Designer",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        }
+      ],
+      "Professors": [
+        {
+          "name": "Mu Ham",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "Mu Dev",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Sustainable Energy Solutions",
+      "description": "Innovative solutions for sustainable energy management on campus.",
+      "image": "/images/mocks/ProjectOfTheMonthMocks.png",
+      "link": "/project",
+      "views": 150,
+      "likes": 75,
+      "team": "Moohan Gen Alpha Form",
+      "Contributor": [
+        {
+          "name": "Jane Doe",
+          "role": "Project Manager",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "John Smith",
+          "role": "Lead Developer",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "Alice Johnson",
+          "role": "UI/UX Designer",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        }
+      ],
+      "Professors": [
+        {
+          "name": "Mu Ham",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        },
+        {
+          "name": "Mu Dev",
+          "avatar": "/images/mocks/ProfileMocks.svg"
+        }
+      ]
+    }
+  ]
+}

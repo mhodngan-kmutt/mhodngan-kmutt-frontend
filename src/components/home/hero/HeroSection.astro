@@ -1,0 +1,47 @@
+---
+import { getProjectsOfTheMonth } from '@/lib/api';
+import AvatarGroup from '../../common/AvatarGroup';
+import HeaderBar from '../../common/header/HeaderBar.astro';
+
+const { t, lang } = Astro.props;
+
+// get date from API mock
+const projects = await getProjectsOfTheMonth();
+const bestInList = projects[0];
+---
+
+<section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-16 bg-main-neutral">
+  <HeaderBar lang={lang} />
+  <!-- Project metadata -->
+  <div class="flex justify-center items-center gap-2">
+    <p>{t('home.hero.topic')}</p>
+    <div
+      class="flex justify-center items-center px-2 rounded-lg border border-supporting-light-orange"
+    >
+      {bestInList.link.includes('month') ? bestInList.link : 'Oct, 2025'}
+    </div>
+    <p>
+      {t('home.hero.view')}
+      {bestInList.views} | {t('home.hero.like')}
+      {bestInList.likes}
+    </p>
+  </div>
+
+  <!-- Project title -->
+  <h1 class="text-center">{bestInList.title}</h1>
+
+  <!-- Contributor avatars -->
+  <AvatarGroup client:load contributors={bestInList.Contributor} />
+
+  <!-- Project image -->
+  <div class="w-full h-[600px] my-4">
+    <a href={`/${lang}/project/${bestInList.slug}`}>
+      <img
+        src={bestInList.image}
+        alt={bestInList.title}
+        class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
+        loading="lazy"
+      />
+    </a>
+  </div>
+</section>

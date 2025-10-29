@@ -1,0 +1,72 @@
+{
+  "home": {
+    "hero": {
+      "topic": "Project of the Month",
+      "view": "View",
+      "like": "Like"
+    },
+    "month": {
+      "smallTopic": "Latest",
+      "topic": "Month",
+      "subTopic": "Popular projects on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Project of the month"
+    },
+    "year": {
+      "smallTopic": "Latest",
+      "topic": "Year",
+      "subTopic": "Popular projects on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Project of the year"
+    },
+    "honor": {
+      "topic": "HONORS",
+      "subTopic": "The most popular project of all time on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Honor projects"
+    },
+    "senior": {
+      "smallTopic": "Latest",
+      "topic": "Senior",
+      "subTopic": "Projects post on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Senior projects"
+    },
+    "thesis": {
+      "smallTopic": "Latest",
+      "topic": "Thesis",
+      "subTopic": "Projects post on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Thesis projects"
+    },
+    "competition": {
+      "smallTopic": "Latest",
+      "topic": "Competition",
+      "subTopic": "Projects post on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Competition projects"
+    },
+    "term": {
+      "smallTopic": "Latest",
+      "topic": "Term",
+      "subTopic": "Projects post on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "Term projects"
+    },
+    "explore": {
+      "topic": "Let’s explore.",
+      "subTopic": "All projects post on MhodNgan",
+      "viewAll": "Check out all projects",
+      "navigate": "All projects"
+    }
+  },
+  "card": {
+    "certified": "Certified by",
+    "contributors": "Contributors"
+  },
+  "project": {
+    "navigateBack": "Back to Projects",
+    "contributors": "Contributors",
+    "professors": "Professors"
+  }
+}

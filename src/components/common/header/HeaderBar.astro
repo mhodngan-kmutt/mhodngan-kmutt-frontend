@@ -1,0 +1,19 @@
+---
+import { Searchbar } from '../../ui/searchbar.tsx';
+import headerLogo from '../../../assets/logo/1.svg';
+import AuthHeaderButton from './AuthHeaderButton.tsx';
+
+const { lang } = Astro.props;
+---
+
+<header class="flex w-full justify-between items-center px-3 py-2">
+  <div class="flex gap-x-7 items-center">
+    <a href="/" class="flex w-15 h-13 items-center">
+      <img src={headerLogo.src} alt="Logo" />
+    </a>
+    <a href="/" class="small">Explore</a>
+    <Searchbar placeholder="Search..." bgColor="bg-main-background" client:load />
+  </div>
+  
+  <AuthHeaderButton client:load lang={lang} />
+</header>

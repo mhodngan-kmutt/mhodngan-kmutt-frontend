@@ -1,0 +1,65 @@
+---
+import { Heart, Eye } from 'lucide-react';
+import AvatarGroup from '../AvatarGroup';
+
+const {
+  t,
+  projectImage,
+  title,
+  explanation,
+  likes,
+  views,
+  professors,
+  contributors,
+  teamName,
+  link,
+} = Astro.props;
+---
+
+<a href={link} class="block hover:shadow-lg transition-shadow rounded-xl">
+  <div
+    class="w-[360px] flex flex-col gap-3 p-2.5 rounded-xl bg-main-white shadow-[0_0_16px_0_rgba(0,0,0,0.06)]"
+  >
+    <div class="relative h-[160px] w-full rounded-xl overflow-hidden">
+      <img
+        src={projectImage}
+        alt={title}
+        class="absolute inset-0 w-full h-full object-cover object-top rounded-xl transition duration-300 hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+    <div class="w-full pl-1.5 pr-4 overflow-hidden">
+      <h4 class="truncate">{title}</h4>
+    </div>
+    <div class="w-full pl-1.5 pr-4">
+      <div class="text-supporting-support">{explanation}</div>
+    </div>
+    <div class="w-full flex justify-between items-center px-1.5">
+      <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1">
+          <Heart className="w-4 h-4" color="var(--color-supporting-light-orange)" />
+          <div class="subtle text-supporting-support">{likes}</div>
+        </div>
+        <div class="flex items-center gap-1">
+          <Eye className="w-4 h-4" color="var(--color-supporting-light-orange)" />
+          <div class="subtle text-supporting-support">{views}</div>
+        </div>
+      </div>
+      <div class="flex gap-1 items-center">
+        <div class="detail text-supporting-support">{t('card.certified')}</div>
+        <div class="flex justify-center -space-x-5">
+          <AvatarGroup client:load contributors={professors} className="w-5 h-5" />
+        </div>
+      </div>
+    </div>
+    <div class="flex px-4 py-3 rounded-xl border-2 border-main-background h-[72px]">
+      <div class="flex w-full gap-2.5">
+        <AvatarGroup client:load contributors={contributors} />
+        <div class="w-full gap-1">
+          <div class="small">{t('card.contributors')}</div>
+          <div class="detail text-supporting-support">{teamName}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>

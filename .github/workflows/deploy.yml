@@ -1,0 +1,101 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - 'setup-**'
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1 Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2 Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # 3 Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # 4 Install dependencies
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 5 Run ESLint (non-blocking)
+      - name: Lint with ESLint
+        run: pnpm exec eslint . --ext .js,.jsx,.ts,.tsx,.astro || echo "⚠️ ESLint found issues"
+        continue-on-error: true
+
+      # 6 Run Prettier check (non-blocking)
+      - name: Check code formatting with Prettier
+        run: pnpm exec prettier --check . || echo "⚠️ Prettier found formatting issues"
+        continue-on-error: true
+
+      # 7 TypeScript type checking (non-blocking)
+      - name: Run TypeScript type check
+        run: pnpm exec tsc --noEmit || echo "⚠️ TypeScript type errors detected"
+        continue-on-error: true
+
+      # 8 Astro diagnostic check (non-blocking)
+      - name: Run Astro check
+        run: pnpm exec astro check || echo "⚠️ Astro check found issues"
+        continue-on-error: true
+
+      # 9 Run tests (optional)
+      - name: Run tests
+        if: hashFiles('vitest.config.*') != ''
+        run: pnpm exec vitest run --reporter=verbose || echo "⚠️ Vitest found failing tests"
+        continue-on-error: true
+
+      # 10 Build project (blocking)
+      - name: Build project
+        run: pnpm run build
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+
+      # 11 Deploy Production (main branch)
+      - name: Deploy to Vercel (Production)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+
+      # 12 Deploy Preview (dev, setup-*, pull request)
+      - name: Deploy to Vercel (Preview)
+        if: github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/setup-') || github.event_name == 'pull_request'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
