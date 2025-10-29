@@ -1,11 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "dist/**/*",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "pnpm install && pnpm run build",
+  "outputDirectory": "dist/client",
   "routes": [
     {
       "src": "/(.*)",
