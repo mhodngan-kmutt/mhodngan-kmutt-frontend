@@ -3,6 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import HeroSection from '@/components/home/hero/HeroSection.astro';
 import MonthSection from '@/components/home/month/MonthSection.astro';
 import YearSection from '@/components/home/year/YearSection.astro';
+import HonorSection from '@/components/home/honor/HonorSection.astro';
+import SeniorSection from '@/components/home/senior/SeniorSection.astro';
+import ThesisSection from '@/components/home/thesis/ThesisSection.astro';
+import CompetitionSection from '@/components/home/competition/CompetitionSection.astro';
+import TermSection from '@/components/home/term/TermSection.astro';
+import ExploreSection from '@/components/home/explore/ExploreSection.astro';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
 import AuthTest from '../../components/AuthTest';
 import i18n from '../../i18n/i18n';
@@ -24,5 +30,11 @@ const t = i18n.t.bind(i18n);
   <HeroSection t={t} lang={currentLang} />
   <MonthSection t={t} lang={currentLang} />
   <YearSection t={t} lang={currentLang} />
+  <HonorSection t={t} lang={currentLang} />
+  <SeniorSection t={t} lang={currentLang} />
+  <ThesisSection t={t} lang={currentLang} />
+  <CompetitionSection t={t} lang={currentLang} />
+  <TermSection t={t} lang={currentLang} />
+  <ExploreSection t={t} lang={currentLang} />
   <!-- <LanguageSwitcher currentLang={currentLang} /> -->
 </Layout>
