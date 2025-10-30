@@ -9,7 +9,7 @@
     "astro": "astro",
     "format": "prettier --write .",
     "prepare": "husky install",
-    "test": "echo \"No tests yet\"",
+    "test": "playwright test",
     "lint": "eslint . --ext .js,.ts,.astro"
   },
   "dependencies": {
@@ -36,6 +36,7 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.38.0",
+    "@playwright/test": "^1.56.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.46.2",

@@ -1,77 +1,130 @@
 name: Deploy to Vercel
 
+# =========================
+# Trigger events for workflow
+# =========================
 on:
   push:
     branches:
-      - main
-      - dev
-      - 'setup-**'
+      - main           # trigger on main for production
+      - dev            # trigger on dev for preview
+      - 'setup-**'     # trigger on any setup-* branch
   pull_request:
     branches:
       - main
       - dev
+  workflow_dispatch:   # manual trigger
 
+# =========================
+# Job 1: Build
+# - checkout code
+# - setup Node.js and pnpm
+# - install dependencies
+# - lint, prettier, typescript, astro checks
+# - run Vitest (unit tests)
+# - build project
+# =========================
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
+    outputs:
+      build-status: ${{ steps.build-result.outcome }}
     steps:
-      # 1 Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2 Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      # 3 Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
 
-      # 4 Install dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5 Run ESLint (non-blocking)
       - name: Lint with ESLint
         run: pnpm exec eslint . --ext .js,.jsx,.ts,.tsx,.astro || echo "⚠️ ESLint found issues"
         continue-on-error: true
 
-      # 6 Run Prettier check (non-blocking)
       - name: Check code formatting with Prettier
         run: pnpm exec prettier --check . || echo "⚠️ Prettier found formatting issues"
         continue-on-error: true
 
-      # 7 TypeScript type checking (non-blocking)
       - name: Run TypeScript type check
         run: pnpm exec tsc --noEmit || echo "⚠️ TypeScript type errors detected"
         continue-on-error: true
 
-      # 8 Astro diagnostic check (non-blocking)
       - name: Run Astro check
         run: pnpm exec astro check || echo "⚠️ Astro check found issues"
         continue-on-error: true
 
-      # 9 Run tests (optional)
-      - name: Run tests
+      - name: Run tests (Vitest)
         if: hashFiles('vitest.config.*') != ''
         run: pnpm exec vitest run --reporter=verbose || echo "⚠️ Vitest found failing tests"
         continue-on-error: true
 
-      # 10 Build project (blocking)
       - name: Build project
+        id: build-result
         run: pnpm run build
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
-      # 11 Deploy Production (main branch)
+# =========================
+# Job 2: E2E Test
+# - depends on build job
+# - setup environment again
+# - install Playwright browsers
+# - run Playwright tests (E2E)
+# - upload test reports
+# - deploy to Vercel (Production/Preview based on branch)
+# =========================
+  e2e-test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: pnpm test
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      # Deploy Production
       - name: Deploy to Vercel (Production)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: amondnet/vercel-action@v25
@@ -86,7 +139,7 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
-      # 12 Deploy Preview (dev, setup-*, pull request)
+      # Deploy Preview
       - name: Deploy to Vercel (Preview)
         if: github.ref == 'refs/heads/dev' || startsWith(github.ref, 'refs/heads/setup-') || github.event_name == 'pull_request'
         uses: amondnet/vercel-action@v25
