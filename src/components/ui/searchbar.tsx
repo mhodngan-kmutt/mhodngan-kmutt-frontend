@@ -3,11 +3,11 @@ import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SearchbarProps extends React.ComponentProps<'input'> {
-  bgColor?: string;
+  componentsColor?: string;
 }
 
 export function Searchbar({
-  bgColor = 'bg-main-background',
+  componentsColor = 'bg-main-background',
   ...props
 }: SearchbarProps) {
   const [value, setValue] = React.useState('');
@@ -33,7 +33,7 @@ export function Searchbar({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className={cn(
-          `w-100 h-10 rounded-md ${bgColor} pl-10 pr-3 py-1 text-base shadow-xs placeholder:text-neutral-500 selection:bg-primary selection:text-primary-foreground outline-none`,
+          `w-100 h-10 rounded-md ${componentsColor} pl-10 pr-3 py-1 text-base shadow-xs placeholder:text-neutral-500 selection:bg-primary selection:text-primary-foreground outline-none`,
           'focus-visible:ring-neutral-500 focus-visible:ring-[2px] focus-visible:ring-offset-0',
           'hover:ring-neutral-300 hover:ring-[1px]',
           'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
