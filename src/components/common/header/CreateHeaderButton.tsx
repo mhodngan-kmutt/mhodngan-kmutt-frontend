@@ -16,7 +16,7 @@ export default function CreateHeaderButton({
         className="btn-primary flex items-center gap-2"
       >
         <WriteIcon className="w-5 h-5 " />
-        <span className="small">Write Project</span>
+        <span className="small">New Project</span>
       </button>
     </a>
   );

@@ -92,6 +92,7 @@ button {
   border-left: 0.5px solid var(--supporting-dark-orane, rgba(194, 65, 12, 1));
   background: var(--main-primary, rgba(249, 115, 22, 1));
   box-shadow: 0 0 0 0.5px #CF4D09, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  color: var(--color-main-neutral, rgba(229, 229, 229, 1));
 }
 .btn-primary:hover {
   border-radius: 8px;
