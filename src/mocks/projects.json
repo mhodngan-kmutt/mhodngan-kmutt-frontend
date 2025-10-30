@@ -11,7 +11,7 @@
       "likes": 300,
       "team": "Moohan Gen Alpha Form",
       "categories": ["Web Application", "IoT", "Management System", "Education"],
-      "published" : "September 22, 2025",
+      "published": "September 22, 2025",
       "Contributor": [
         { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
@@ -32,7 +32,7 @@
       "likes": 100,
       "team": "Moohan Gen Alpha Form",
       "categories": ["Artificial Intelligence", "Education", "Machine Learning", "Web Application"],
-      "published" : "September 24, 2025",
+      "published": "September 24, 2025",
       "Contributor": [
         { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
@@ -53,7 +53,7 @@
       "likes": 210,
       "team": "AgriTech Revolution",
       "categories": ["IoT", "Agriculture", "Data Analytics", "Embedded Systems"],
-      "published" : "September 26, 2025",
+      "published": "September 26, 2025",
       "Contributor": [
         { "name": "Mark Lee", "role": "IoT Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "Sara Wong", "role": "Data Scientist", "avatar": "/images/mocks/ProfileMocks.svg" }
@@ -72,7 +72,7 @@
       "likes": 180,
       "team": "EcoVision",
       "categories": ["Energy", "Data Visualization", "Mobile App", "Sustainability"],
-      "published" : "September 28, 2025",
+      "published": "September 28, 2025",
       "Contributor": [
         { "name": "Tom Green", "role": "Frontend Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "Lucy Chen", "role": "Energy Analyst", "avatar": "/images/mocks/ProfileMocks.svg" }
@@ -81,147 +81,164 @@
         { "name": "Dr. Tanaka", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
-        {
-      "id": 1,
-      "title": "Smart Campus Management System",
-      "description": "A comprehensive system to manage campus resources efficiently.",
+    {
+      "id": 5,
+      "title": "Blockchain Voting System",
+      "description": "A secure and transparent voting platform using blockchain technology.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 700,
-      "likes": 300,
-      "team": "Moohan Gen Alpha Form",
+      "views": 520,
+      "likes": 250,
+      "team": "CryptoVote",
+      "categories": ["Blockchain", "Security", "Web Application", "Democracy"],
+      "published": "October 2, 2025",
       "Contributor": [
-        { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Alice Johnson", "role": "UI/UX Designer", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Alex Kim", "role": "Blockchain Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Emma Rodriguez", "role": "Security Analyst", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "David Park", "role": "Smart Contract Developer", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Mu Ham", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Mu Dev", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Prof. Nakamoto", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Dr. Ethereum", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
     {
-      "id": 2,
-      "title": "AI-Powered Learning Platform",
-      "description": "An adaptive learning platform that personalizes content for students.",
+      "id": 6,
+      "title": "Health Monitoring Wearable",
+      "description": "A smart wearable device that monitors vital signs and provides health insights.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 200,
-      "likes": 100,
-      "team": "Moohan Gen Alpha Form",
+      "views": 640,
+      "likes": 320,
+      "team": "VitalTech",
+      "categories": ["Healthcare", "IoT", "Embedded Systems", "Mobile App"],
+      "published": "October 5, 2025",
       "Contributor": [
-        { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Alice Johnson", "role": "UI/UX Designer", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Dr. Sarah Johnson", "role": "Biomedical Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Mike Chen", "role": "Hardware Engineer", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Mu Ham", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Mu Dev", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Dr. Heartwell", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
     {
-      "id": 3,
-      "title": "IoT Smart Agriculture",
-      "description": "A system for monitoring crop health using IoT sensors and analytics.",
+      "id": 7,
+      "title": "AR Campus Navigation",
+      "description": "An augmented reality app for interactive campus navigation and information.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 450,
-      "likes": 210,
-      "team": "AgriTech Revolution",
+      "views": 290,
+      "likes": 150,
+      "team": "AR Pioneers",
+      "categories": ["Augmented Reality", "Mobile App", "Education", "3D Graphics"],
+      "published": "October 8, 2025",
       "Contributor": [
-        { "name": "Mark Lee", "role": "IoT Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Sara Wong", "role": "Data Scientist", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Lisa Zhang", "role": "AR Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Ryan Taylor", "role": "3D Artist", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Maya Patel", "role": "UX Designer", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Prof. Chai", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Prof. Reality", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
     {
-      "id": 4,
-      "title": "Renewable Energy Tracker",
-      "description": "An app that visualizes and optimizes renewable energy consumption.",
+      "id": 8,
+      "title": "Automated Trading Bot",
+      "description": "An AI-powered cryptocurrency trading bot with advanced risk management.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 380,
-      "likes": 180,
-      "team": "EcoVision",
+      "views": 800,
+      "likes": 420,
+      "team": "FinTech Warriors",
+      "categories": ["Fintech", "AI", "Machine Learning", "Cryptocurrency"],
+      "published": "October 12, 2025",
       "Contributor": [
-        { "name": "Tom Green", "role": "Frontend Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Lucy Chen", "role": "Energy Analyst", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "James Wilson", "role": "Quantitative Analyst", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Sophie Martin", "role": "ML Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Kevin Chang", "role": "Backend Developer", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Dr. Tanaka", "avatar": "/images/mocks/ProfileMocks.svg" }
-      ]
-    },    {
-      "id": 1,
-      "title": "Smart Campus Management System",
-      "description": "A comprehensive system to manage campus resources efficiently.",
-      "image": "/images/mocks/ProjectOfTheMonthMocks.png",
-      "link": "/project",
-      "views": 700,
-      "likes": 300,
-      "team": "Moohan Gen Alpha Form",
-      "Contributor": [
-        { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Alice Johnson", "role": "UI/UX Designer", "avatar": "/images/mocks/ProfileMocks.svg" }
-      ],
-      "Professors": [
-        { "name": "Mu Ham", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Mu Dev", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Dr. Finance", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Prof. Algorithm", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
     {
-      "id": 2,
-      "title": "AI-Powered Learning Platform",
-      "description": "An adaptive learning platform that personalizes content for students.",
+      "id": 9,
+      "title": "Smart Traffic Management",
+      "description": "An intelligent traffic control system using computer vision and ML algorithms.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 200,
-      "likes": 100,
-      "team": "Moohan Gen Alpha Form",
+      "views": 420,
+      "likes": 195,
+      "team": "Traffic Wizards",
+      "categories": ["Computer Vision", "Machine Learning", "Smart City", "Transportation"],
+      "published": "October 15, 2025",
       "Contributor": [
-        { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Alice Johnson", "role": "UI/UX Designer", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Carlos Rivera", "role": "Computer Vision Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Nina Petrov", "role": "Traffic Analyst", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Mu Ham", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Mu Dev", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Dr. Traffic", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
     {
-      "id": 3,
-      "title": "IoT Smart Agriculture",
-      "description": "A system for monitoring crop health using IoT sensors and analytics.",
+      "id": 10,
+      "title": "Virtual Reality Classroom",
+      "description": "An immersive VR platform for remote learning and virtual field trips.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 450,
-      "likes": 210,
-      "team": "AgriTech Revolution",
+      "views": 350,
+      "likes": 175,
+      "team": "VR Educators",
+      "categories": ["Virtual Reality", "Education", "3D Graphics", "Remote Learning"],
+      "published": "October 18, 2025",
       "Contributor": [
-        { "name": "Mark Lee", "role": "IoT Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Sara Wong", "role": "Data Scientist", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Rachel Adams", "role": "VR Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Ben Foster", "role": "3D Environment Artist", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Anna Schmidt", "role": "Educational Designer", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Prof. Chai", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Prof. Virtual", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     },
     {
-      "id": 4,
-      "title": "Renewable Energy Tracker",
-      "description": "An app that visualizes and optimizes renewable energy consumption.",
+      "id": 11,
+      "title": "Cybersecurity Dashboard",
+      "description": "Real-time threat detection and monitoring system for enterprise networks.",
       "image": "/images/mocks/ProjectOfTheMonthMocks.png",
       "link": "/project",
-      "views": 380,
-      "likes": 180,
-      "team": "EcoVision",
+      "views": 680,
+      "likes": 340,
+      "team": "CyberGuards",
+      "categories": ["Cybersecurity", "Network Security", "Dashboard", "Real-time Analytics"],
+      "published": "October 22, 2025",
       "Contributor": [
-        { "name": "Tom Green", "role": "Frontend Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
-        { "name": "Lucy Chen", "role": "Energy Analyst", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Marcus Thompson", "role": "Security Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Zoe Williams", "role": "Network Analyst", "avatar": "/images/mocks/ProfileMocks.svg" }
       ],
       "Professors": [
-        { "name": "Dr. Tanaka", "avatar": "/images/mocks/ProfileMocks.svg" }
+        { "name": "Dr. Secure", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Prof. Firewall", "avatar": "/images/mocks/ProfileMocks.svg" }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Food Waste Reduction App",
+      "description": "A mobile app connecting restaurants with consumers to reduce food waste.",
+      "image": "/images/mocks/ProjectOfTheMonthMocks.png",
+      "link": "/project",
+      "views": 540,
+      "likes": 280,
+      "team": "Green Plate",
+      "categories": ["Sustainability", "Mobile App", "Social Impact", "Food Technology"],
+      "published": "October 25, 2025",
+      "Contributor": [
+        { "name": "Isabella Garcia", "role": "Product Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Oliver Brown", "role": "Mobile Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
+        { "name": "Fatima Al-Zahra", "role": "Sustainability Consultant", "avatar": "/images/mocks/ProfileMocks.svg" }
+      ],
+      "Professors": [
+        { "name": "Dr. Sustainability", "avatar": "/images/mocks/ProfileMocks.svg" }
       ]
     }
   ]
