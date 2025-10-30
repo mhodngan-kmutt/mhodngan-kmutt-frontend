@@ -10,9 +10,9 @@ import {
 import FilterIcon from '@/assets/icons/filterIcon';
 import ToggleButton from '../../common/button/ToggleButton';
 import { ChevronDown } from 'lucide-react';
-import searchOptions from '../../../constants/advanceSearchOptions.json';
+import i18n from '@/i18n/i18n';
 
-const { categories, certifications, programs } = searchOptions;
+const { categories, certifications, programs } = i18n.t('advanceSearch', { returnObjects: true }) as { categories: string[], certifications: string[], programs: string[] };
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
