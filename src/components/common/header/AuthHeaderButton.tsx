@@ -8,10 +8,11 @@ import CreateHeaderButton from './CreateHeaderButton.tsx';
 
 interface AuthHeaderButtonProps {
   lang: string;
+  signinButtonText: string;
   componentsColor?: string;
 }
 
-export default function AuthHeaderButton({ lang, componentsColor = 'bg-main-background' }: AuthHeaderButtonProps) {
+export default function AuthHeaderButton({ signinButtonText, lang, componentsColor = 'bg-main-background' }: AuthHeaderButtonProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -100,7 +101,7 @@ export default function AuthHeaderButton({ lang, componentsColor = 'bg-main-back
   return (
     <button className="btn-icon" type="button" aria-label="Sign in" onClick={handleLogin}>
       <GoogleIcon className="w-5 h-5" />
-      <span className="small">Sign in</span>
+      <span className="small">{signinButtonText}</span>
     </button>
   );
 }

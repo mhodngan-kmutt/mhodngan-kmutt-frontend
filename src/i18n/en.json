@@ -60,6 +60,10 @@
       "navigate": "All projects"
     }
   },
+  "header": {
+    "explore": "Explore",
+    "signin": "Sign in"
+  },
   "card": {
     "certified": "Certified by",
     "contributors": "Contributors"
