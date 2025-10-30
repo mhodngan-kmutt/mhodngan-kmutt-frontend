@@ -8,9 +8,10 @@ import CreateHeaderButton from './CreateHeaderButton.tsx';
 
 interface AuthHeaderButtonProps {
   lang: string;
+  componentsColor?: string;
 }
 
-export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
+export default function AuthHeaderButton({ lang, componentsColor = 'bg-main-background' }: AuthHeaderButtonProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -78,7 +79,7 @@ export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
   };
 
   if (loading) {
-    return <Skeleton className="h-10 w-10 rounded-full bg-main-background" />;
+    return <Skeleton className={`h-10 w-10 rounded-full ${componentsColor}`} />;
   }
 
   if (user) {
