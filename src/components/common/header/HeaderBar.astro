@@ -3,17 +3,17 @@ import { Searchbar } from '../../ui/searchbar.tsx';
 import headerLogo from '../../../assets/logo/1.svg';
 import AuthHeaderButton from './AuthHeaderButton.tsx';
 
-const { lang, componentsColor } = Astro.props;
---- 
+const { t, lang, componentsColor } = Astro.props;
+---
 
-<header class="flex w-full justify-between items-center px-3 py-2">
-  <div class="flex gap-x-7 items-center">
+<header class="flex w-full justify-between items-center gap-3 px-3 py-2">
+  <div class="flex w-full gap-x-7 items-center">
     <a href="/" class="flex w-15 h-13 items-center">
       <img src={headerLogo.src} alt="Logo" />
     </a>
-    <a href="/" class="small">Explore</a>
-    <Searchbar placeholder="Search..." componentsColor={componentsColor} client:load />
+    <a href="/" class="small">{t('header.explore')}</a>
+    <Searchbar className="hidden md:block" placeholder="Search..." componentsColor={componentsColor} client:load />
   </div>
   
-  <AuthHeaderButton client:load lang={lang} componentsColor={componentsColor} />
+  <AuthHeaderButton client:load signinButtonText={t('header.signin')} lang={lang} componentsColor={componentsColor} />
 </header>

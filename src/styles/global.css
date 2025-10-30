@@ -81,6 +81,7 @@ button {
   gap: 8px;
   padding: 8px;
   transition: all 0.2s ease-in-out;
+  text-wrap: nowrap;
 }
 
 .btn-primary {
