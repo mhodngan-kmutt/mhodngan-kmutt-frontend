@@ -10,6 +10,8 @@
       "views": 700,
       "likes": 300,
       "team": "Moohan Gen Alpha Form",
+      "categories": ["Web Application", "IoT", "Management System", "Education"],
+      "published" : "September 22, 2025",
       "Contributor": [
         { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
@@ -29,6 +31,8 @@
       "views": 200,
       "likes": 100,
       "team": "Moohan Gen Alpha Form",
+      "categories": ["Artificial Intelligence", "Education", "Machine Learning", "Web Application"],
+      "published" : "September 24, 2025",
       "Contributor": [
         { "name": "Jane Doe", "role": "Project Manager", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "John Smith", "role": "Lead Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
@@ -48,6 +52,8 @@
       "views": 450,
       "likes": 210,
       "team": "AgriTech Revolution",
+      "categories": ["IoT", "Agriculture", "Data Analytics", "Embedded Systems"],
+      "published" : "September 26, 2025",
       "Contributor": [
         { "name": "Mark Lee", "role": "IoT Engineer", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "Sara Wong", "role": "Data Scientist", "avatar": "/images/mocks/ProfileMocks.svg" }
@@ -65,6 +71,8 @@
       "views": 380,
       "likes": 180,
       "team": "EcoVision",
+      "categories": ["Energy", "Data Visualization", "Mobile App", "Sustainability"],
+      "published" : "September 28, 2025",
       "Contributor": [
         { "name": "Tom Green", "role": "Frontend Developer", "avatar": "/images/mocks/ProfileMocks.svg" },
         { "name": "Lucy Chen", "role": "Energy Analyst", "avatar": "/images/mocks/ProfileMocks.svg" }

@@ -83,6 +83,25 @@ button {
   transition: all 0.2s ease-in-out;
 }
 
+.btn-primary {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--supporting-dark-orane, rgba(194, 65, 12, 1));
+  border-right: 0.5px solid var(--supporting-dark-orane, rgba(194, 65, 12, 1));
+  border-bottom: 2px solid var(--supporting-dark-orane, rgba(194, 65, 12, 1));
+  border-left: 0.5px solid var(--supporting-dark-orane, rgba(194, 65, 12, 1));
+  background: var(--main-primary, rgba(249, 115, 22, 1));
+  box-shadow: 0 0 0 0.5px #CF4D09, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+.btn-primary:hover {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-right: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-bottom: 2px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  border-left: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
+  background: var(--supporting-dark-orane, rgba(194, 65, 12, 1));
+  box-shadow: 0 0 0 0.5px #CF4D09, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
 .btn-secondary {
   border-radius: 8px;
   border-top: 0.25px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
@@ -92,7 +111,6 @@ button {
   background: var(--main-secondary, rgba(14, 165, 233, 1));
   box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
-
 .btn-secondary:hover {
   border-radius: 8px;
   border-top: 0.25px solid var(--supporting-support, rgba(64, 64, 64, 1));
@@ -112,7 +130,6 @@ button {
   background: var(--main-white, rgba(255, 255, 255, 1));
   box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
-
 .btn-tertiary:hover {
   border-radius: 8px;
   border-top: 0.25px solid var(--supporting-support, rgba(64, 64, 64, 1));
@@ -121,6 +138,18 @@ button {
   border-left: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
   background: var(--main-neutral, rgba(229, 229, 229, 1));
   box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.btn-locked {
+  border-radius: 8px;
+  border-top: 0.25px solid var(--main-neutral, #E5E5E5);
+  border-right: 0.5px solid var(--main-neutral, #E5E5E5);
+  border-bottom: 0.25px solid var(--main-neutral, #E5E5E5);
+  border-left: 0.5px solid var(--main-neutral, #E5E5E5);
+  background: var(--main-white, #FFFFFF);
+  padding-top: 4px;
+  padding-bottom: 4px;
+  color: #737373;
 }
 
 .btn-icon {
@@ -140,4 +169,22 @@ button {
   border-left: 0.5px solid var(--Supporting-Support, #404040);
   background: var(--Main-Neutral, #E5E5E5);
   box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.btn-link1{
+  padding: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  color: #3B82F6;
+}
+
+/* Detail Card */
+.simple-card {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* 12px */
+  border-radius: 0.75rem; /* 12px */
+  background-color: var(--color-main-white);
+  box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.06);
 }
