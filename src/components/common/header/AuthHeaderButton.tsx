@@ -4,12 +4,14 @@ import type { User } from '@supabase/supabase-js';
 import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
 import { Skeleton } from '@/components/ui/skeleton.tsx';
+import CreateHeaderButton from './CreateHeaderButton.tsx';
 
 interface AuthHeaderButtonProps {
   lang: string;
+  componentsColor?: string;
 }
 
-export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
+export default function AuthHeaderButton({ lang, componentsColor = 'bg-main-background' }: AuthHeaderButtonProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -77,7 +79,7 @@ export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
   };
 
   if (loading) {
-    return <Skeleton className="h-10 w-10 rounded-full bg-main-background" />;
+    return <Skeleton className={`h-10 w-10 rounded-full ${componentsColor}`} />;
   }
 
   if (user) {
@@ -87,7 +89,12 @@ export default function AuthHeaderButton({ lang }: AuthHeaderButtonProps) {
 
     console.log('👤 Logged in user:', { firstName, avatarUrl });
 
-    return <DropdownProfile onLogout={handleLogout} name={firstName} avatarUrl={avatarUrl} />;
+    return (
+      <div className="flex items-center gap-4">
+        <CreateHeaderButton lang={lang} />
+        <DropdownProfile onLogout={handleLogout} name={firstName} avatarUrl={avatarUrl} />
+      </div>
+    );
   }
 
   return (

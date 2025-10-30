@@ -1,6 +1,8 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
+import HeaderBar from '../../../components/common/header/HeaderBar.astro';
+import { AdvanceSearch } from '../../../components/common/dropdown/AdvanceSearch';
 import i18n from '../../../i18n/i18n';
 import { getProjects } from '../../../lib/api';
 
@@ -22,32 +24,35 @@ const projects = await getProjects();
 ---
 
 <Layout title={t('home.month.topic')} class="overflow-y-scroll">
-  <section class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
-    <!-- Topic -->
-    <div class="flex flex-col items-center gap-2 text-center">
-      <p>{t('home.month.smallTopic')}</p>
-      <h1>{t('home.month.topic')}</h1>
-      <div class="lead">{t('home.month.subTopic')}</div>
+  <section class="flex w-full flex-col py-6 px-16 gap-10">
+    <HeaderBar lang={lang} componentsColor="bg-main-neutral" />
+    <div class="flex flex-col gap-6">
+      <div class="flex w-full justify-between">
+        <h2>
+          <span>Result for</span>
+          <span class="text-main-primary">Project xxx</span>
+        </h2>
+        <AdvanceSearch client:load/>
+      </div>
+      <div class="flex flex-wrap gap-6 justify-center">
+        {
+          projects.map((p) => (
+            <BigCard
+              t={t}
+              projectImage={p.image}
+              title={p.title}
+              explanation={p.description}
+              likes={p.likes}
+              views={p.views}
+              professors={p.Professors}
+              contributors={p.Contributor}
+              teamName={p.team}
+              link={`/${currentLang}/project/${p.slug}`}
+            />
+          ))
+        }
+      </div>
     </div>
-
-    <!-- List of Cards -->
-    <div class="flex flex-wrap gap-6 justify-center">
-      {
-        projects.map((p) => (
-          <BigCard
-            t={t}
-            projectImage={p.image}
-            title={p.title}
-            explanation={p.description}
-            likes={p.likes}
-            views={p.views}
-            professors={p.Professors}
-            contributors={p.Contributor}
-            teamName={p.team}
-            link={`/${currentLang}/project/${p.slug}`}
-          />
-        ))
-      }
-    </div>
+    
   </section>
 </Layout>
