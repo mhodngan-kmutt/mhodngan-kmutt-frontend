@@ -1,0 +1,12 @@
+---
+const { t, lang, project } = Astro.props;
+---
+
+<section id="ContentProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px] bg-main-white">
+    <div class="flex px-3">
+        <div class="simple-card !w-full px-5 py-5">
+            <h3 class="text-main-neutral2">Project Overview</h3>
+            <p class="text-supporting-support leading-relaxed subtle">{project.description}</p>
+        </div>
+    </div>
+</section>

@@ -110,7 +110,7 @@ button {
   border-bottom: 2px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
   border-left: 0.5px solid var(--supporting-dark-sky, rgba(3, 105, 161, 1));
   background: var(--main-secondary, rgba(14, 165, 233, 1));
-  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 0.5px rgba(3, 105, 161, 1), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
   color: var(--color-main-neutral, rgba(229, 229, 229, 1));
 }
 .btn-secondary:hover {
@@ -120,7 +120,7 @@ button {
   border-bottom: 2px solid var(--supporting-support, rgba(64, 64, 64, 1));
   border-left: 0.5px solid var(--supporting-support, rgba(64, 64, 64, 1));
   background: var(--supporting-dark-sky, rgba(3, 105, 161, 1));
-  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 0.5px rgba(3, 105, 161, 1), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
 
 .btn-tertiary {
@@ -180,7 +180,7 @@ button {
   color: #3B82F6;
 }
 
-/* Detail Card */
+/* Card */
 .simple-card {
   width: 360px;
   display: flex;

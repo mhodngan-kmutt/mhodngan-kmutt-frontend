@@ -1,0 +1,35 @@
+---
+import { Users } from "lucide-react";
+import Avatar from "../../components/common/Avatar";
+
+const { t, lang, project } = Astro.props;
+const contributors = project.Contributor || [];
+---
+
+<section id="ContributorProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px] bg-main-white">
+    <div class="flex px-3">
+        <div class="simple-card !w-full px-5 py-5">
+            <div class="flex items-center gap-2">
+                <Users className="text-main-neutral2"/>
+                <h3 class="text-main-neutral2">Contributors</h3>
+            </div>
+            <div class="flex flex-col gap-3">
+                {
+                    contributors.map((contributor) => (
+                    <div class="flex items-center gap-3">
+                        <Avatar
+                            client:idle
+                            name={contributor.name}
+                            avatar={contributor.avatar}
+                        />
+                        <div class="flex flex-col py-1">
+                            <span class="large">{contributor.name}</span>
+                            <span class="detail">{contributor.role}</span>
+                        </div>
+                    </div>
+                    ))
+                }  
+            </div>  
+        </div>
+    </div>
+</section>

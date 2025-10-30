@@ -1,0 +1,74 @@
+---
+import AvatarGroup from '../common/AvatarGroup';
+import Avatar from '../common/Avatar';
+import HeaderBar from '../common/header/HeaderBar.astro';
+import { Heart, Download } from 'lucide-react';
+
+const { t, lang, project } = Astro.props;
+---
+
+<section id="HeroProjectDetail" class="flex w-full flex-col gap-4 py-6 px-[150px] bg-main-white">
+  <HeaderBar t={t} lang={lang} />
+  <!-- Project metadata -->
+
+  <!-- Project image -->
+  <div class="w-full h-[300px] my-4">
+    <a href={`/${lang}/project/${project.slug}`}>
+      <img
+        src={project.image}
+        alt={project.title}
+        class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
+        loading="lazy"
+      />
+    </a>
+  </div>
+
+  <!-- Project title -->
+  <h2>{project.title}</h2>
+
+  <!-- Project categories -->
+  <div class="flex gap-1 flex-wrap">
+    {project.categories.map((category) => <button class="btn-locked detail">{category}</button>)}
+  </div>
+
+  <!-- Contributor and buttons container -->
+  <div class="flex justify-between items-center">
+    <!-- Contributor information -->
+    <div class="flex flex-col gap-2">
+      <!-- Publisher avatar -->
+      <div class="flex items-center gap-4">
+        <Avatar
+          client:idle
+          name={project.Contributor[0].name}
+          avatar={project.Contributor[0].avatar}
+        />
+        <div style="color: #737373">
+          <span class="small">{project.Contributor[0].name}</span>
+          <span class="detail"> | {project.published}</span>
+        </div>
+      </div>
+
+      <!-- Contributor avatars -->
+      <div class="flex items-center gap-4">
+        <AvatarGroup
+          client:idle
+          contributors={project.Contributor}
+          className="w-6 h-6 -space-x-7"
+        />
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex gap-2">
+        <button class="btn-tertiary">
+            <Heart className='text-main-secondary w-5 h-5'/>
+            <span class="small text-main-secondary">Like</span>
+            <span class="small text-main-secondary"> ({project.likes}) </span>
+        </button>
+        <button class="btn-primary">
+            <Download className='text-main-white w-5 h-5'/>
+            <span class="small text-main-white">Download Project Resource</span> 
+        </button>
+    </div>
+  </div>
+</section>

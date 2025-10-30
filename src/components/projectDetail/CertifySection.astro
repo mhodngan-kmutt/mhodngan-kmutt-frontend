@@ -1,0 +1,41 @@
+---
+import { Award, CheckCircle } from "lucide-react";
+import Avatar from "../../components/common/Avatar";
+
+const { t, lang, project } = Astro.props;
+const professors = project.Professors || [];
+---
+
+<section id="CertifiedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px] bg-main-white">
+    <div class="flex px-3">
+        <div class="simple-card !w-full px-5 py-5">
+            <div class="flex items-center gap-2">
+                <Award className="text-main-neutral2"/>
+                <h3 class="text-main-neutral2">Certified by Professor</h3>
+            </div>
+            <div class="flex flex-col gap-3">
+                {
+                    professors.map((prof) => (
+                    <div class="flex items-center gap-3">
+                        <Avatar
+                            client:idle
+                            name={prof.name}
+                            avatar={prof.avatar}
+                        />
+                        <div class="flex flex-col py-1">
+                            <span class="large">{prof.name}</span>
+                        </div>
+                    </div>
+                    ))
+                }
+                <button 
+                    class="btn-locked !px-2 !py-2 pointer-events-none" 
+                    style="background-color: var(--color-supporting-light-sky); border-color: var(--color-supporting-light-sky);">
+
+                    <CheckCircle className="w-5 h-5 text-supporting-dark-sky"/>
+                    <span class="small text-supporting-dark-sky">Certified Project</span>
+                </button>
+            </div>  
+        </div>
+    </div>
+</section>
