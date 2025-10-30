@@ -115,6 +115,9 @@ jobs:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+          VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
+          VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
+          EXPECTED_USERNAME: ${{ secrets.EXPECTED_USERNAME }}
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
