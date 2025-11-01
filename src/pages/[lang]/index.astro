@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import HeaderBar from '../../components/common/header/HeaderBar.astro';
 import HeroSection from '@/components/home/hero/HeroSection.astro';
 import MonthSection from '@/components/home/month/MonthSection.astro';
 import YearSection from '@/components/home/year/YearSection.astro';
@@ -27,6 +28,7 @@ const t = i18n.t.bind(i18n);
 
 <Layout title="MhodNgan" class="overflow-y-scroll">
   <!-- <AuthTest client:load /> -->
+  <HeaderBar position="relative" t={t} lang={currentLang} componentsColor="main-background" backgroundColor="main-neutral" />
   <HeroSection t={t} lang={currentLang} />
   <MonthSection t={t} lang={currentLang} />
   <YearSection t={t} lang={currentLang} />

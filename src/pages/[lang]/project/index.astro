@@ -24,8 +24,8 @@ const projects = await getProjects();
 ---
 
 <Layout title={t('home.month.topic')} class="overflow-y-scroll">
-  <section class="flex w-full flex-col py-6 px-16 gap-10">
-    <HeaderBar t={t} lang={lang} componentsColor="bg-main-neutral" />
+  <HeaderBar t={t} lang={lang} />
+  <section class="flex w-full flex-col pt-30 py-6 px-16 gap-10">
     <div class="flex flex-col gap-6">
       <div class="flex w-full justify-between">
         <h2>

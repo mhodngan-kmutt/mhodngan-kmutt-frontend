@@ -9,6 +9,7 @@ import ContributorSection from '@/components/projectDetail/ContributorSection.as
 import CertifySection from '@/components/projectDetail/CertifySection.astro';
 import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
+import HeaderBar from '@/components/common/header/HeaderBar.astro';
 
 // generate paths
 export async function getStaticPaths() {
@@ -32,6 +33,7 @@ const project = await getProjectBySlug(slug);
 ---
 
 <Layout title={project.title}>
+  <HeaderBar t={t} lang={lang} />
   <HeroSection t={t} lang={lang} project={project} />
   <ContentSection t={t} lang={lang} project={project} />
   <ExternalLinksSection t={t} lang={lang} project={project} />
