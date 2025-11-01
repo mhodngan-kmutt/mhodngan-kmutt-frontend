@@ -3,10 +3,19 @@ import { Searchbar } from '../../ui/searchbar.tsx';
 import headerLogo from '../../../assets/logo/1.svg';
 import AuthHeaderButton from './AuthHeaderButton.tsx';
 
-const { t, lang, componentsColor } = Astro.props;
+interface Props {
+    t: (key: string) => string;
+    lang: string;
+    position?: string;
+    componentsColor?: string;
+    backgroundColor?: string;
+    mode?: 'default' | 'write';
+}
+
+const { t, lang, position='fixed', componentsColor='main-neutral', backgroundColor='float-background', mode } = Astro.props;
 ---
 
-<header class="flex w-full justify-between items-center gap-3 px-3 py-2">
+<header class={`${position} top-0 z-50 flex w-full justify-between items-center gap-3 px-20 py-5 bg-${backgroundColor}`}>
   <div class="flex w-full gap-x-7 items-center">
     <a href="/" class="flex w-15 h-13 items-center">
       <img src={headerLogo.src} alt="Logo" />
@@ -15,5 +24,5 @@ const { t, lang, componentsColor } = Astro.props;
     <Searchbar className="hidden md:block" placeholder="Search..." componentsColor={componentsColor} client:load />
   </div>
   
-  <AuthHeaderButton client:load signinButtonText={t('header.signin')} lang={lang} componentsColor={componentsColor} />
+  <AuthHeaderButton client:load signinButtonText={t('header.signin')} lang={lang} componentsColor={componentsColor} mode={mode} />
 </header>

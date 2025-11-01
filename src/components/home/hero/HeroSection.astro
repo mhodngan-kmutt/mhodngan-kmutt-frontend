@@ -1,7 +1,6 @@
 ---
 import { getProjectsOfTheMonth } from '@/lib/api';
-import AvatarGroup from '../../common/AvatarGroup';
-import HeaderBar from '../../common/header/HeaderBar.astro';
+import AvatarGroup from '../../common/Avatar/AvatarGroup';
 
 const { t, lang } = Astro.props;
 
@@ -11,7 +10,6 @@ const bestInList = projects[0];
 ---
 
 <section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-16 bg-main-neutral">
-  <HeaderBar t={t} lang={lang} />
   <!-- Project metadata -->
   <div class="flex justify-center items-center gap-2">
     <p>{t('home.hero.topic')}</p>

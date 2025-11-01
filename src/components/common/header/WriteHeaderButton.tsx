@@ -1,22 +1,22 @@
 import React from 'react';
 import WriteIcon from '../../../assets/icons/writeIcon.tsx';
 
-interface CreateHeaderButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface WriteHeaderButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   lang: string;
 }
 
-export default function CreateHeaderButton({
+export default function WriteHeaderButton({
   lang,
-}: CreateHeaderButtonProps) {
+}: WriteHeaderButtonProps) {
   return (
-    <a href={lang === 'th' ? '/th/create' : '/en/create'}>
+    <a href={lang === 'th' ? '/th/writeProject' : '/en/writeProject'}>
       <button
         type="button"
         aria-label="Write Project"
         className="btn-primary flex items-center gap-2"
       >
         <WriteIcon className="w-5 h-5 " />
-        <span className="small">New Project</span>
+        <span className="small">Write Project</span>
       </button>
     </a>
   );

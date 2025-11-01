@@ -8,7 +8,7 @@ interface SearchbarProps extends React.ComponentProps<'input'> {
 }
 
 export function Searchbar({
-  componentsColor = 'bg-main-background',
+  componentsColor,
   className,
   ...props
 }: SearchbarProps) {
@@ -35,7 +35,7 @@ export function Searchbar({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className={cn(
-          `w-full max-w-100 h-10 rounded-md ${componentsColor} pl-10 pr-3 py-1 text-base shadow-xs placeholder:text-neutral-500 selection:bg-primary selection:text-primary-foreground outline-none`,
+          `w-full max-w-100 h-10 rounded-md bg-${componentsColor} pl-10 pr-3 py-1 text-base shadow-xs placeholder:text-neutral-500 selection:bg-primary selection:text-primary-foreground outline-none`,
           'focus-visible:ring-neutral-500 focus-visible:ring-[2px] focus-visible:ring-offset-0',
           'hover:ring-neutral-300 hover:ring-[1px]',
           'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
