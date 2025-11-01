@@ -1,14 +1,13 @@
 ---
-import AvatarGroup from '../common/AvatarGroup';
-import Avatar from '../common/Avatar';
+import AvatarGroup from '../common/Avatar/AvatarGroup';
+import Avatar from '../common/Avatar/Avatar';
 import HeaderBar from '../common/header/HeaderBar.astro';
 import { Heart, Download } from 'lucide-react';
 
 const { t, lang, project } = Astro.props;
 ---
 
-<section id="HeroProjectDetail" class="flex w-full flex-col gap-4 py-6 px-[150px] bg-main-white">
-  <HeaderBar t={t} lang={lang} />
+<section id="HeroProjectDetail" class="flex w-full flex-col gap-4 pt-30 py-6 px-[150px] bg-main-white">
   <!-- Project metadata -->
 
   <!-- Project image -->
@@ -28,7 +27,7 @@ const { t, lang, project } = Astro.props;
 
   <!-- Project categories -->
   <div class="flex gap-1 flex-wrap">
-    {project.categories.map((category) => <button class="btn-locked detail">{category}</button>)}
+    {project.categories.map((category: string) => <button class="btn-locked detail">{category}</button>)}
   </div>
 
   <!-- Contributor and buttons container -->
