@@ -8,15 +8,8 @@ import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
 import { Skeleton } from '@/components/ui/skeleton.tsx';
 import WriteHeaderButton from './WriteHeaderButton.tsx';
-import PublishButton from './PublishButton.tsx'; // 💡 Import PublishButton
-import type { BlockEditorRef } from '../BlockEditor'; // 💡 Import type-only
-
-interface EditorPropsEvent extends CustomEvent {
-  detail: {
-    editorRef: React.RefObject<BlockEditorRef>;
-    title: string;
-  };
-}
+import PublishButton from './PublishButton.tsx';
+import CancelButton from './CancelButton.tsx';
 
 interface AuthHeaderButtonProps {
   lang: string;
@@ -28,9 +21,6 @@ interface AuthHeaderButtonProps {
 export default function AuthHeaderButton({ signinButtonText, lang, componentsColor = 'bg-main-neutral', mode = 'default' }: AuthHeaderButtonProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const [editorRefState, setEditorRefState] = useState<React.RefObject<BlockEditorRef> | undefined>(undefined);
-  const [titleState, setTitleState] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -73,20 +63,10 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
       setLoading(false);
     });
 
-    const handleEditorPropsReady = (event: EditorPropsEvent) => {
-      if (event.detail) {
-        setEditorRefState(event.detail.editorRef);
-        setTitleState(event.detail.title);
-      }
-    };
-
-    // 💡 ฟัง Event เมื่อ Component Mount
-    window.addEventListener('editorPropsReady', handleEditorPropsReady as EventListener);
-
     // 💡 Cleanup Functions
     return () => {
       authListener?.subscription.unsubscribe();
-      window.removeEventListener('editorPropsReady', handleEditorPropsReady as EventListener);
+      // window.removeEventListener('editorPropsReady', handleEditorPropsReady as EventListener);
     };
   }, [lang]);
 
@@ -127,13 +107,10 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
       <div className="flex items-center gap-4">
         {mode === 'write' ? (
           <>
-            <button className="btn-ghost-light">Cancel</button>
-            
-            {editorRefState && titleState !== undefined ? (
-              <PublishButton editorRef={editorRefState} title={titleState} />
-            ) : (
-              <button className="btn-locked">Publish</button>
-            )}
+            <CancelButton
+              onCancel={() => console.log("Writing canceled")}
+            />
+            <PublishButton />
           </>
         ) : (
           <WriteHeaderButton lang={lang} />

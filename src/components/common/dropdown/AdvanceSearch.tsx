@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import FilterIcon from '@/assets/icons/filterIcon';
+import { Settings2Icon } from 'lucide-react';
 import ToggleButton from '../../common/button/ToggleButton';
 import { ChevronDown } from 'lucide-react';
 import i18n from '@/i18n/i18n';
@@ -24,14 +24,14 @@ export function AdvanceSearch() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="btn-icon" type="button" aria-label="Profile Menu">
-            <FilterIcon className="w-5 h-5" />
+            <Settings2Icon size={20} />
             <span className="small">Advance search</span>
         </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-[288px] bg-main-white border border-main-neutral p-3 flex flex-col gap-6" align="end">
         <div className='flex items-center gap-3 justify-start'>
-            <FilterIcon className="w-5 h-5" />
+            <Settings2Icon size={20} />
             <h4>Advance search</h4>
         </div>
         <div className='flex flex-col gap-4'>
