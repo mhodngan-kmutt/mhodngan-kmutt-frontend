@@ -20,11 +20,11 @@ export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfilePr
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="btn-icon" type="button" aria-label="Profile Menu">
-          <Avatar className="w-6 h-6">
+          <Avatar className="w-10 h-10 md:w-6 md:h-6">
             <AvatarImage src={avatarUrl || ''} alt={name} />
             <AvatarFallback>{name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="small">{name}</span>
+          <span className="hidden md:inline-block ml-2 small">{name}</span> {/* This will hide the name on small screens */}
         </button>
       </DropdownMenuTrigger>
 

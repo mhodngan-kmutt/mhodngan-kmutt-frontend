@@ -15,22 +15,3 @@ i18n.changeLanguage(currentLang);
   <HeaderBar t={i18n.t.bind(i18n)} lang={currentLang} mode="write" />
   <BlockEditorWrapper client:load currentLang={currentLang} />
 </Layout>
-
-<script>
-  // 💡 สคริปต์เสริมสำหรับดักจับ Custom Event ในฝั่ง Client
-  // เพื่อให้ AuthHeaderButton (ที่เป็น React Component) เข้าถึง Ref/Title ได้
-  // เราจะแก้ไข AuthHeaderButton ให้ดักจับ Event ด้วยตัวเอง
-
-  if (typeof window !== 'undefined') {
-    window.addEventListener('editorPropsReady', ((event) => {
-        const authButton = document.querySelector('.auth-header-button-container'); 
-        if (authButton) {
-            // 💡 ถ้าใช้ React Hydration (client:load) ใน AuthHeaderButton
-            // เราสามารถส่งข้อมูลไปยัง Component ได้โดยการอัปเดต Props
-            // แต่เนื่องจาก Astro ไม่สนับสนุนการทำเช่นนี้โดยตรง 
-            // เราจะปรับ AuthHeaderButton ให้ดักจับ Event 
-            // และเก็บข้อมูลใน State ของตัวเอง
-        }
-    }) as EventListener);
-  }
-</script>

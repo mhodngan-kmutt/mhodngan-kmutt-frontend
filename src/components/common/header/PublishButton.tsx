@@ -1,62 +1,67 @@
-// PublishButton.tsx (สมมติว่าอยู่ใน components/common/header/)
+// PublishButton.tsx
 'use client';
 
-import type { BlockEditorRef } from '../BlockEditor';
 import { supabase } from '@/lib/supabase';
 
-interface PublishButtonProps {
-  editorRef: React.RefObject<BlockEditorRef>;
-  title: string;
-}
+const TITLE_STORAGE_KEY = 'projectTitle';
+const CONTENT_STORAGE_KEY = 'projectContent';
+const UPLOADED_FILES_KEY = 'uploadedFiles';
 
-export default function PublishButton({ editorRef, title }: PublishButtonProps) {
+export default function PublishButton() {
   const handlePublish = async () => {
-    if (!editorRef.current) {
-      alert("Editor is not ready.");
-      return;
-    }
 
-    if (title.trim() === "") {
+    // 1. อ่าน title และ content จาก localStorage
+    const title = typeof window !== 'undefined' ? localStorage.getItem(TITLE_STORAGE_KEY) : null;
+    const content = typeof window !== 'undefined' ? localStorage.getItem(CONTENT_STORAGE_KEY) : null;
+
+    if (!title || title.trim() === "") {
       alert("Please enter a title.");
       return;
     }
 
+    if (!content || content.trim() === "") {
+      alert("Content is empty.");
+      return;
+    }
+
     try {
-      // 1. ดึงเนื้อหาจาก BlockNote editor ในรูปแบบ JSON string
-      const content = JSON.stringify(editorRef.current.editor.document);
+      const user = (await supabase.auth.getUser()).data.user;
+      if (!user) throw new Error("User not authenticated");
+      
       console.log("📝 Publishing content...", content);
 
-      // // 2. ส่งข้อมูลไปยัง Supabase
-      // const { data, error } = await supabase
-      //   .from('projects')
-      //   .insert([
-      //     {
-      //       title: title,
-      //       content: content,
-      //       badge: 'New', // ควรมีการจัดการ field อื่นๆ ตามเหมาะสม
-      //       status: 'Published'
-      //     },
-      //   ])
-      //   .select();
+      // Insert ลง table
+      const { data, error } = await supabase
+        .from('projects')
+        .insert([
+          {
+            title,
+            content,
+            status: 'Published',
+          },
+        ])
+        .select();
 
-      // if (error) {
-      //   console.error('❌ Supabase publish error:', error);
-      //   alert(`Failed to publish: ${error.message}`);
-      //   return;
-      // }
+      if (error) throw error;
 
-      // console.log('✅ Published successfully:', data);
-      alert('Project published successfully!');
+      // 2. ล้างข้อมูล Draft ทั้งหมดออกจาก localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(TITLE_STORAGE_KEY);
+        localStorage.removeItem(CONTENT_STORAGE_KEY);
+        localStorage.removeItem(UPLOADED_FILES_KEY);
+      }
 
+      alert('✅ Project published successfully!');
+      window.location.reload();
     } catch (e) {
-      console.error('❌ General publish error:', e);
+      console.error('❌ Publish error:', e);
       alert('An unexpected error occurred during publishing.');
     }
   };
 
   return (
     <button className="btn-primary" onClick={handlePublish}>
-      Publish
+      <div className='small'>Publish</div>
     </button>
   );
 }
