@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Toaster } from "@/components/ui/sonner";
 const { title = 'MhodNgan', class: extraClass = '' } = Astro.props;
 ---
 
@@ -17,5 +18,13 @@ const { title = 'MhodNgan', class: extraClass = '' } = Astro.props;
     <main class={`flex flex-col justify-center bg-main-background text-main-neutral2`}>
       <slot />
     </main>
+    <Toaster position="bottom-right" expand richColors visibleToasts={10} client:load
+      toastOptions={{
+        classNames: {
+          title: 'text-xl font-semibold leading[1.4]',
+          description: 'text-sm !text-main-neutral2 font-normal leading-[1.4286]',
+        },
+      }}
+    />
   </body>
 </html>

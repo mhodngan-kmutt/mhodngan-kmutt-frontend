@@ -7,6 +7,7 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner"
 
 const CONTENT_STORAGE_KEY = 'projectContent';
 const UPLOADED_FILES_KEY = 'uploadedFiles';
@@ -38,6 +39,16 @@ async function uploadFile(file: File) {
 
   if (error) {
     console.error('❌ Supabase upload error:', error);
+    let toastMessage = "Failed to upload item: " + error.message;
+
+    if (error.message.includes("exceeded the maximum allowed size")) {
+      toastMessage = `The file "${file.name}" is too large. Please upload a file smaller than the limit (30MB).`;
+    }
+
+    toast.error("Failed to upload item", {
+      description: toastMessage,
+      duration: 10000,
+    });
     throw error;
   }
 
