@@ -2,8 +2,6 @@
 
 This document describes how to deploy the **MhodNgan KMUTT Frontend** project to **Vercel** using **GitHub Actions**.
 
----
-
 ## Overview
 
 - **Framework:** [Astro](https://astro.build)
@@ -12,8 +10,6 @@ This document describes how to deploy the **MhodNgan KMUTT Frontend** project to
 - **Package Manager:** pnpm
 - **Testing:** Vitest (unit), Playwright (E2E)
 - **Linting/Formatting:** ESLint + Prettier
-
----
 
 ## Environment Setup
 
@@ -43,8 +39,6 @@ Optional (for local or private builds):
 | `SUPABASE_SERVICE_ROLE_KEY` | (Optional) For server-side operations |
 | `SUPABASE_JWT_SECRET` | (Optional) JWT validation secret |
 
----
-
 ## GitHub Actions Workflow
 
 Deployment is handled automatically via the workflow in  
@@ -57,8 +51,6 @@ Deployment is handled automatically via the workflow in
 | `dev` | Preview deploy to Vercel |
 | `setup-*` | Temporary/Setup branch deploy |
 | `pull_request` | Deploys preview for PRs |
-
----
 
 ## Workflow Summary
 
@@ -74,8 +66,6 @@ Deployment is handled automatically via the workflow in
 - Run E2E tests  
 - Upload test report to GitHub Actions artifacts  
 - Deploy to Vercel (Production or Preview depending on branch)
-
----
 
 ## Manual Deployment (Optional)
 
@@ -97,8 +87,6 @@ PUBLIC_SUPABASE_URL=...
 PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
----
-
 ## Post-deployment Check
 
 After successful deployment:
@@ -108,8 +96,6 @@ After successful deployment:
 3. Verify pages and localization load properly
 4. Run `pnpm preview` locally if you need to debug production builds
 
----
-
 ## Troubleshooting
 
 | Issue                   | Possible Fix                                              |
@@ -118,8 +104,6 @@ After successful deployment:
 | 403 or 401 Errors    | Verify Supabase keys are set correctly in GitHub Secrets  |
 | Playwright timeout   | Increase timeout in `playwright.config.ts` or run locally |
 | Environment mismatch | Ensure `.env` matches GitHub Secrets values               |
-
----
 
 ## References
 

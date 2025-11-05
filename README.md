@@ -9,25 +9,21 @@
   <a href="https://mhodngan.vercel.app/en">📎 Explore the web »</a>
 </p>
 
----
-
-## 📖 Overview
+## Overview
 
 Frontend web application built with **Astro + React + TailwindCSS**, connected to **Supabase**.  
 This project powers the **MhodNgan KMUTT** platform for managing and publishing student projects.
 
 
-- ⚡ Framework: **Astro**
-- 🧩 Components: **React (via @astrojs/react)** + **shadcn/ui**
-- 🎨 Styling: **TailwindCSS + tailwind-merge**
-- 🪣 Backend: **Supabase**
-- 🌍 Hosting: **Vercel**
-- 🧪 Testing: **Vitest** + **Playwright**
-- 🧹 Code Quality: **ESLint** + **Prettier** + **Husky**
+- Framework: **Astro**
+- Components: **React (via @astrojs/react)** + **shadcn/ui**
+- Styling: **TailwindCSS + tailwind-merge**
+- Backend: **Supabase**
+- Hosting: **Vercel**
+- Testing: **Vitest** + **Playwright**
+- Code Quality: **ESLint** + **Prettier** + **Husky**
 
----
-
-## 🧱 Project Structure
+## Project Structure
 
 ````
 
@@ -45,9 +41,7 @@ This project powers the **MhodNgan KMUTT** platform for managing and publishing 
 
 ````
 
----
-
-## 🧑‍💻 Developer Guide
+## Developer Guide
 
 ### 1. Setup
 
@@ -97,18 +91,14 @@ pnpm build
 pnpm preview
 ```
 
----
-
-## 🚀 Deployment
+## Deployment
 
 This project is deployed automatically via **GitHub Actions** → **Vercel**.
 Every push to `main` or `dev` triggers deployment.
 
 📄 See [`DEPLOY.md`](./DEPLOY.md) for full deployment details.
 
----
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork this repo
 2. Create a new branch:
@@ -125,9 +115,7 @@ Every push to `main` or `dev` triggers deployment.
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
----
-
-## 🧭 Learn More
+## Learn More
 
 * [Astro Documentation](https://docs.astro.build)
 * [Supabase Docs](https://supabase.com/docs)
