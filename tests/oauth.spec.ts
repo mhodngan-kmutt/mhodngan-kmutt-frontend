@@ -34,15 +34,8 @@ test('Open browser, go to MhodNgan then sign-in/sign-out', async ({ page }) => {
   // Attempt sign-in
   await signIn();
 
-  // Wait for profile button
-  const profileButton = page.getByRole('button', { name: 'Profile Menu' });
-
-  if (!(await profileButton.isVisible({ timeout: 5000 }))) {
-    console.log('Profile button not visible, retrying sign-in...');
-    await signIn();
-  }
-
   // Final assertions
+  const profileButton = page.getByLabel('Profile Menu');
   await expect(profileButton).toBeVisible({ timeout: 10000 });
   await expect(profileButton).toHaveText(EXPECTED_USERNAME);
 });

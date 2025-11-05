@@ -109,8 +109,8 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: pnpm test
+      - name: Run Playwright tests (headed)
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' pnpm test
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
