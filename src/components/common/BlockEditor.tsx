@@ -5,13 +5,15 @@ import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
+import { forwardRef, useImperativeHandle, useState, useEffect, useRef, useCallback } from "react"; // 💡 เพิ่ม useCallback และ useRef
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner"
 
 const CONTENT_STORAGE_KEY = 'projectContent';
 const UPLOADED_FILES_KEY = 'uploadedFiles';
+const DEBOUNCE_DELAY = 1000; // 1 วินาทีสำหรับการ Debounce
 
+// ... getInitialContent, uploadFile, getActiveFilePaths (ใช้โค้ดเดิม) ...
 const getInitialContent = () => {
   if (typeof window !== "undefined") {
     const storedContent = localStorage.getItem(CONTENT_STORAGE_KEY);
@@ -62,30 +64,23 @@ export interface BlockEditorRef {
   uploadedFiles: string[];
 }
 
-// Check the files that are actually in use
 function getActiveFilePaths(document: PartialBlock[]): string[] {
   const activePaths: string[] = [];
-  const publicUrlPrefix = supabase.storage.from("Published").getPublicUrl('').data.publicUrl;
+  // Check for window existence before accessing global object
+  const publicUrlPrefix = typeof window !== "undefined"
+    ? supabase.storage.from("Published").getPublicUrl('').data.publicUrl
+    : '';
 
   const traverse = (blocks: PartialBlock[]) => {
     for (const block of blocks) {
-      // 1. ตรวจสอบ Block Type ที่อาจมีไฟล์ (เช่น image, file, custom block)
       if (block.type === 'image' && block.props?.url) {
         const url = block.props.url as string;
-        // 💡 แปลง Public URL กลับเป็น File Path
-        if (url.startsWith(publicUrlPrefix)) {
-          // ดึงเฉพาะส่วนท้ายที่เป็น filePath
+        if (publicUrlPrefix && url.startsWith(publicUrlPrefix)) { // 💡 เพิ่มเงื่อนไข publicUrlPrefix เพื่อความปลอดภัย
           const filePath = url.substring(publicUrlPrefix.length);
           activePaths.push(filePath);
         }
       }
 
-      // 2. ตรวจสอบ Content ภายใน Block (ถ้ามี)
-      if (block.content && Array.isArray(block.content)) {
-        // สำหรับ Inline content ที่อาจมีไฟล์ (BlockNote image/file blocks มักใช้ props.url)
-      }
-
-      // 3. ตรวจสอบ Nested Blocks (ถ้า BlockNote รองรับ)
       if (block.children && Array.isArray(block.children)) {
         traverse(block.children);
       }
@@ -95,6 +90,7 @@ function getActiveFilePaths(document: PartialBlock[]): string[] {
   traverse(document);
   return activePaths;
 }
+// ... interface และ getActiveFilePaths (ใช้โค้ดเดิม) ...
 
 const BlockEditor = forwardRef<BlockEditorRef>(function BlockEditor(props, ref) {
   if (typeof window === "undefined") return null;
@@ -108,26 +104,10 @@ const BlockEditor = forwardRef<BlockEditorRef>(function BlockEditor(props, ref) 
     return [];
   });
 
-  // 2. Custom upload function: บันทึกรายชื่อไฟล์ลง localStorage ด้วย
-  const customUploadFile = async (file: File) => {
-    const { publicUrl, filePath } = await uploadFile(file);
-
-    // อัปเดต state และ localStorage ด้วย path ของไฟล์ใหม่
-    setUploadedFiles(prev => {
-      const newFiles = [...prev, filePath];
-      console.log('--- DEBUG: UPLOAD ---');
-      console.log('✅ File uploaded and added to uploadedFiles state:', filePath);
-      console.log('📦 New uploadedFiles state:', newFiles);
-      console.log('-----------------------');
-      return newFiles;
-    });
-
-    console.log('✅ File uploaded and saved to localStorage:', filePath);
-    return publicUrl;
-  };
-
+  // 💡 Ref เพื่อเก็บค่า Editor
   const editor = useCreateBlockNote({
     initialContent: getInitialContent(),
+    // ... schema และ config เดิม ...
     placeholders: {
       emptyDocument: "Start typing..",
       heading: "Start typing..",
@@ -135,6 +115,7 @@ const BlockEditor = forwardRef<BlockEditorRef>(function BlockEditor(props, ref) 
     schema: BlockNoteSchema.create().extend({
       blockSpecs: {
         heading: createHeadingBlockSpec({
+          allowToggleHeadings: false,
           levels: [1, 2, 3],
         }),
       },
@@ -145,60 +126,91 @@ const BlockEditor = forwardRef<BlockEditorRef>(function BlockEditor(props, ref) 
       cellTextColor: true,
       headers: true,
     },
-    uploadFile: customUploadFile,
+    uploadFile: async (file: File) => { // 💡 ย้าย customUploadFile มาอยู่ตรงนี้และแก้ไขการจัดการ State
+      const { publicUrl, filePath } = await uploadFile(file);
+
+      // อัปเดต State และ Local Storage ในการเรียก setUploadedFiles ครั้งเดียว
+      setUploadedFiles(prev => {
+        const newFiles = [...prev, filePath];
+        localStorage.setItem(UPLOADED_FILES_KEY, JSON.stringify(newFiles));
+        console.log('--- DEBUG: UPLOAD ---');
+        console.log('✅ File uploaded and added to uploadedFiles state:', filePath);
+        console.log('📦 New uploadedFiles state:', newFiles);
+        console.log('-----------------------');
+        return newFiles;
+      });
+
+      return publicUrl;
+    }
   });
+
+  // 💡 ฟังก์ชัน Debounce สำหรับ Logic การจัดการไฟล์
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 💡 ใช้ useCallback เพื่อสร้างฟังก์ชันที่เสถียรสำหรับ Logic การจัดการไฟล์
+  const cleanupFiles = useCallback(async (currentDocument: PartialBlock[]) => {
+    // 1. บันทึก Content ลง Local Storage
+    localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(currentDocument));
+    console.log("📝 Block Editor content saved to localStorage.");
+
+    // 2. ตรวจสอบไฟล์ที่ยังคงใช้งานอยู่ใน Document
+    const activePaths = getActiveFilePaths(currentDocument);
+    const currentUploadedFiles = JSON.parse(localStorage.getItem(UPLOADED_FILES_KEY) || '[]'); // 💡 อ่านจาก LocalStorage โดยตรง
+
+    console.log('--- DEBUG: CLEANUP START (Debounced) ---');
+    console.log('📂 currentUploadedFiles (Local Storage):', currentUploadedFiles);
+    console.log('✅ activePaths (Files ที่ยังอยู่ใน Editor):', activePaths);
+
+    // 3. เปรียบเทียบและลบไฟล์ที่ไม่ได้ใช้งานแล้ว
+    const filesToDelete = currentUploadedFiles.filter((path: string) => !activePaths.includes(path));
+
+    if (filesToDelete.length > 0) {
+      try {
+        const { error } = await supabase.storage.from("Published").remove(filesToDelete);
+
+        if (error) {
+          console.error("❌ Error deleting unused files:", error);
+        } else {
+          console.log("🗑️ Unused files deleted from Supabase:", filesToDelete);
+
+          // 4. อัปเดต State และ Local Storage (Files) หลังการลบ
+          const newUploadedFiles = currentUploadedFiles.filter((path: string) => !filesToDelete.includes(path));
+          setUploadedFiles(newUploadedFiles);
+          localStorage.setItem(UPLOADED_FILES_KEY, JSON.stringify(newUploadedFiles));
+          console.log('📦 uploadedFiles (State & LocalStorage หลังการลบ):', newUploadedFiles);
+        }
+      } catch (e) {
+        console.error("❌ Unused file deletion failed:", e);
+      }
+    }
+    console.log('--- DEBUG: CLEANUP END (Debounced) ---');
+  }, []); // 💡 ไม่มี dependencies เพื่อให้ฟังก์ชันเสถียร
 
   useEffect(() => {
     const listener = editor.onChange(() => {
       if (typeof window !== "undefined") {
         const currentDocument = editor.document;
 
-        // 1. บันทึก Content ลง Local Storage
-        localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(currentDocument));
-        console.log("📝 Block Editor content saved to localStorage.");
-
-        // 2. ตรวจสอบไฟล์ที่ยังคงใช้งานอยู่ใน Document
-        const activePaths = getActiveFilePaths(currentDocument);
-        console.log('--- DEBUG: ON CHANGE START ---');
-        console.log('📂 uploadedFiles (State ก่อนการลบ):', uploadedFiles);
-        console.log('✅ activePaths (Files ที่ยังอยู่ใน Editor):', activePaths);
-
-        // 3. เปรียบเทียบและลบไฟล์ที่ไม่ได้ใช้งานแล้ว
-        // filesToDelete = ไฟล์ที่อยู่ใน uploadedFiles แต่ไม่อยู่ใน activePaths
-        const filesToDelete = uploadedFiles.filter(path => !activePaths.includes(path));
-
-        if (filesToDelete.length > 0) {
-          supabase.storage.from("Published").remove(filesToDelete)
-            .then(({ error }) => {
-              if (error) {
-                console.error("❌ Error deleting unused files:", error);
-              } else {
-                console.log("🗑️ Unused files deleted from Supabase:", filesToDelete);
-
-                // 4. อัปเดต State และ Local Storage (Files) หลังการลบ
-                const newUploadedFiles = activePaths;
-                setUploadedFiles(newUploadedFiles);
-                localStorage.setItem(UPLOADED_FILES_KEY, JSON.stringify(newUploadedFiles));
-                console.log('📦 uploadedFiles (State หลังการลบ):', newUploadedFiles);
-              }
-            })
-            .catch(e => console.error("❌ Unused file deletion failed:", e));
-        } else {
-          // หากไม่มีไฟล์ที่ต้องลบ, ให้บันทึก uploadedFiles state ล่าสุดลง localStorage
-          if (uploadedFiles.length !== activePaths.length || !uploadedFiles.every((val, index) => val === activePaths[index])) {
-            setUploadedFiles(activePaths);
-            localStorage.setItem(UPLOADED_FILES_KEY, JSON.stringify(activePaths));
-            console.log('📦 uploadedFiles (State Updated to activePaths):', activePaths);
-          }
+        // 💡 ล้าง Debounce เก่า
+        if (debounceRef.current) {
+          clearTimeout(debounceRef.current);
         }
+
+        // 💡 ตั้งเวลาเรียก cleanupFiles (รวมถึงการบันทึก content) หลังหยุดพิมพ์/แก้ไข 1 วินาที
+        debounceRef.current = setTimeout(() => {
+          cleanupFiles(currentDocument);
+        }, DEBOUNCE_DELAY);
       }
     });
 
-    // Cleanup listener on unmount
+    // Cleanup listener และ Debounce timer on unmount
     return () => {
       listener();
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
     };
-  }, [editor, uploadedFiles]);
+  }, [editor, cleanupFiles]); // 💡 cleanupFiles เป็น dependency แต่เป็น useCallback ที่เสถียร
 
   useImperativeHandle(ref, () => ({
     editor: editor,
