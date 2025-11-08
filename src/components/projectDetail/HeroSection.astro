@@ -3,8 +3,11 @@ import AvatarGroup from '../common/Avatar/AvatarGroup';
 import Avatar from '../common/Avatar/Avatar';
 import HeaderBar from '../common/header/HeaderBar.astro';
 import { Heart, Download } from 'lucide-react';
+import { LikeButton } from '../common/button/LikeButton';
 
-const { t, lang, project } = Astro.props;
+const { t, lang, project, userContext } = Astro.props;
+
+const { userLiked } = userContext;
 ---
 
 <section id="HeroProjectDetail" class="flex w-full flex-col gap-4 pt-30 py-6 px-[150px] bg-main-white">
@@ -41,7 +44,7 @@ const { t, lang, project } = Astro.props;
           name={project.Contributor[0].name}
           avatar={project.Contributor[0].avatar}
         />
-        <div style="color: #737373">
+        <div class="text-supporting-ghost">
           <span class="small">{project.Contributor[0].name}</span>
           <span class="detail"> | {project.published}</span>
         </div>
@@ -59,11 +62,20 @@ const { t, lang, project } = Astro.props;
 
     <!-- Action buttons -->
     <div class="flex gap-2">
-        <button class="btn-tertiary">
+        <!-- Like button -->
+        <!-- <button class="btn-tertiary">
             <Heart className='text-main-secondary w-5 h-5'/>
             <span class="small text-main-secondary">Like</span>
             <span class="small text-main-secondary"> ({project.likes}) </span>
-        </button>
+        </button> -->
+        <LikeButton
+          client:load
+          projectId={project.id}
+          initialLikes={project.likes}
+          initialLiked={userLiked}
+        />
+
+        <!-- Download button -->
         <button class="btn-primary">
             <Download className='text-main-white w-5 h-5'/>
             <span class="small text-main-white">Download Project Resource</span> 

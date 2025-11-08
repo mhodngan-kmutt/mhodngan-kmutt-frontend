@@ -10,6 +10,7 @@ import CertifySection from '@/components/projectDetail/CertifySection.astro';
 import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
 import HeaderBar from '@/components/common/header/HeaderBar.astro';
+import { supabase } from '@/lib/supabase';
 
 // generate paths
 export async function getStaticPaths() {
@@ -30,15 +31,62 @@ i18n.changeLanguage(currentLang);
 const t = i18n.t.bind(i18n);
 
 const project = await getProjectBySlug(slug);
+
+// Initialize user context variables
+let userLiked = false;
+let isProfessor = false;
+let currentUser = null;
+let userProfile = null;
+
+// Get comprehensive user data in one place
+try {
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (session?.user) {
+    currentUser = session.user;
+    
+    // Get user profile including role
+    const { data: profile } = await supabase
+      .from('user_profiles') // Adjust table name based on your schema
+      .select('role, name, avatar')
+      .eq('user_id', session.user.id)
+      .single();
+    
+    userProfile = profile;
+    isProfessor = profile?.role === 'professor';
+    
+    // Check if user has liked this project
+    const { data: likeData } = await supabase
+      .from('project_likes')
+      .select('id')
+      .eq('project_id', project.id)
+      .eq('user_id', session.user.id)
+      .single();
+    
+    userLiked = !!likeData;
+  }
+} catch (error) {
+  console.error('Error fetching user data:', error);
+  // Keep default values (false)
+}
+
+// Create user context object to pass to components
+const userContext = {
+  isAuthenticated: !!currentUser,
+  isProfessor,
+  userLiked,
+  user: currentUser,
+  profile: userProfile
+};
 ---
 
 <Layout title={project.title}>
   <HeaderBar t={t} lang={lang} />
-  <HeroSection t={t} lang={lang} project={project} />
+  <HeroSection t={t} lang={lang} project={project} userContext={userContext}/>
   <ContentSection t={t} lang={lang} project={project} />
   <ExternalLinksSection t={t} lang={lang} project={project} />
   <ContributorSection t={t} lang={lang} project={project} />
-  <CertifySection t={t} lang={lang} project={project} />
-  <CommentSection t={t} lang={lang} project={project} />
+  <CertifySection t={t} lang={lang} project={project} userContext={userContext}/>
+  <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>
