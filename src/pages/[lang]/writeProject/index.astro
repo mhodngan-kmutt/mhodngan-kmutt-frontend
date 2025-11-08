@@ -11,7 +11,7 @@ const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
 ---
 
-<Layout title="Profile">
+<Layout title="Write Project">
   <HeaderBar t={i18n.t.bind(i18n)} lang={currentLang} mode="write" />
   <BlockEditorWrapper client:load currentLang={currentLang} />
 </Layout>

@@ -1,7 +1,14 @@
 ---
 import '../styles/global.css';
 import { Toaster } from "@/components/ui/sonner";
-const { title = 'MhodNgan', class: extraClass = '' } = Astro.props;
+
+const {
+  title = 'MhodNgan | Student Project Platform',
+  description = 'Discover, share, and publish student projects from KMUTT with MhodNgan — an academic innovation showcase platform.',
+  url = 'https://mhodngan.vercel.app',
+  image = '/images/og-image.webp',
+  class: extraClass = '',
+} = Astro.props;
 ---
 
 <html lang="en">
@@ -9,19 +16,59 @@ const { title = 'MhodNgan', class: extraClass = '' } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+
+    <!-- ✅ Primary Meta Tags -->
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content="KMUTT, student project, showcase, academic, research, innovation, MhodNgan" />
+    <meta name="author" content="KMUTT Students" />
+
+    <!-- ✅ Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
+    <!-- ✅ Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+
+    <!-- ✅ Favicon & Fonts -->
+    <link rel="icon" type="image/svg+xml" href="/logo/1.svg" />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- ✅ Canonical URL -->
+    <link rel="canonical" href={url} />
+
+    <!-- ✅ Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ✅ Robots -->
+    <meta name="robots" content="index, follow" />
   </head>
-  <body class="min-h-screen ${extraClass}">
-    <main class={`flex flex-col justify-center bg-main-background text-main-neutral2`}>
+
+  <body class={`min-h-screen ${extraClass}`}>
+    <main class="flex flex-col justify-center bg-main-background text-main-neutral2">
       <slot />
     </main>
-    <Toaster position="bottom-right" expand richColors visibleToasts={10} client:load
+
+    <Toaster
+      position="bottom-right"
+      expand
+      richColors
+      visibleToasts={10}
+      client:load
       toastOptions={{
         classNames: {
-          title: 'text-xl font-semibold leading[1.4]',
+          title: 'text-xl font-semibold leading-[1.4]',
           description: 'text-sm !text-main-neutral2 font-normal leading-[1.4286]',
         },
       }}
