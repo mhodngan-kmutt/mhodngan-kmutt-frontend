@@ -164,6 +164,8 @@ button {
 .btn-icon {
   padding: 0px;
   border-radius: calc(infinity * 1px);
+  border: 0.25px solid var(--main-neutral, #E5E5E5);
+  background: var(--main-white, #FFF);
 }
 
 .btn-icon:hover {
