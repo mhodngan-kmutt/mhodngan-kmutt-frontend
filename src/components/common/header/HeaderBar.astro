@@ -13,9 +13,16 @@ interface Props {
 }
 
 const { t, lang, position='fixed', componentsColor='main-neutral', backgroundColor='float-background', mode } = Astro.props;
+
+const backgroundClasses: Record<string, string> = {
+  'float-background': 'bg-float-background',
+  'float-neutral-background': 'bg-float-neutral-background',
+};
+
+const backgroundClass = backgroundClasses[backgroundColor] || 'bg-float-background';
 ---
 
-<header class={`${position} top-0 z-50 flex w-full justify-between items-center gap-3 px-20 py-5 bg-${backgroundColor}`}>
+<header class={`${position} top-0 z-50 flex w-full justify-between items-center gap-3 px-20 py-5 ${backgroundClass}`}>
   <div class="flex w-full gap-x-7 items-center">
     <a href="/" class="flex w-15 h-13 items-center">
       <img src={headerLogo.src} alt="Logo" />
