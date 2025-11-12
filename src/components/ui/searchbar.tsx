@@ -5,11 +5,13 @@ import { cn } from '@/lib/utils';
 interface SearchbarProps extends React.ComponentProps<'input'> {
   componentsColor?: string;
   classname?: string;
+  lang: string;
 }
 
 export function Searchbar({
   componentsColor,
   className,
+  lang,
   ...props
 }: SearchbarProps) {
   const [value, setValue] = React.useState('');
@@ -17,7 +19,7 @@ export function Searchbar({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!value) return;
-    window.location.href = `/en/project/${encodeURIComponent(value)}`;
+    window.location.href = `/${lang}/project?q=${encodeURIComponent(value)}`;
   };
 
   return (
@@ -25,7 +27,7 @@ export function Searchbar({
       {/* Clickable Search icon */}
       <button
         type="submit"
-        className="absolute inset-y-0 left-0 flex items-center justify-center ml-1 my-2.5 text-muted-foreground hover:text-neutral-800"
+        className="absolute inset-y-0 left-0 flex items-center justify-center my-2.5 text-muted-foreground hover:text-neutral-800"
       >
         <Search className="w-5 h-5 text-neutral-500 hover:text-neutral-800" />
       </button>
