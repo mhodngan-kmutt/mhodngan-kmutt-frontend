@@ -57,7 +57,7 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 // Fetch single project by ID from backend
-export async function getProjectById(id: string | number): Promise<Project> {
+export async function getProjectById(id: string): Promise<Project> {
   try {
     const response = await fetch(`${API_BASE_URL}/project/${id}`);
     
@@ -76,6 +76,24 @@ export async function getProjectById(id: string | number): Promise<Project> {
     
   } catch (error) {
     console.error(`Error fetching project ${id}:`, error);
+  }
+}
+
+// Fetch certification info. by project Id
+export async function getCertifyByProjectId(id: string) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/projects/${id}/certifications`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch certification info: ${response.status}`);
+    }
+
+    const certification = await response.json();
+    
+    return certification;
+
+  } catch (error) {
+    console.error(`Error fetching certification info. of project ${id}:`, error);
   }
 }
 
