@@ -3,8 +3,22 @@ import AvatarGroup from '../common/Avatar/AvatarGroup';
 import Avatar from '../common/Avatar/Avatar';
 import HeaderBar from '../common/header/HeaderBar.astro';
 import { Heart, Download } from 'lucide-react';
+import { LikeButton } from '../common/button/LikeButton';
+import { formatDate } from '../../lib/dateFormat';
 
-const { t, lang, project } = Astro.props;
+const { t, lang, project, userContext } = Astro.props;
+
+// Decompose project
+const projectId = project?.projectId || '';
+const projectTitle = project?.title || 'Untitled Project';
+const projectPreviewImageUrl = project?.previewImageUrl || '/default-image.jpg';
+const projectCategories = project?.categories || [];
+const contributors = project?.contributors || [];
+const likeCount = project?.likeCount || 0;
+const createdAt = formatDate(project?.createdAt || 'Unknown date');
+
+// Decompose user data
+const { userLiked } = userContext;
 ---
 
 <section id="HeroProjectDetail" class="flex w-full flex-col gap-4 pt-30 py-6 px-[150px]">
@@ -14,8 +28,8 @@ const { t, lang, project } = Astro.props;
   <div class="w-full h-[300px] my-4">
     <a href={`/${lang}/project/${project.slug}`}>
       <img
-        src={project.image}
-        alt={project.title}
+        src={projectPreviewImageUrl}
+        alt={projectTitle}
         class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
         loading="lazy"
       />
@@ -23,11 +37,15 @@ const { t, lang, project } = Astro.props;
   </div>
 
   <!-- Project title -->
-  <h2>{project.title}</h2>
+  <h2>{projectTitle}</h2>
 
   <!-- Project categories -->
   <div class="flex gap-1 flex-wrap">
-    {project.categories.map((category: string) => <button class="btn-locked detail">{category}</button>)}
+    {projectCategories.map((category : any) => (
+      <button class="btn-locked detail ">
+        {category.categoryName}
+      </button>
+    ))}
   </div>
 
   <!-- Contributor and buttons container -->
@@ -37,21 +55,21 @@ const { t, lang, project } = Astro.props;
       <!-- Publisher avatar -->
       <div class="flex items-center gap-4">
         <Avatar
-          client:idle
-          name={project.Contributor[0].name}
-          avatar={project.Contributor[0].avatar}
+          client:load
+          name={contributors[0].fullname}
+          avatar={contributors[0].profileImageUrl}
         />
-        <div style="color: #737373">
-          <span class="small">{project.Contributor[0].name}</span>
-          <span class="detail"> | {project.published}</span>
+        <div class="text-supporting-ghost">
+          <span class="small">{contributors[0].fullname}</span>
+          <span class="detail"> | {createdAt}</span>
         </div>
       </div>
 
       <!-- Contributor avatars -->
       <div class="flex items-center gap-4">
         <AvatarGroup
-          client:idle
-          contributors={project.Contributor}
+          client:load
+          contributors={contributors}
           className="w-6 h-6 -space-x-7"
         />
       </div>
@@ -59,11 +77,15 @@ const { t, lang, project } = Astro.props;
 
     <!-- Action buttons -->
     <div class="flex gap-2">
-        <button class="btn-tertiary">
-            <Heart className='text-main-secondary w-5 h-5'/>
-            <span class="small text-main-secondary">Like</span>
-            <span class="small text-main-secondary"> ({project.likes}) </span>
-        </button>
+        <!-- Like button -->
+        <LikeButton
+          client:load
+          projectId={projectId}
+          initialLikes={likeCount}
+          initialLiked={userLiked}
+        />
+
+        <!-- Download button -->
         <button class="btn-primary">
             <Download className='text-main-white w-5 h-5'/>
             <span class="small text-main-white">Download Project Resource</span> 

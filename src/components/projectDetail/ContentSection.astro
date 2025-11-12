@@ -1,12 +1,14 @@
 ---
 const { t, lang, project } = Astro.props;
+
+const content = project.content || 'The author didn\'t provide the project content';
 ---
 
 <section id="ContentProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex px-3">
-        <div class="simple-card !w-full px-5 py-5">
+        <div class="simple-card w-full! px-5 py-5">
             <h3 class="text-main-neutral2">Project Overview</h3>
-            <p class="text-supporting-support leading-relaxed subtle">{project.description}</p>
+            <p class="text-supporting-support leading-relaxed subtle">{content}</p>
         </div>
     </div>
 </section>

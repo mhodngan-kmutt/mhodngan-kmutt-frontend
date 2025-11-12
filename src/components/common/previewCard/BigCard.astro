@@ -11,20 +11,17 @@ const {
   views,
   professors,
   contributors,
-  teamName,
   link,
 } = Astro.props;
 ---
 
 <a href={link} class="block hover:shadow-lg transition-shadow rounded-xl">
-  <div
-    class="w-[360px] flex flex-col gap-3 p-2.5 rounded-xl bg-main-white shadow-[0_0_16px_0_rgba(0,0,0,0.06)]"
-  >
-    <div class="relative h-[160px] w-full rounded-xl overflow-hidden">
+  <div class="w-[360px] flex flex-col gap-3 p-2.5 rounded-xl bg-main-white shadow-[0_0_16px_0_rgba(0,0,0,0.06)]">
+    <div class="relative h-[160px] w-full rounded-xl overflow-hidden flex items-center justify-center">
       <img
-        src={projectImage}
+        src={projectImage || '/images/mocks/ProjectImageMocks-2.png'}
         alt={title}
-        class="absolute inset-0 w-full h-full object-cover object-top rounded-xl transition duration-300 hover:scale-105"
+        class="w-full h-full object-cover object-center rounded-xl transition duration-300 hover:scale-105"
         loading="lazy"
       />
     </div>
@@ -32,7 +29,7 @@ const {
       <h4 class="truncate">{title}</h4>
     </div>
     <div class="w-full pl-1.5 pr-4">
-      <div class="text-supporting-support">{explanation}</div>
+      <div class="text-supporting-support h-[50px] line-clamp-2">{explanation}</div>
     </div>
     <div class="w-full flex justify-between items-center px-1.5">
       <div class="flex items-center gap-1.5">
@@ -57,7 +54,7 @@ const {
         <AvatarGroup client:load contributors={contributors} />
         <div class="w-full gap-1">
           <div class="small">{t('card.contributors')}</div>
-          <div class="detail text-supporting-support">{teamName}</div>
+          <div class="detail text-supporting-support">@cpe, kmutt</div>
         </div>
       </div>
     </div>

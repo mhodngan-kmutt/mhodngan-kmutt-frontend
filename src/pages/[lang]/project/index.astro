@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import Layout from '../../../layouts/Layout.astro';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
 import HeaderBar from '../../../components/common/header/HeaderBar.astro';
@@ -6,7 +7,7 @@ import { AdvanceSearch } from '../../../components/common/dropdown/AdvanceSearch
 import i18n from '../../../i18n/i18n';
 import { getProjects } from '../../../lib/api';
 
-// generate paths
+// dynamic paths
 export async function getStaticPaths() {
   const languages = ['en', 'th'];
   return languages.map((lang) => ({
@@ -14,45 +15,79 @@ export async function getStaticPaths() {
   }));
 }
 
-// load params and project
+// get params and query
 const { lang } = Astro.params;
 const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
 const t = i18n.t.bind(i18n);
 
-const projects = await getProjects();
+const q = Astro.url.searchParams.get('q') || undefined;
+const badge = Astro.url.searchParams.get('badge') || undefined;
+const status = Astro.url.searchParams.get('status') || undefined;
+const from = Astro.url.searchParams.get('from') || undefined;
+const to = Astro.url.searchParams.get('to') || undefined;
+const contributors = Astro.url.searchParams.get('contributors') || undefined;
+
+const orderBy = q
+  ? 'like_count'
+  : (Astro.url.searchParams.get('orderBy') as
+      | 'created_at'
+      | 'updated_at'
+      | 'title'
+      | 'like_count'
+      | 'view_count'
+      | 'monthly_like_count'
+      | 'monthly_view_count'
+      | 'yearly_like_count'
+      | 'yearly_view_count') || 'updated_at';
+
+const order = (Astro.url.searchParams.get('order') as 'asc' | 'desc') || 'desc';
+
+const { meta, data: projects } = await getProjects({
+  q,
+  badge,
+  status,
+  from,
+  to,
+  contributors,
+  orderBy,
+  order,
+});
 ---
 
 <Layout title={t('home.month.topic')} class="overflow-y-scroll">
   <HeaderBar t={t} lang={lang} />
   <section class="flex w-full flex-col pt-30 py-6 px-16 gap-10">
     <div class="flex flex-col gap-6">
-      <div class="flex w-full justify-between">
+      <div class="flex w-full justify-between items-center">
         <h2>
-          <span>Result for</span>
-          <span class="text-main-primary">Project xxx</span>
+          {q ? (
+            <>
+              <span>Result for </span>
+              <span class="text-main-primary">"{q}"</span>
+            </>
+          ) : (
+            <span>All Projects</span>
+          )}
         </h2>
-        <AdvanceSearch client:load/>
+        <AdvanceSearch client:load />
       </div>
+
       <div class="flex flex-wrap gap-6 justify-center">
-        {
-          projects.map((p) => (
-            <BigCard
-              t={t}
-              projectImage={p.image}
-              title={p.title}
-              explanation={p.description}
-              likes={p.likes}
-              views={p.views}
-              professors={p.Professors}
-              contributors={p.Contributor}
-              teamName={p.team}
-              link={`/${currentLang}/project/${p.slug}`}
-            />
-          ))
-        }
+        {projects.map((p) => (
+          <BigCard
+            t={t}
+            projectImage={p.previewImageUrl}
+            title={p.title}
+            explanation={p.shortDescription}
+            likes={p.likeCount}
+            views={p.viewCount}
+            professors={[]}
+            contributors={p.contributors}
+            link={`/${currentLang}/project/${p.projectId}`}
+          />
+        ))}
       </div>
     </div>
-    
   </section>
 </Layout>
