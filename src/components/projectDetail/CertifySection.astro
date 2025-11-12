@@ -1,41 +1,115 @@
 ---
-import { Award, CheckCircle } from "lucide-react";
+import { Award, CheckCircle, Shield, X } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
+import { ConfirmationModal } from "../common/modal/CertifyModal";
 
-const { t, lang, project } = Astro.props;
-const professors = project.Professors || [];
+const { t, lang, project, certification, userContext } = Astro.props;
+
+// Decompose project
+const projectId = project.projectId || '';
+const projectTitle = project.title || '';
+
+// Decompose certification
+const certifyData = certification.data.data || [];
+// console.log(certification.data.data[0].professor.user.fullname);
+// console.log(certification.data.data[0].professor.faculty);
+
+const isCertified = certification.data.count > 0;
+
+// Decompose userContext
+// const { isProfessor } = userContext;
+
+// Debug
+// let isCertified = false;
+let isProfessor = true;
 ---
 
-<section id="CertifiedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px] bg-main-white">
+<section id="CertifiedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex px-3">
-        <div class="simple-card !w-full px-5 py-5">
+        <div class="simple-card w-full! px-5 py-5">
             <div class="flex items-center gap-2">
                 <Award className="text-main-neutral2"/>
                 <h3 class="text-main-neutral2">Certified by Professor</h3>
             </div>
             <div class="flex flex-col gap-3">
-                {
-                    professors.map((prof) => (
+                {isCertified && certifyData.map((data : any) => (
                     <div class="flex items-center gap-3">
                         <Avatar
-                            client:idle
-                            name={prof.name}
-                            avatar={prof.avatar}
+                            client:load
+                            name={data.professor.user.fullname}
+                            avatar={data.professor.user.profile_image_url}
                         />
                         <div class="flex flex-col py-1">
-                            <span class="large">{prof.name}</span>
+                            <span class="large">{data.professor.user.fullname}</span>
+                            <span class="detail text-supporting-ghost">
+                                {data.professor.position} | {data.professor.faculty}
+                            </span>
                         </div>
                     </div>
-                    ))
-                }
-                <button 
-                    class="btn-locked !px-2 !py-2 pointer-events-none" 
-                    style="background-color: var(--color-supporting-light-sky); border-color: var(--color-supporting-light-sky);">
+                ))}
 
-                    <CheckCircle className="w-5 h-5 text-supporting-dark-sky"/>
-                    <span class="small text-supporting-dark-sky">Certified Project</span>
-                </button>
+                {/* Show certified badge if certified */}
+                {isCertified && (
+                    <button 
+                        class="btn-locked px-2! py-2! pointer-events-none" 
+                        style="background-color: var(--color-supporting-light-sky); border-color: var(--color-supporting-light-sky);">
+                        <CheckCircle className="w-5 h-5 text-supporting-dark-sky"/>
+                        <span class="small text-supporting-dark-sky">Certified Project</span>
+                    </button>
+                )}
+
+                {/* Show certify button if user is professor and project is not certified */}
+                {isProfessor && !isCertified && (
+                    <div class="flex flex-col items-center justify-center px-3 py-3 gap-5">
+                        <Shield className="w-16 h-16 text-supporting-support" />
+                        <span class="subtle">This project is pending for your certification</span>
+                        <button 
+                            id="certify-button"
+                            class="btn-primary px-4 py-2 flex items-center justify-center gap-2"
+                            data-project-id={projectId}
+                            data-project-name={projectTitle}>
+                            <Award className="w-5 h-5 text-white"/>
+                            <span class="small text-white">Certify This Project</span>
+                        </button>
+                    </div>
+                )}
+
+                {/* Show message if not certified and user is not professor */}
+                {!isCertified && !isProfessor && (
+                    <div class="text-center py-4">
+                        <span class="text-neutral-500 italic">This project is awaiting certification</span>
+                    </div>
+                )}
             </div>  
         </div>
     </div>
+
+    <!-- Certify Confirmation Modal -->
+    <ConfirmationModal
+        client:load
+        projectId={projectId}
+        projectName={projectTitle}
+        title="Project Certification Confirmation"
+        warningMessage="This action cannot be undone. By certifying this project, you confirm that it meets the required academic standards."
+        confirmButtonText="Certify Project"
+        loadingText="Certifying..."
+    />
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const certifyButton = document.getElementById('certify-button');
+    
+    if (certifyButton) {
+        certifyButton.addEventListener('click', () => {
+            // Trigger the React modal to open
+            window.dispatchEvent(new CustomEvent('openCertificationModal', {
+                detail: {
+                    projectId: certifyButton.getAttribute('data-project-id'),
+                    projectName: certifyButton.getAttribute('data-project-name')
+                }
+            }));
+        });
+    }
+});
+</script>

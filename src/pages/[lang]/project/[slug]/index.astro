@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
-import { getProjects, getProjectBySlug } from '../../../../lib/api';
+import { getProjects, getProjectById } from '../../../../lib/api';
 import i18n from '../../../../i18n/i18n';
 import ExternalLinksSection from '@/components/projectDetail/ExternalLinksSection.astro';
 import ContentSection from '@/components/projectDetail/ContentSection.astro';
@@ -11,34 +11,55 @@ import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
 import HeaderBar from '@/components/common/header/HeaderBar.astro';
 
+// Default context - will be updated client-side
+const userContext = {
+  username: null,
+  name: null,
+  avatar: null,
+  isAuthenticated: false,
+  isProfessor: false,
+  userLiked: false,
+};
+
 // generate paths
 export async function getStaticPaths() {
   const projects = await getProjects();
   const languages = ['en', 'th'];
-
-  return projects.flatMap((p) =>
-    languages.map((lang) => ({
-      params: { slug: String(p.slug), lang },
-    })),
-  );
+  const paths = projects.data.flatMap((p) => {
+    return languages.map((lang) => {
+      return {
+        params: {
+          lang,
+          slug: p.projectId,
+        },
+      };
+    });
+  });
+  return paths;
 }
 
 // load params and project
-const { slug, lang } = Astro.params as { slug: string; lang: string };
+const { slug: projectId, lang } = Astro.params as {
+  slug: string;
+  lang: string;
+};
 const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
 const t = i18n.t.bind(i18n);
 
-const project = await getProjectBySlug(slug);
+const project = await getProjectById(projectId);
+if (!project) {
+  throw new Error(`404: Project not found: ${projectId}`);
+}
 ---
 
 <Layout title={project.title}>
   <HeaderBar t={t} lang={lang} />
-  <HeroSection t={t} lang={lang} project={project} />
+  <HeroSection t={t} lang={lang} project={project} userContext={userContext}/>
   <ContentSection t={t} lang={lang} project={project} />
   <ExternalLinksSection t={t} lang={lang} project={project} />
   <ContributorSection t={t} lang={lang} project={project} />
-  <CertifySection t={t} lang={lang} project={project} />
-  <CommentSection t={t} lang={lang} project={project} />
+  <!-- <CertifySection t={t} lang={lang} project={project} certification={certification} userContext={userContext}/> -->
+  <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>

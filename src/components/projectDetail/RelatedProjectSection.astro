@@ -1,62 +1,39 @@
 ---
+import { getProjects } from '@/lib/api';
 import BigCard from "../common/previewCard/BigCard.astro";
 
-const { t, lang, project } = Astro.props;
+const { t, lang } = Astro.props;
+const PAGE_SIZE = 8;
+const ORDER_BY = 'monthly_like_count';
+const ORDER = 'desc';
+
+const { meta, data: projects } = await getProjects({
+  pageSize: PAGE_SIZE,
+  orderBy: ORDER_BY,
+  order: ORDER,
+});
 ---
 
-<section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px] bg-main-white">
+<section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex px-3">
         <div class="simple-card !w-full px-5 py-5">
             <h3 class="text-main-neutral2">Related Projects</h3>
-            <div class="grid grid-cols-2 px-4 py-3 gap-4 justify-items-center max-w-4xl mx-auto">
-                <BigCard
-                  t={t}
-                  projectImage={project.image}
-                  title={project.title}
-                  explanation={project.description}
-                  likes={project.likes}
-                  views={project.views}
-                  professors={project.Professors}
-                  contributors={project.Contributor}
-                  teamName={project.team}
-                  link={`/${lang}/project/${project.slug}`}
-                />
-                <BigCard
-                  t={t}
-                  projectImage={project.image}
-                  title={project.title}
-                  explanation={project.description}
-                  likes={project.likes}
-                  views={project.views}
-                  professors={project.Professors}
-                  contributors={project.Contributor}
-                  teamName={project.team}
-                  link={`/${lang}/project/${project.slug}`}
-                />
-                <BigCard
-                  t={t}
-                  projectImage={project.image}
-                  title={project.title}
-                  explanation={project.description}
-                  likes={project.likes}
-                  views={project.views}
-                  professors={project.Professors}
-                  contributors={project.Contributor}
-                  teamName={project.team}
-                  link={`/${lang}/project/${project.slug}`}
-                />
-                <BigCard
-                  t={t}
-                  projectImage={project.image}
-                  title={project.title}
-                  explanation={project.description}
-                  likes={project.likes}
-                  views={project.views}
-                  professors={project.Professors}
-                  contributors={project.Contributor}
-                  teamName={project.team}
-                  link={`/${lang}/project/${project.slug}`}
-                />
+            <div class="flex flex-wrap gap-6 justify-center">
+                {
+                  projects.map((p) => (
+                      <BigCard
+                        t={t}
+                        projectImage={p.previewImageUrl}
+                        title={p.title}
+                        explanation={p.shortDescription}
+                        likes={p.likeCount}
+                        views={p.viewCount}
+                        professors={[]}
+                        contributors={p.contributors}
+                        link={`/${lang}/project/${p.projectId}`}
+                      />
+                    ))
+                }
             </div>
         </div>
     </div>

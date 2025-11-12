@@ -2,22 +2,21 @@
 import { ExternalLink } from "lucide-react";
 
 const { t, lang, project } = Astro.props;
+
+const externalLinks = project.externalLinks || [];
 ---
 
-<section id="ExternalLinksProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px] bg-main-white">
+<section id="ExternalLinksProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex px-3">
-        <div class="simple-card !w-full px-5 py-5">
+        <div class="simple-card w-full! px-5 py-5">
             <div class="flex items-center gap-2">
                 <ExternalLink className="text-main-neutral2" />
                 <h3 class="text-main-neutral2">External Links</h3>
             </div>
             <div class="flex flex-col">  
-                <!-- {project.link.map((link) => (
+                {externalLinks.map((link : string) => (
                     <a href={link} class="btn-link1 small">{link}</a>
-                ))} -->
-                <a href="#" class="btn-link1 small">mooham.com</a>
-                <a href="#" class="btn-link1 small">mooham.com</a>
-                <a href="#" class="btn-link1 small">mooham.com</a>
+                ))}
             </div>
         </div>
     </div>

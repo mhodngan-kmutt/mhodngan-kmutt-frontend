@@ -105,7 +105,25 @@ export async function getProjects(params: GetProjectsParams = {}): Promise<Proje
   };
 }
 
-export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  // Empty stub
-  return null;
-}
+ // Fetch single project by ID from backend
+export async function getProjectById(id: string) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/project/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch project: ${response.status}`);
+    }
+    
+    const project = await response.json();
+    
+    // Ensure slug exists
+    if (!project.slug) {
+      project.slug = generateSlug(project.title);
+    }
+    
+    return project;
+    
+  } catch (error) {
+    console.error(`Error fetching project ${id}:`, error);
+  }
+} 
