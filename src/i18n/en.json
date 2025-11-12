@@ -60,6 +60,10 @@
       "navigate": "All projects"
     }
   },
+  "header": {
+    "explore": "Explore",
+    "signin": "Sign in"
+  },
   "card": {
     "certified": "Certified by",
     "contributors": "Contributors"
@@ -68,5 +72,22 @@
     "navigateBack": "Back to Projects",
     "contributors": "Contributors",
     "professors": "Professors"
+  },
+  "advanceSearch": {
+    "categories": [
+      "Web Development",
+      "AI",
+      "IoTs",
+      "Cyber Security",
+      "Engineering",
+      "Math",
+      "Mechanism",
+      "Physics",
+      "KeeYes",
+      "LLM",
+      "Other"
+    ],
+    "certifications": ["Certified", "Uncertified"],
+    "programs": ["REG", "INTER", "HDS", "RC"]
   }
 }

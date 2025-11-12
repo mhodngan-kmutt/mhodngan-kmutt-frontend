@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import type { User } from '@supabase/supabase-js';
 
 /**
  * Sign in using Google OAuth.
@@ -23,11 +24,7 @@ export async function signInWithGoogle() {
  * Verifies if the logged-in user uses @mail.kmutt.ac.th
  * If not, signs out and redirects to /${lang}/unauthorized
  */
-export async function verifyKmuttEmail(lang: string) {
-  const { data } = await supabase.auth.getUser();
-  const user = data?.user;
-
-  // If no user yet, skip check (let init continue)
+export async function verifyKmuttEmail(user: User | null, lang: string) {
   if (!user) return true;
 
   if (user.email && !user.email.toLowerCase().endsWith('@mail.kmutt.ac.th')) {

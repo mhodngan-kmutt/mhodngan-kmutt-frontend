@@ -1,0 +1,17 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import HeaderBar from '../../../components/common/header/HeaderBar.astro';
+import i18n from '../../../i18n/i18n';
+import BlockEditorWrapper from '@/components/writeProject/BlockEditorWrapper';
+
+export const prerender = false;
+
+const { lang } = Astro.params as { lang: string };
+const currentLang = lang === 'th' ? 'th' : 'en';
+i18n.changeLanguage(currentLang);
+---
+
+<Layout title="Write Project">
+  <HeaderBar t={i18n.t.bind(i18n)} lang={currentLang} mode="write" />
+  <BlockEditorWrapper client:load currentLang={currentLang} />
+</Layout>
