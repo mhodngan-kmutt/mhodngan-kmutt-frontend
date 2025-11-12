@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import projectsJson from "../mocks/projects.json";
 import projectsOfTheMonthJson from "../mocks/project_of_the_month.json";
 const API_BASE_URL = import.meta.env.PUBLIC_API_URL;
@@ -106,9 +105,7 @@ export async function getProjects(params: GetProjectsParams = {}): Promise<Proje
   };
 }
 
-// export async function getProjectBySlug(slug: string): Promise<Project> {
-//   await new Promise((r) => setTimeout(r, 100));
-//   const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
-//   if (!project) throw new Error(`Project not found: ${slug}`);
-//   return project;
-// }
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  // Empty stub
+  return null;
+}
