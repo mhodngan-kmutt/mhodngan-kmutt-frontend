@@ -4,9 +4,20 @@ import Avatar from '../common/Avatar/Avatar';
 import HeaderBar from '../common/header/HeaderBar.astro';
 import { Heart, Download } from 'lucide-react';
 import { LikeButton } from '../common/button/LikeButton';
+import { formatDate } from '../../lib/dateFormat';
 
 const { t, lang, project, userContext } = Astro.props;
 
+// Decompose project
+const projectId = project?.projectId || '';
+const projectTitle = project?.title || 'Untitled Project';
+const projectPreviewImageUrl = project?.previewImageUrl || '/default-image.jpg';
+const projectCategories = project?.categories || [];
+const contributors = project?.contributors || [];
+const likeCount = project?.likeCount || 0;
+const createdAt = formatDate(project?.createdAt || 'Unknown date');
+
+// Decompose user data
 const { userLiked } = userContext;
 ---
 
@@ -17,8 +28,8 @@ const { userLiked } = userContext;
   <div class="w-full h-[300px] my-4">
     <a href={`/${lang}/project/${project.slug}`}>
       <img
-        src={project.image}
-        alt={project.title}
+        src={projectPreviewImageUrl}
+        alt={projectTitle}
         class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
         loading="lazy"
       />
@@ -26,11 +37,15 @@ const { userLiked } = userContext;
   </div>
 
   <!-- Project title -->
-  <h2>{project.title}</h2>
+  <h2>{projectTitle}</h2>
 
   <!-- Project categories -->
   <div class="flex gap-1 flex-wrap">
-    {project.categories.map((category: string) => <button class="btn-locked detail">{category}</button>)}
+    {projectCategories.map((category : any) => (
+      <button class="btn-locked detail">
+        {category.categoryName}
+      </button>
+    ))}
   </div>
 
   <!-- Contributor and buttons container -->
@@ -40,21 +55,21 @@ const { userLiked } = userContext;
       <!-- Publisher avatar -->
       <div class="flex items-center gap-4">
         <Avatar
-          client:idle
-          name={project.Contributor[0].name}
-          avatar={project.Contributor[0].avatar}
+          client:load
+          name={contributors[0].fullname}
+          avatar={contributors[0].profileImageUrl}
         />
         <div class="text-supporting-ghost">
-          <span class="small">{project.Contributor[0].name}</span>
-          <span class="detail"> | {project.published}</span>
+          <span class="small">{contributors[0].fullname}</span>
+          <span class="detail"> | {createdAt}</span>
         </div>
       </div>
 
       <!-- Contributor avatars -->
       <div class="flex items-center gap-4">
         <AvatarGroup
-          client:idle
-          contributors={project.Contributor}
+          client:load
+          contributors={contributors}
           className="w-6 h-6 -space-x-7"
         />
       </div>
@@ -63,15 +78,10 @@ const { userLiked } = userContext;
     <!-- Action buttons -->
     <div class="flex gap-2">
         <!-- Like button -->
-        <!-- <button class="btn-tertiary">
-            <Heart className='text-main-secondary w-5 h-5'/>
-            <span class="small text-main-secondary">Like</span>
-            <span class="small text-main-secondary"> ({project.likes}) </span>
-        </button> -->
         <LikeButton
           client:load
-          projectId={project.id}
-          initialLikes={project.likes}
+          projectId={projectId}
+          initialLikes={likeCount}
           initialLiked={userLiked}
         />
 

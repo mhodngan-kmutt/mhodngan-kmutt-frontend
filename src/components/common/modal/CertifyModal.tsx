@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Shield, CheckCircle } from 'lucide-react';
+import successImage from '../../../assets/images/2.svg'; //why i can't import picture
 
 interface ConfirmationModalProps {
   projectName: string;
@@ -8,7 +9,6 @@ interface ConfirmationModalProps {
   warningMessage: string;
   confirmButtonText?: string;
   loadingText?: string;
-  successImage?: string; //I try to pass the image, but unluckly I failed.
 }
 
 export function ConfirmationModal({
@@ -17,8 +17,7 @@ export function ConfirmationModal({
   projectId,
   warningMessage,
   confirmButtonText = "Confirm",
-  loadingText = "Processing...",
-  successImage
+  loadingText = "Processing..."
 }: ConfirmationModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');

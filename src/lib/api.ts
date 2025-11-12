@@ -1,5 +1,6 @@
 import projectsJson from "../mocks/projects.json";
 import projectsOfTheMonthJson from "../mocks/project_of_the_month.json";
+import { getSession } from "./auth";
 
 // ---------- Interfaces ----------
 export interface Contributor {
@@ -27,6 +28,9 @@ export interface Project {
   Professors: Professor[];
 }
 
+// ---------- API Configuration ----------
+const API_BASE_URL = import.meta.env.PUBLIC_API_URL;
+
 // ---------- Utility ----------
 function generateSlug(title: string): string {
   return title
@@ -52,6 +56,29 @@ export async function getProjects(): Promise<Project[]> {
   return projects;
 }
 
+// Fetch single project by ID from backend
+export async function getProjectById(id: string | number): Promise<Project> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/project/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch project: ${response.status}`);
+    }
+    
+    const project = await response.json();
+    
+    // Ensure slug exists
+    if (!project.slug) {
+      project.slug = generateSlug(project.title);
+    }
+    
+    return project;
+    
+  } catch (error) {
+    console.error(`Error fetching project ${id}:`, error);
+  }
+}
+
 export async function getProjectBySlug(slug: string): Promise<Project> {
   await new Promise((r) => setTimeout(r, 100));
   const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
@@ -62,4 +89,43 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
 export async function getProjectsOfTheMonth(): Promise<Project[]> {
   await new Promise((r) => setTimeout(r, 100));
   return projectsOfTheMonth;
+}
+
+// User Profile
+export async function getMyProfile() {
+  try {
+    // Get current session
+    const session = await getSession();
+
+    if (!session?.user) {
+      console.log('No authenticated user found');
+      return null;
+    }
+
+    // Get my profile, include passing authorization header
+    const response = await fetch(`${API_BASE_URL}/user/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      credentials: 'include',
+    });
+
+    if(!response.ok){
+      if (response.status === 401) {
+        console.log('User not authenticated');
+        return null;
+      }
+      throw new Error(`Failed to fetch my profile: ${response.status} ${response.statusText}`);
+    }
+
+    const user = await response.json();
+    return user;
+    
+  } catch (error) {
+    console.error(`Error fetching my profile`, error);
+    return null;
+  }
+  
 }

@@ -4,9 +4,11 @@ import Avatar from "../common/Avatar/Avatar";
 import { ConfirmationModal } from "../common/modal/CertifyModal";
 
 const { t, lang, project, userContext } = Astro.props;
-const professors = project.Professors || [];
-// const isCertified = professors && professors.length > 0;
 
+const projectId = project.projectId || '';
+const projectTitle = project.title || '';
+
+// const isCertified = professors && professors.length > 0;
 // const { isProfessor } = userContext;
 
 //debug
@@ -22,7 +24,7 @@ let isProfessor = true;
                 <h3 class="text-main-neutral2">Certified by Professor</h3>
             </div>
             <div class="flex flex-col gap-3">
-                {isCertified && professors.map((prof) => (
+                {isCertified && professors.map((prof : any) => (
                     <div class="flex items-center gap-3">
                         <Avatar
                             client:load
@@ -53,8 +55,8 @@ let isProfessor = true;
                         <button 
                             id="certify-button"
                             class="btn-primary px-4 py-2 flex items-center justify-center gap-2"
-                            data-project-id={project.id}
-                            data-project-name={project.title}>
+                            data-project-id={projectId}
+                            data-project-name={projectTitle}>
                             <Award className="w-5 h-5 text-white"/>
                             <span class="small text-white">Certify This Project</span>
                         </button>
@@ -74,8 +76,8 @@ let isProfessor = true;
     <!-- Certify Confirmation Modal -->
     <ConfirmationModal
         client:load
-        projectId={project.id}
-        projectName={project.title}
+        projectId={projectId}
+        projectName={projectTitle}
         title="Project Certification Confirmation"
         warningMessage="This action cannot be undone. By certifying this project, you confirm that it meets the required academic standards."
         confirmButtonText="Certify Project"

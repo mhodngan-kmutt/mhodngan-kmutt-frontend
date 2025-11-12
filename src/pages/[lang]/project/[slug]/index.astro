@@ -1,7 +1,8 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
-import { getProjects, getProjectBySlug } from '../../../../lib/api';
+import { getProjects, getProjectBySlug, getProjectById, getMyProfile } from '../../../../lib/api';
 import i18n from '../../../../i18n/i18n';
+
 import ExternalLinksSection from '@/components/projectDetail/ExternalLinksSection.astro';
 import ContentSection from '@/components/projectDetail/ContentSection.astro';
 import HeroSection from '@/components/projectDetail/HeroSection.astro';
@@ -10,7 +11,6 @@ import CertifySection from '@/components/projectDetail/CertifySection.astro';
 import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
 import HeaderBar from '@/components/common/header/HeaderBar.astro';
-import { supabase } from '@/lib/supabase';
 
 // generate paths
 export async function getStaticPaths() {
@@ -30,53 +30,16 @@ const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
 const t = i18n.t.bind(i18n);
 
-const project = await getProjectBySlug(slug);
+const project = await getProjectById('a1b2c3d4-e5f6-7890-abcd-0987654321fe');
 
-// Initialize user context variables
-let userLiked = false;
-let isProfessor = false;
-let currentUser = null;
-let userProfile = null;
-
-// Get comprehensive user data in one place
-try {
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if (session?.user) {
-    currentUser = session.user;
-    
-    // Get user profile including role
-    const { data: profile } = await supabase
-      .from('user_profiles') // Adjust table name based on your schema
-      .select('role, name, avatar')
-      .eq('user_id', session.user.id)
-      .single();
-    
-    userProfile = profile;
-    isProfessor = profile?.role === 'professor';
-    
-    // Check if user has liked this project
-    const { data: likeData } = await supabase
-      .from('project_likes')
-      .select('id')
-      .eq('project_id', project.id)
-      .eq('user_id', session.user.id)
-      .single();
-    
-    userLiked = !!likeData;
-  }
-} catch (error) {
-  console.error('Error fetching user data:', error);
-  // Keep default values (false)
-}
-
-// Create user context object to pass to components
+// Default context - will be updated client-side
 const userContext = {
-  isAuthenticated: !!currentUser,
-  isProfessor,
-  userLiked,
-  user: currentUser,
-  profile: userProfile
+  username: null,
+  name: null,
+  avatar: null,
+  isAuthenticated: false,
+  isProfessor: false,
+  userLiked: false,
 };
 ---
 
@@ -90,3 +53,39 @@ const userContext = {
   <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>
+
+<script>
+  import { getMyProfile } from '@/lib/api';
+  
+  async function initUserContext() {
+    try {
+      const user = await getMyProfile();
+      
+      if (user) {
+        // Update global context and UI here
+        globalThis.USER_CONTEXT = {
+          userId : user.uerId,
+          username: user.username,
+          name: user.fullname,
+          avatar: user.profileImageUrl,
+          role: user.role,
+          isAuthenticated: true,
+          isProfessor: user.role === 'professor',
+          userLiked: false, // Check this separately
+        };
+        
+        // Dispatch event for React components
+        window.dispatchEvent(new CustomEvent('userContextReady', {
+          detail: globalThis.USER_CONTEXT
+        }));
+      } else {
+        console.log('❌ No user found or not authenticated');
+      }
+    } catch (error) {
+      console.error('💥 Error initializing user context:', error);
+    }
+  }
+  
+  // Run when DOM is loaded
+  document.addEventListener('DOMContentLoaded', initUserContext);
+</script>
