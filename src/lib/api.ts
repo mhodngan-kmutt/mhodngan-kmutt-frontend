@@ -57,7 +57,7 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 // Fetch single project by ID from backend
-export async function getProjectById(id: string): Promise<Project> {
+export async function getProjectById(id: string) {
   try {
     const response = await fetch(`${API_BASE_URL}/project/${id}`);
     
