@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { signInWithGoogle, signOut, getSession, getUser, onAuthStateChange, verifyKmuttEmail } from '../../../lib/auth.ts';
+import { signInWithGoogle, signOut, getSession, getUser, onAuthStateChange } from '../../../lib/auth.ts';
 import type { User } from '@supabase/supabase-js';
 import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
@@ -30,12 +30,7 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
         const userData = sessionData?.user || (await getUser());
 
         if (userData) {
-          const valid = await verifyKmuttEmail(userData, lang);
-          if (valid) {
-            setUser(userData);
-          } else {
-            return;
-          }
+          setUser(userData);
         }
       } catch (error) {
         console.error('❌ Auth init error:', error);
@@ -53,9 +48,7 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
       setLoading(true);
 
       if (currentUser) {
-        const valid = await verifyKmuttEmail(currentUser, lang);
-
-        if (valid) setUser(currentUser);
+        setUser(currentUser);
       } else {
         setUser(null);
       }

@@ -110,7 +110,7 @@ export async function getProjects(params: GetProjectsParams = {}): Promise<Proje
   }
   
   const result = await response.json();
-  console.log('Fetch Projects Response:', result);
+  // console.log('Fetch Projects Response:', result);
   return {
     meta: result.meta,
     data: result.data,
