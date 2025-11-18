@@ -109,6 +109,9 @@ try {
               professors={[]}
               contributors={p.contributors}
               link={`/${currentLang}/project/${p.projectId}`}
+              showActions={true}
+              projectId={p.projectId}
+              token={token}
             />
           ))}
         </div>
