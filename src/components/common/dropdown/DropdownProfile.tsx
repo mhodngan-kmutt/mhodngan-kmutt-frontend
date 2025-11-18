@@ -30,7 +30,7 @@ export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfilePr
 
       <DropdownMenuContent className="w-auto bg-main-white border border-main-neutral" align="end">
         <DropdownMenuItem asChild>
-          <a href="/en/project" className="w-full cursor-pointer hover:bg-neutral-100">
+          <a href="/en/project/me" className="w-full cursor-pointer hover:bg-neutral-100">
             My Project
           </a>
         </DropdownMenuItem>

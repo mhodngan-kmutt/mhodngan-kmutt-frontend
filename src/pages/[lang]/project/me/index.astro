@@ -1,0 +1,112 @@
+---
+export const prerender = false;
+import Layout from '../../../../layouts/Layout.astro';
+import BigCard from '@/components/common/previewCard/BigCard.astro';
+import HeaderBar from '../../../../components/common/header/HeaderBar.astro';
+import { AdvanceSearch } from '../../../../components/common/dropdown/AdvanceSearch';
+import i18n from '../../../../i18n/i18n';
+import { getProjects } from '../../../../lib/api';
+
+// dynamic paths
+export async function getStaticPaths() {
+  const languages = ['en', 'th'];
+  return languages.map((lang) => ({
+    params: { lang },
+  }));
+}
+
+// get params and query
+const { lang } = Astro.params;
+const currentLang = lang === 'th' ? 'th' : 'en';
+i18n.changeLanguage(currentLang);
+const t = i18n.t.bind(i18n);
+
+const { data: sessionData } = await Astro.locals.supabase.auth.getSession(); 
+const token = sessionData.session?.access_token;
+
+const q = Astro.url.searchParams.get('q') || undefined;
+const badge = Astro.url.searchParams.get('badge') || undefined;
+const status = Astro.url.searchParams.get('status') || undefined;
+const from = Astro.url.searchParams.get('from') || undefined;
+const to = Astro.url.searchParams.get('to') || undefined;
+const contributors = Astro.url.searchParams.get('contributors') || undefined;
+
+const orderBy = q
+  ? 'like_count'
+  : (Astro.url.searchParams.get('orderBy') as
+      | 'created_at'
+      | 'updated_at'
+      | 'title'
+      | 'like_count'
+      | 'view_count'
+      | 'monthly_like_count'
+      | 'monthly_view_count'
+      | 'yearly_like_count'
+      | 'yearly_view_count') || 'updated_at';
+
+const order = (Astro.url.searchParams.get('order') as 'asc' | 'desc') || 'desc';
+
+let meta, projects;
+
+try {
+  const result = await getProjects({
+    q,
+    badge,
+    status,
+    from,
+    to,
+    contributors,
+    orderBy,
+    order,
+    isMyProject: true,
+    token: token,
+  });
+  meta = result.meta;
+  projects = result.data;
+} catch (error: any) {
+  if (error.message.includes('401')) {
+    return Astro.redirect(`/${currentLang}/unauthorized`);
+  }
+  throw error;
+}
+---
+
+<Layout title={t('home.month.topic')} class="overflow-y-scroll">
+  <HeaderBar t={t} lang={lang} />
+  <section class="flex w-full flex-col pt-30 py-6 px-16 gap-10">
+    <div class="flex flex-col gap-6">
+      <div class="flex w-full justify-between items-center">
+        <h2>
+          {q ? (
+            <>
+              <span>Result for </span>
+              <span class="text-main-primary">"{q}"</span>
+            </>
+          ) : (
+            <span>My Projects</span>
+          )}
+        </h2>
+        <AdvanceSearch client:load />
+      </div>
+
+      <div class="flex flex-wrap gap-6 justify-center">
+        {projects.map((p) => (
+          <BigCard
+            t={t}
+            projectImage={p.previewImageUrl}
+            title={p.title}
+            explanation={p.shortDescription}
+            likes={p.likeCount}
+            views={p.viewCount}
+            professors={[]}
+            contributors={[]}
+            link={`/${currentLang}/project/${p.projectId}`}
+            showActions={true}
+            projectId={p.projectId}
+            token={token}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

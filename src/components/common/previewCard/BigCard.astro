@@ -1,6 +1,7 @@
 ---
 import { Heart, Eye } from 'lucide-react';
 import AvatarGroup from '../Avatar/AvatarGroup';
+import { ProjectActionsDropdown } from '../dropdown/ProjectActionsDropdown';
 
 const {
   t,
@@ -12,6 +13,9 @@ const {
   professors,
   contributors,
   link,
+  showActions = false,
+  projectId,
+  token,
 } = Astro.props;
 ---
 
@@ -57,6 +61,9 @@ const {
           <div class="detail text-supporting-support">@cpe, kmutt</div>
         </div>
       </div>
+      {showActions &&
+        <ProjectActionsDropdown client:load projectId={projectId} token={token} />
+      }
     </div>
   </div>
 </a>
