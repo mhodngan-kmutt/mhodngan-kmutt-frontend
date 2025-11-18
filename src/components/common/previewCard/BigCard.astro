@@ -14,6 +14,8 @@ const {
   contributors,
   link,
   showActions = false,
+  projectId,
+  token,
 } = Astro.props;
 ---
 
@@ -60,7 +62,7 @@ const {
         </div>
       </div>
       {showActions &&
-        <ProjectActionsDropdown client:load onEdit={() => alert('Edit')} onDelete={() => console.log('Delete')} />
+        <ProjectActionsDropdown client:load projectId={projectId} token={token} />
       }
     </div>
   </div>
