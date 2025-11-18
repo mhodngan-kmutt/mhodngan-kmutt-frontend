@@ -1,4 +1,3 @@
-
 import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerClient } from './lib/supabase-server';
 

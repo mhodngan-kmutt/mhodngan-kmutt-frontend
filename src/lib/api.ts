@@ -66,6 +66,8 @@ export interface GetProjectsParams {
   page?: number;
   pageSize?: number;
   include?: string;
+  token?: string;
+  isMyProject?: boolean;
 }
 
 // ---------- Utility ----------
@@ -92,13 +94,23 @@ export async function getProjects(params: GetProjectsParams = {}): Promise<Proje
   queryParams.append('pageSize', (params.pageSize || 100).toString());
   if (params.include) queryParams.append('include', params.include);
 
-  const response = await fetch(`${API_BASE_URL}/project?${queryParams.toString()}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch projects: ${response.statusText}`);
+  const headers: HeadersInit = {};
+  if (params.token) {
+    headers['Authorization'] = `Bearer ${params.token}`;
   }
 
+  const endpoint = params.isMyProject ? '/project/me' : '/project';
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}?${queryParams.toString()}`, {
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+  }
+  
   const result = await response.json();
+  console.log('Fetch Projects Response:', result);
   return {
     meta: result.meta,
     data: result.data,
@@ -125,5 +137,18 @@ export async function getProjectById(id: string) {
     
   } catch (error) {
     console.error(`Error fetching project ${id}:`, error);
+  }
+}
+
+export async function deleteProject(id: string, token: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete project: ${response.status} ${response.statusText}`);
   }
 } 
