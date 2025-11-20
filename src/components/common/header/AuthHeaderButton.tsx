@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { signInWithGoogle, signOut, getSession, getUser, onAuthStateChange } from '../../../lib/auth.ts';
+import { getCurrentUser, type Contributor } from '../../../lib/api.ts';
 import type { User } from '@supabase/supabase-js';
 import GoogleIcon from '../../../assets/icons/googleIcon.tsx';
 import { DropdownProfile } from '../dropdown/DropdownProfile.tsx';
@@ -20,6 +21,7 @@ interface AuthHeaderButtonProps {
 
 export default function AuthHeaderButton({ signinButtonText, lang, componentsColor = 'bg-main-neutral', mode = 'default' }: AuthHeaderButtonProps) {
   const [user, setUser] = useState<User | null>(null);
+  const [apiUser, setApiUser] = useState<Contributor | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +33,13 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
 
         if (userData) {
           setUser(userData);
+          const storedUserData = sessionStorage.getItem('userData');
+          console.log('Debug: initAuth - storedUserData from sessionStorage:', storedUserData);
+          if (storedUserData) {
+            const parsedData = JSON.parse(storedUserData);
+            console.log('Debug: initAuth - parsed storedUserData:', parsedData);
+            setApiUser(parsedData);
+          }
         }
       } catch (error) {
         console.error('❌ Auth init error:', error);
@@ -47,10 +56,21 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
 
       setLoading(true);
 
-      if (currentUser) {
+      if (currentUser && session?.access_token) {
         setUser(currentUser);
+        try {
+          const userData = await getCurrentUser(session.access_token);
+          console.log('Debug: onAuthStateChange - fetched userData from API:', userData);
+          sessionStorage.setItem('userData', JSON.stringify(userData));
+          setApiUser(userData);
+        } catch (error) {
+          console.error('❌ Error fetching user data:', error);
+          setApiUser(null);
+        }
       } else {
         setUser(null);
+        setApiUser(null);
+        sessionStorage.removeItem('userData');
       }
 
       setLoading(false);
@@ -95,6 +115,9 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
     const avatarUrl = user.user_metadata?.avatar_url || null;
 
     console.log('👤 Logged in user:', { firstName, avatarUrl });
+    console.log('Debug: render - apiUser state:', apiUser);
+    const storedUserData = sessionStorage.getItem('userData');
+    console.log('Debug: render - sessionStorage.userData:', storedUserData);
 
     return (
       <div className="flex items-center gap-4">
@@ -106,9 +129,9 @@ export default function AuthHeaderButton({ signinButtonText, lang, componentsCol
             <PublishButton />
           </>
         ) : (
-          <WriteHeaderButton lang={lang} />
+          apiUser && apiUser.role === 'contributor' && <WriteHeaderButton lang={lang} />
         )}
-        <DropdownProfile onLogout={handleLogout} name={firstName} avatarUrl={avatarUrl} />
+        <DropdownProfile onLogout={handleLogout} name={firstName} avatarUrl={avatarUrl} userRole={apiUser?.role} />
       </div>
     );
   }

@@ -172,4 +172,21 @@ export async function deleteProject(id: string, token: string): Promise<void> {
   if (!response.ok) {
     throw new Error(`Failed to delete project: ${response.status} ${response.statusText}`);
   }
-} 
+}
+
+export async function getCurrentUser(token: string): Promise<Contributor> {
+  const response = await fetch(`${API_BASE_URL}/user/me`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+  }
+
+  const data: Contributor = await response.json();
+  return data;
+}

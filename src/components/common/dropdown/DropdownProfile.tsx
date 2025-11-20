@@ -13,9 +13,10 @@ type DropdownProfileProps = {
   onLogout: () => void;
   name: string;
   avatarUrl?: string | null;
+  userRole?: string;
 };
 
-export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfileProps) {
+export function DropdownProfile({ onLogout, name, avatarUrl, userRole }: DropdownProfileProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,11 +30,13 @@ export function DropdownProfile({ onLogout, name, avatarUrl }: DropdownProfilePr
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-auto bg-main-white border border-main-neutral" align="end">
-        <DropdownMenuItem asChild>
-          <a href="/en/project/me" className="w-full cursor-pointer hover:bg-neutral-100">
-            My Project
-          </a>
-        </DropdownMenuItem>
+        {userRole === 'contributor' && (
+          <DropdownMenuItem asChild>
+            <a href="/en/project/me" className="w-full cursor-pointer hover:bg-neutral-100">
+              My Project
+            </a>
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuItem
           onSelect={onLogout}
