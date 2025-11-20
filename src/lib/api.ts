@@ -22,6 +22,26 @@ export interface Contributor {
   role: string;
 }
 
+export interface Contributor {
+  userId: string;
+  username: string;
+  fullname: string;
+  email: string;
+  profileImageUrl: string;
+  role: string;
+}
+
+export interface Professor {
+  userId: string;
+  fullname: string;
+  email: string;
+  profileImageUrl: string;
+  position: string;
+  department: string;
+  faculty: string;
+  certificationDate: Date;
+}
+
 export interface Project {
   projectId: string;
   title: string;
@@ -38,6 +58,7 @@ export interface Project {
   externalLinks: string[];
   files: File[];
   contributors: Contributor[];
+  certifiedBy: Professor[];
 }
 
 export interface ProjectListResponse {

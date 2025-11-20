@@ -47,10 +47,12 @@ const {
         </div>
       </div>
       <div class="flex gap-1 items-center">
-        <div class="detail text-supporting-support">{t('card.certified')}</div>
-        <div class="flex justify-center -space-x-5">
-          <AvatarGroup client:load contributors={professors} className="w-5 h-5" />
-        </div>
+        {professors.length > 0 &&
+          <div class="detail text-supporting-support">{t('card.certified')}</div>
+          <div class="flex justify-center -space-x-5">
+            <AvatarGroup client:load contributors={professors} className="w-5 h-5" />
+          </div>
+        }
       </div>
     </div>
     <div class="flex px-4 py-3 rounded-xl border-2 border-main-background h-[72px]">
