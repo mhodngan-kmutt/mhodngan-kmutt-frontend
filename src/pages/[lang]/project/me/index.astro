@@ -106,7 +106,7 @@ try {
               explanation={p.shortDescription}
               likes={p.likeCount}
               views={p.viewCount}
-              professors={[]}
+              professors={p.certifiedBy}
               contributors={p.contributors}
               link={`/${currentLang}/project/${p.projectId}`}
               showActions={true}

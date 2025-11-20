@@ -51,7 +51,7 @@ const t = i18n.t.bind(i18n);
 
 const project = await getProjectById(projectId);
 if (!project) {
-  throw new Error(`404: Project not found: ${projectId}`);
+  return Astro.redirect(`/${currentLang}/404`, 302);
 }
 ---
 
