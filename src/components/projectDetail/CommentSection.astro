@@ -1,8 +1,7 @@
 ---
 import { MessageCircle, Heart, Download, CornerDownRight } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
-import AvatarGroup from "../common/Avatar/AvatarGroup";
-import { LikeButton } from "../common/button/LikeButton";
+import ContributorActionBar from "./ContributorActionBar.astro";
 import { CommentInput } from "../ui/commentInput";
 import { formatDate } from "@/lib/dateFormat";
 
@@ -28,49 +27,13 @@ const userLiked = userContext.userLiked;
 
         <!-- Contributor and Buttons Card -->
         <div class="simple-card w-full! px-5 py-5">
-            <div class="flex justify-between items-center">
-                <!-- Contributor information -->
-                <div class="flex flex-col gap-2">
-                    <!-- Publisher avatar -->
-                    <div class="flex items-center gap-4">
-                        <Avatar
-                            client:load
-                            name={contributors[0].fullname}
-                            avatar={contributors[0].profileImageUrl}
-                        />
-                        <div class="text-supporting-ghost">
-                            <span class="small">{contributors[0].fullname}</span>
-                            <span class="detail"> | {createdAt}</span>
-                        </div>
-                    </div>
-
-                    <!-- Contributor avatars -->
-                    <div class="flex items-center gap-4">
-                        <AvatarGroup
-                            client:load
-                            contributors={contributors}
-                            className="w-6 h-6 -space-x-7"
-                        />
-                    </div>
-                </div>
-
-                <!-- Action buttons -->
-                <div class="flex gap-2">
-                    <!-- Like button -->
-                    <LikeButton
-                        client:load
-                        projectId={projectId}
-                        initialLikes={likeCount}
-                        initialLiked={userLiked}
-                    />
-
-                    <!-- Download button -->
-                    <button class="btn-primary">
-                        <Download className='text-main-white w-5 h-5'/>
-                        <span class="small text-main-white">Download Project Resource</span> 
-                    </button>
-                </div>
-            </div>
+            <ContributorActionBar
+                contributors={contributors}
+                projectId={projectId}
+                likeCount={likeCount}
+                userLiked={userLiked}
+                createdAt={createdAt}
+            />
         </div>
 
         <!-- Display Comments Card -->

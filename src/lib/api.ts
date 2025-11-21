@@ -181,12 +181,13 @@ export async function getCertifyByProjectId(id: string) {
   }
 }
 
-export async function getProjectBySlug(slug: string): Promise<Project> {
-  await new Promise((r) => setTimeout(r, 100));
-  const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
-  if (!project) throw new Error(`Project not found: ${slug}`);
-  return project;
-}
+// น่าจะไม่ได้ใช้แล้วใช่ป่ะ
+// export async function getProjectBySlug(slug: string): Promise<Project> {
+//   await new Promise((r) => setTimeout(r, 100));
+//   const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
+//   if (!project) throw new Error(`Project not found: ${slug}`);
+//   return project;
+// }
 
 export async function deleteProject(id: string, token: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/project/${id}`, {
