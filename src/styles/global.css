@@ -218,3 +218,12 @@ button {
 .bn-editor [data-content-type=table] th p {
   font-weight: 700 !important;
 }
+
+/* BlockNote Renderer Styles */
+[data-content-type=divider] hr {
+  border-color: var(--color-main-neutral) !important;
+}
+
+.blocknote-readonly input[type="checkbox"] {
+  pointer-events: none !important;
+}
