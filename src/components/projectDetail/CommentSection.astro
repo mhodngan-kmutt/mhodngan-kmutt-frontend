@@ -1,5 +1,5 @@
 ---
-import { MessageCircle, Heart, Download } from "lucide-react";
+import { MessageCircle, Heart, Download, CornerDownRight } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
 import AvatarGroup from "../common/Avatar/AvatarGroup";
 import { LikeButton } from "../common/button/LikeButton";
@@ -8,10 +8,15 @@ import { formatDate } from "@/lib/dateFormat";
 
 const { t, lang, project, userContext } = Astro.props;
 
+// Decompose project
 const projectId = project.projectId || '';
 const contributors = project.contributors || [];
 const createdAt = formatDate(project?.createdAt || 'Unknown date');
 const likeCount = project?.likeCount || 0;
+
+const comments = Array.isArray(project.comments) 
+  ? project.comments 
+  : project.comments ? [project.comments] : [];
 
 const userFullName = userContext.name;
 const userProfile = userContext.avatar;
@@ -73,26 +78,33 @@ const userLiked = userContext.userLiked;
             <div class="flex items-center gap-2">
                 <MessageCircle className=" w-5 h-5 text-main-neutral2"/>
                 <h3 class="text-main-neutral2">Comments</h3>
-                <h3 class="text-main-neutral2">(1)</h3> <!-- wait for mock data -->
+                {(comments.length > 0) && (
+                    <h3 class="text-main-neutral2">({comments.length})</h3>
+                )}
             </div>
             <div class="flex flex-col gap-3">
                 <div class="flex items-start px-4 py-3 gap-4">
-                    <Avatar
-                        client:load
-                        name={contributors[0].fullname}
-                        avatar={contributors[0].profileImageUrl}
-                        className="shrink-0"
-                    />
-                    <div class="flex flex-col py-1 gap-1 max-w-md">
-                        <div class="gap-1">
-                            <span class="text-main-neutral2 small">{contributors[0].fullname}</span>
-                            <span class="text-supporting-support detail">Â·</span>
-                            <span class="text-supporting-support detail">5 days ago</span> <!-- wait for mock data -->
+                    {comments.map((commentator: any)=>(
+                        <Avatar
+                            client:load
+                            name={commentator.user.fullname}
+                            avatar={commentator.user.profileImageUrl}
+                            className="shrink-0"
+                        />
+                        <div class="flex flex-col py-1 gap-1 max-w-md">
+                            <div class="gap-1">
+                                <span class="text-main-neutral2 small">{commentator.user.fullname}</span>
+                                <span class="text-supporting-support detail">Â·</span>
+                                <span class="text-supporting-support detail">{formatDate(commentator.commentedAt)}</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <CornerDownRight className="w-3 h-3 text-main-neutral2"/>
+                                <p class="text-main-neutral2 detail warp-break-words">
+                                    {commentator.message}
+                                </p>
+                            </div>
                         </div>
-                        <p class="text-main-neutral2 detail warp-break-words"> <!-- wait for mock data -->
-                            This is groundbreaking research! The methodology is particularly impressive and the results show significant improvement over existing approaches.
-                        </p>
-                    </div>
+                    ))}
                 </div>
             </div>  
         </div>
