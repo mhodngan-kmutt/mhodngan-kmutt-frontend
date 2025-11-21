@@ -1,6 +1,8 @@
 ---
+export const prerender = false;
+
 import Layout from '../../../../layouts/Layout.astro';
-import { getProjects, getProjectBySlug, getProjectById, getMyProfile, getCertifyByProjectId } from '../../../../lib/api';
+import { getProjects, getProjectById } from '../../../../lib/api';
 import i18n from '../../../../i18n/i18n';
 
 import ExternalLinksSection from '@/components/projectDetail/ExternalLinksSection.astro';
@@ -12,30 +14,6 @@ import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
 import HeaderBar from '@/components/common/header/HeaderBar.astro';
 
-// generate paths
-export async function getStaticPaths() {
-  const projects = await getProjects();
-  const languages = ['en', 'th'];
-
-  return projects.flatMap((p) =>
-    languages.map((lang) => ({
-      params: { slug: String(p.slug), lang },
-    })),
-  );
-}
-
-// load params and project
-const { slug, lang } = Astro.params as { slug: string; lang: string };
-const currentLang = lang === 'th' ? 'th' : 'en';
-i18n.changeLanguage(currentLang);
-const t = i18n.t.bind(i18n);
-
-// fetch api
-const projectId = 'a1b2c3d4-e5f6-7890-abcd-0987654321fe';
-
-const project = await getProjectById(projectId);
-const certification = await getCertifyByProjectId(projectId);
-
 // Default context - will be updated client-side
 const userContext = {
   username: null,
@@ -45,6 +23,37 @@ const userContext = {
   isProfessor: false,
   userLiked: false,
 };
+
+// generate paths
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  const languages = ['en', 'th'];
+  const paths = projects.data.flatMap((p) => {
+    return languages.map((lang) => {
+      return {
+        params: {
+          lang,
+          slug: p.projectId,
+        },
+      };
+    });
+  });
+  return paths;
+}
+
+// load params and project
+const { slug: projectId, lang } = Astro.params as {
+  slug: string;
+  lang: string;
+};
+const currentLang = lang === 'th' ? 'th' : 'en';
+i18n.changeLanguage(currentLang);
+const t = i18n.t.bind(i18n);
+
+const project = await getProjectById(projectId);
+if (!project) {
+  return Astro.redirect(`/${currentLang}/404`, 302);
+}
 ---
 
 <Layout title={project.title}>
@@ -53,7 +62,7 @@ const userContext = {
   <ContentSection t={t} lang={lang} project={project} />
   <ExternalLinksSection t={t} lang={lang} project={project} />
   <ContributorSection t={t} lang={lang} project={project} />
-  <CertifySection t={t} lang={lang} project={project} certification={certification} userContext={userContext}/>
+  <!-- <CertifySection t={t} lang={lang} project={project} certification={certification} userContext={userContext}/> -->
   <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>

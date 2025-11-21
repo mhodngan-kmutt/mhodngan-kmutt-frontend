@@ -1,11 +1,11 @@
 ---
 export const prerender = false;
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '../../../../layouts/Layout.astro';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
-import HeaderBar from '../../../components/common/header/HeaderBar.astro';
-import { AdvanceSearch } from '../../../components/common/dropdown/AdvanceSearch';
-import i18n from '../../../i18n/i18n';
-import { getProjects } from '../../../lib/api';
+import HeaderBar from '../../../../components/common/header/HeaderBar.astro';
+import { AdvanceSearch } from '../../../../components/common/dropdown/AdvanceSearch';
+import i18n from '../../../../i18n/i18n';
+import { getProjects } from '../../../../lib/api';
 
 // dynamic paths
 export async function getStaticPaths() {
@@ -20,6 +20,9 @@ const { lang } = Astro.params;
 const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
 const t = i18n.t.bind(i18n);
+
+const { data: sessionData } = await Astro.locals.supabase.auth.getSession(); 
+const token = sessionData.session?.access_token;
 
 const q = Astro.url.searchParams.get('q') || undefined;
 const badge = Astro.url.searchParams.get('badge') || undefined;
@@ -43,16 +46,29 @@ const orderBy = q
 
 const order = (Astro.url.searchParams.get('order') as 'asc' | 'desc') || 'desc';
 
-const { meta, data: projects } = await getProjects({
-  q,
-  badge,
-  status,
-  from,
-  to,
-  contributors,
-  orderBy,
-  order,
-});
+let meta, projects;
+
+try {
+  const result = await getProjects({
+    q,
+    badge,
+    status,
+    from,
+    to,
+    contributors,
+    orderBy,
+    order,
+    isMyProject: true,
+    token: token,
+  });
+  meta = result.meta;
+  projects = result.data;
+} catch (error: any) {
+  if (error.message.includes('401')) {
+    return Astro.redirect(`/${currentLang}/unauthorized`);
+  }
+  throw error;
+}
 ---
 
 <Layout title={t('home.month.topic')} class="overflow-y-scroll">
@@ -67,7 +83,7 @@ const { meta, data: projects } = await getProjects({
               <span class="text-main-primary">"{q}"</span>
             </>
           ) : (
-            <span>All Projects</span>
+            <span>My Projects</span>
           )}
         </h2>
         <AdvanceSearch client:load />
@@ -91,6 +107,9 @@ const { meta, data: projects } = await getProjects({
               professors={p.certifiedBy}
               contributors={p.contributors}
               link={`/${currentLang}/project/${p.projectId}`}
+              showActions={true}
+              projectId={p.projectId}
+              token={token}
             />
           ))}
         </div>

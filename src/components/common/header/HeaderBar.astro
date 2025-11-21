@@ -28,7 +28,7 @@ const backgroundClass = backgroundClasses[backgroundColor] || 'bg-float-backgrou
       <img src={headerLogo.src} alt="Logo" />
     </a>
     <a href="/en/project/" class="small hidden md:block">{t('header.explore')}</a>
-    <Searchbar className="hidden md:block" placeholder="Search..." componentsColor={componentsColor} client:load />
+    <Searchbar className="hidden md:block" placeholder="Search..." componentsColor={componentsColor} client:load lang={lang} />
   </div>
   
   <AuthHeaderButton client:load signinButtonText={t('header.signin')} lang={lang} componentsColor={componentsColor} mode={mode} />
