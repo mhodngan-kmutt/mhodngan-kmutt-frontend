@@ -1,10 +1,6 @@
 import projectsJson from "../mocks/projects.json";
 import projectsOfTheMonthJson from "../mocks/project_of_the_month.json";
-<<<<<<< HEAD
-import { getSession } from "./auth";
-=======
 const API_BASE_URL = import.meta.env.PUBLIC_API_URL;
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
 
 // ---------- Interfaces ----------
 export interface Category {
@@ -96,7 +92,6 @@ export interface GetProjectsParams {
 }
 
 // ---------- API Configuration ----------
-const API_BASE_URL = import.meta.env.PUBLIC_API_URL;
 
 // ---------- Utility ----------
 function generateSlug(title: string): string {
@@ -145,11 +140,7 @@ export async function getProjects(params: GetProjectsParams = {}): Promise<Proje
   };
 }
 
-<<<<<<< HEAD
-// Fetch single project by ID from backend
-=======
  // Fetch single project by ID from backend
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
 export async function getProjectById(id: string) {
   try {
     const response = await fetch(`${API_BASE_URL}/project/${id}`);
@@ -170,7 +161,6 @@ export async function getProjectById(id: string) {
   } catch (error) {
     console.error(`Error fetching project ${id}:`, error);
   }
-<<<<<<< HEAD
 }
 
 // Fetch certification info. by project Id
@@ -196,8 +186,6 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
   const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
   if (!project) throw new Error(`Project not found: ${slug}`);
   return project;
-=======
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
 }
 
 export async function deleteProject(id: string, token: string): Promise<void> {
@@ -213,46 +201,6 @@ export async function deleteProject(id: string, token: string): Promise<void> {
   }
 }
 
-<<<<<<< HEAD
-// User Profile
-export async function getMyProfile() {
-  try {
-    // Get current session
-    const session = await getSession();
-
-    if (!session?.user) {
-      console.log('No authenticated user found');
-      return null;
-    }
-
-    // Get my profile, include passing authorization header
-    const response = await fetch(`${API_BASE_URL}/user/me`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`,
-      },
-      credentials: 'include',
-    });
-
-    if(!response.ok){
-      if (response.status === 401) {
-        console.log('User not authenticated');
-        return null;
-      }
-      throw new Error(`Failed to fetch my profile: ${response.status} ${response.statusText}`);
-    }
-
-    const user = await response.json();
-    return user;
-    
-  } catch (error) {
-    console.error(`Error fetching my profile`, error);
-    return null;
-  }
-  
-}
-=======
 export async function getCurrentUser(token: string): Promise<Contributor> {
   const response = await fetch(`${API_BASE_URL}/user/me`, {
     method: 'GET',
@@ -269,4 +217,3 @@ export async function getCurrentUser(token: string): Promise<Contributor> {
   const data: Contributor = await response.json();
   return data;
 }
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c

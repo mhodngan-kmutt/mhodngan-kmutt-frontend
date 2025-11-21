@@ -2,18 +2,6 @@
 import { getProjects } from '@/lib/api';
 import BigCard from "../common/previewCard/BigCard.astro";
 
-<<<<<<< HEAD
-const { t, lang, project } = Astro.props;
-
-// Decompose project
-const projectId = project?.projectId || '';
-const projectTitle = project?.title || 'Untitled Project';
-const projectPreviewImageUrl = project?.previewImageUrl || '/default-image.jpg';
-const projectDescription = project?.shortDescription || '';
-const contributors = project?.contributors || [];
-const likeCount = project?.likeCount || 0;
-const viewCount = project?.viewCount || 0;
-=======
 const { t, lang } = Astro.props;
 const PAGE_SIZE = 8;
 const ORDER_BY = 'monthly_like_count';
@@ -24,38 +12,12 @@ const { meta, data: projects } = await getProjects({
   orderBy: ORDER_BY,
   order: ORDER,
 });
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
 ---
 
 <section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex px-3">
         <div class="simple-card w-full! px-5 py-5">
             <h3 class="text-main-neutral2">Related Projects</h3>
-<<<<<<< HEAD
-            <div class="grid grid-cols-2 px-4 py-3 gap-4 justify-items-center max-w-4xl mx-auto">
-                <!-- <BigCard
-                  t={t}
-                  projectImage={project.previewImageUrl}
-                  title={project.title}
-                  explanation={project.shortDescription}
-                  likes={project.likeCount}
-                  views={project.viewCount}
-                  professors={project.contributors[0]}
-                  contributors={project.contributors}
-                  link={`/${lang}/project/${project.slug}`}
-                /> -->
-                <BigCard
-                  t={t}
-                  projectImage={projectPreviewImageUrl}
-                  title={projectTitle}
-                  explanation={projectDescription}
-                  likes={likeCount}
-                  views={viewCount}
-                  professors={contributors[0]}
-                  contributors={contributors}
-                  link={`#`}
-                />
-=======
             <div class="flex flex-wrap gap-6 justify-center">
                 {
                   projects.map((p) => (
@@ -72,7 +34,6 @@ const { meta, data: projects } = await getProjects({
                       />
                     ))
                 }
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
             </div>
         </div>
     </div>

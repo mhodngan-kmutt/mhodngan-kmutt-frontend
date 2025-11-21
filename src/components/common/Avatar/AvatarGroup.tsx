@@ -3,11 +3,7 @@
 import React from 'react'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
-<<<<<<< HEAD
-interface Contributor {
-=======
 export interface Contributor {
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
   userId: string;
   username: string;
   fullname: string;
@@ -16,11 +12,6 @@ export interface Contributor {
   role: string;
 }
 
-<<<<<<< HEAD
-interface AvatarGroupProps {
-  contributors: Contributor[] | string;
-  className?: string;
-=======
 export interface AvatarGroupProps {
   contributors: Contributor[];
   className?: string;
@@ -38,7 +29,6 @@ function getRandomColor(userId: string) {
   }
   const index = Math.abs(hash) % PLACEHOLDER_COLORS.length;
   return PLACEHOLDER_COLORS[index];
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
 }
 
 export default function AvatarGroup({
@@ -76,23 +66,6 @@ export default function AvatarGroup({
 
   return (
     <div className="flex justify-center -space-x-5">
-<<<<<<< HEAD
-      {parsedContributors.map((contributor: Contributor) => (
-        <Avatar 
-          key={contributor.userId}
-          className={`w-10 h-10 border border-main-white ${className}`}
-          title={`${contributor.fullname} (${contributor.email})`}
-        >
-          <AvatarImage 
-            src={contributor.profileImageUrl} 
-            alt={contributor.fullname} 
-          />
-          <AvatarFallback>
-            {(contributor.fullname || 'U').charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      ))}
-=======
       {contributors.map((c, i) => {
         const initial = c.fullname?.charAt(0).toUpperCase() || '?';
         const color = getRandomColor(c.userId);
@@ -105,7 +78,6 @@ export default function AvatarGroup({
           </Avatar>
         )
       })}
->>>>>>> 15cc28596eafd404af0b0b7247895ea35f32b13c
     </div>
   )
 }
