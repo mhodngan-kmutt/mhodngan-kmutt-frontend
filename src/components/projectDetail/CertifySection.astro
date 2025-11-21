@@ -3,18 +3,16 @@ import { Award, CheckCircle, Shield, X } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
 import { ConfirmationModal } from "../common/modal/CertifyModal";
 
-const { t, lang, project, certification, userContext } = Astro.props;
+const { t, lang, project, userContext } = Astro.props;
 
 // Decompose project
 const projectId = project.projectId || '';
 const projectTitle = project.title || '';
+const certifiedBy = Array.isArray(project.certifiedBy) 
+  ? project.certifiedBy 
+  : project.certifiedBy ? [project.certifiedBy] : [];
 
-// Decompose certification
-const certifyData = certification.data.data || [];
-// console.log(certification.data.data[0].professor.user.fullname);
-// console.log(certification.data.data[0].professor.faculty);
-
-const isCertified = certification.data.count > 0;
+const isCertified = certifiedBy.length > 0;
 
 // Decompose userContext
 // const { isProfessor } = userContext;
@@ -32,17 +30,17 @@ let isProfessor = true;
                 <h3 class="text-main-neutral2">Certified by Professor</h3>
             </div>
             <div class="flex flex-col gap-3">
-                {isCertified && certifyData.map((data : any) => (
+                {isCertified && certifiedBy.map((prof : any) => (
                     <div class="flex items-center gap-3">
                         <Avatar
                             client:load
-                            name={data.professor.user.fullname}
-                            avatar={data.professor.user.profile_image_url}
+                            name={prof.fullname}
+                            avatar={prof.profile_image_url}
                         />
                         <div class="flex flex-col py-1">
-                            <span class="large">{data.professor.user.fullname}</span>
+                            <span class="large">{prof.fullname}</span>
                             <span class="detail text-supporting-ghost">
-                                {data.professor.position} | {data.professor.faculty}
+                                {prof.position} | {prof.faculty}
                             </span>
                         </div>
                     </div>
