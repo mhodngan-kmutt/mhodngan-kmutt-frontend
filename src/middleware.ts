@@ -1,40 +1,45 @@
-
 import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerClient } from './lib/supabase-server';
-
-// Define which routes are protected
-const protectedRoutes = ['/en/admin', '/en/profile'];
+import { getCurrentUser } from './lib/api';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { url, cookies, redirect, locals } = context;
 
-  // Skip auth check during build/prerendering
-  if (!import.meta.env.PUBLIC_SUPABASE_URL || !import.meta.env.PUBLIC_SUPABASE_ANON_KEY) {
-    return next();
-  }
+  // Skip checks during build or missing env
+  const missingEnv =
+    !import.meta.env.PUBLIC_SUPABASE_URL ||
+    !import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+  if (missingEnv) return next();
 
   // Create Supabase server client
   const supabase = createSupabaseServerClient(cookies);
+  const { data: { session } } = await supabase.auth.getSession();
 
-  // Get the session from Supabase
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // Store session and supabase client in locals for use in pages
+  // Expose to the rest of the app
   locals.session = session;
   locals.supabase = supabase;
 
-  // Check if the user is trying to access a protected route
-  const isProtectedRoute = protectedRoutes.some((route) => url.pathname.startsWith(route));
-
-  if (isProtectedRoute) {
-    // If there's no session, redirect to the unauthorized page
+  /**
+   * --------------------------------------------------------------------
+   * 🔐 Route Guard: /project/me  (contributors only)
+   * --------------------------------------------------------------------
+   */
+  if (url.pathname.endsWith('/project/me')) {
     if (!session) {
-      return redirect('/en/unauthorized');
+      return redirect('/en/404', 302);
+    }
+
+    try {
+      const user = await getCurrentUser(session.access_token);
+
+      if (user.role !== 'contributor') {
+        return redirect('/en/404', 302);
+      }
+    } catch {
+      return redirect('/en/404', 302);
     }
   }
 
-  // If the route is not protected or the user is authenticated, continue
   return next();
 });

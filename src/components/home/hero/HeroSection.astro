@@ -1,11 +1,17 @@
 ---
-import { getProjectsOfTheMonth } from '@/lib/api';
+import { getProjects } from '@/lib/api';
 import AvatarGroup from '../../common/Avatar/AvatarGroup';
 
 const { t, lang } = Astro.props;
+const PAGE_SIZE = 1;
+const ORDER_BY = 'monthly_like_count';
+const ORDER = 'desc';
 
-// get date from API mock
-const projects = await getProjectsOfTheMonth();
+const { meta, data: projects } = await getProjects({
+  pageSize: PAGE_SIZE,
+  orderBy: ORDER_BY,
+  order: ORDER,
+});
 const bestInList = projects[0];
 ---
 
@@ -16,12 +22,12 @@ const bestInList = projects[0];
     <div
       class="flex justify-center items-center px-2 rounded-lg border border-supporting-light-orange"
     >
-      {bestInList.link.includes('month') ? bestInList.link : 'Oct, 2025'}
+      {bestInList.projectId.includes('month') ? bestInList.projectId : 'Nov, 2025'}
     </div>
     <p>
       {t('home.hero.view')}
-      {bestInList.views} | {t('home.hero.like')}
-      {bestInList.likes}
+      {bestInList.viewCount} | {t('home.hero.like')}
+      {bestInList.likeCount}
     </p>
   </div>
 
@@ -29,13 +35,13 @@ const bestInList = projects[0];
   <h1 class="text-center">{bestInList.title}</h1>
 
   <!-- Contributor avatars -->
-  <AvatarGroup client:load contributors={bestInList.Contributor} />
+  <AvatarGroup client:load contributors={bestInList.contributors} />
 
   <!-- Project image -->
   <div class="w-full h-[600px] my-4">
-    <a href={`/${lang}/project/${bestInList.slug}`}>
+    <a href={`/${lang}/project/${bestInList.projectId}`}>
       <img
-        src={bestInList.image}
+        src={bestInList.previewImageUrl}
         alt={bestInList.title}
         class="w-full h-full object-cover rounded-xl hover:opacity-90 transition"
         loading="lazy"

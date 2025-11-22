@@ -1,12 +1,14 @@
 ---
-import { getProjectsOfTheMonth } from '@/lib/api';
+import { getProjects } from '@/lib/api';
 import BigCard from '@/components/common/previewCard/BigCard.astro';
 import { ArrowRightIcon } from 'lucide-react';
 
 const { t, lang } = Astro.props;
 
 // get date from API mock
-const projects = await getProjectsOfTheMonth();
+const { meta, data: projects } = await getProjects({
+  pageSize: 3,
+});
 ---
 
 <section id="ExploreSection" class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5">
@@ -20,19 +22,18 @@ const projects = await getProjectsOfTheMonth();
   <div class="flex flex-wrap gap-6 justify-center">
     {
       projects.map((p) => (
-        <BigCard
-          t={t}
-          projectImage={p.image}
-          title={p.title}
-          explanation={p.description}
-          likes={p.likes}
-          views={p.views}
-          professors={p.Professors}
-          contributors={p.Contributor}
-          teamName={p.team}
-          link={`/${lang}/project/${p.slug}`}
-        />
-      ))
+          <BigCard
+            t={t}
+            projectImage={p.previewImageUrl}
+            title={p.title}
+            explanation={p.shortDescription}
+            likes={p.likeCount}
+            views={p.viewCount}
+            professors={p.certifiedBy}
+            contributors={p.contributors}
+            link={`/${lang}/project/${p.projectId}`}
+          />
+        ))
     }
   </div>
 

@@ -2,37 +2,48 @@
 import { MessageCircle, Heart, Download } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
 import AvatarGroup from "../common/Avatar/AvatarGroup";
+import { LikeButton } from "../common/button/LikeButton";
 import { CommentInput } from "../ui/commentInput";
+import { formatDate } from "@/lib/dateFormat";
 
-const { t, lang, project } = Astro.props;
+const { t, lang, project, userContext } = Astro.props;
+
+const projectId = project.projectId || '';
+const contributors = project.contributors || [];
+const createdAt = formatDate(project?.createdAt || 'Unknown date');
+const likeCount = project?.likeCount || 0;
+
+const userFullName = userContext.name;
+const userProfile = userContext.avatar;
+const userLiked = userContext.userLiked;
 ---
 
 <section id="CommentProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex flex-col px-3 gap-3">
 
         <!-- Contributor and Buttons Card -->
-        <div class="simple-card !w-full px-5 py-5">
+        <div class="simple-card w-full! px-5 py-5">
             <div class="flex justify-between items-center">
                 <!-- Contributor information -->
                 <div class="flex flex-col gap-2">
                     <!-- Publisher avatar -->
                     <div class="flex items-center gap-4">
                         <Avatar
-                            client:idle
-                            name={project.Contributor[0].name}
-                            avatar={project.Contributor[0].avatar}
+                            client:load
+                            name={contributors[0].fullname}
+                            avatar={contributors[0].profileImageUrl}
                         />
-                        <div style="color: #737373">
-                            <span class="small">{project.Contributor[0].name}</span>
-                            <span class="detail"> | {project.published}</span>
+                        <div class="text-supporting-ghost">
+                            <span class="small">{contributors[0].fullname}</span>
+                            <span class="detail"> | {createdAt}</span>
                         </div>
                     </div>
 
                     <!-- Contributor avatars -->
                     <div class="flex items-center gap-4">
                         <AvatarGroup
-                            client:idle
-                            contributors={project.Contributor}
+                            client:load
+                            contributors={contributors}
                             className="w-6 h-6 -space-x-7"
                         />
                     </div>
@@ -40,11 +51,15 @@ const { t, lang, project } = Astro.props;
 
                 <!-- Action buttons -->
                 <div class="flex gap-2">
-                    <button class="btn-tertiary">
-                        <Heart className='text-main-secondary w-5 h-5'/>
-                        <span class="small text-main-secondary">Like</span>
-                        <span class="small text-main-secondary"> ({project.likes}) </span>
-                    </button>
+                    <!-- Like button -->
+                    <LikeButton
+                        client:load
+                        projectId={projectId}
+                        initialLikes={likeCount}
+                        initialLiked={userLiked}
+                    />
+
+                    <!-- Download button -->
                     <button class="btn-primary">
                         <Download className='text-main-white w-5 h-5'/>
                         <span class="small text-main-white">Download Project Resource</span> 
@@ -54,7 +69,7 @@ const { t, lang, project } = Astro.props;
         </div>
 
         <!-- Display Comments Card -->
-        <div class="simple-card !w-full px-5 py-5">
+        <div class="simple-card w-full! px-5 py-5">
             <div class="flex items-center gap-2">
                 <MessageCircle className=" w-5 h-5 text-main-neutral2"/>
                 <h3 class="text-main-neutral2">Comments</h3>
@@ -63,18 +78,18 @@ const { t, lang, project } = Astro.props;
             <div class="flex flex-col gap-3">
                 <div class="flex items-start px-4 py-3 gap-4">
                     <Avatar
-                        client:idle
-                        name={project.Contributor[0].name}
-                        avatar={project.Contributor[0].avatar}
-                        className="flex-shrink-0"
+                        client:load
+                        name={contributors[0].fullname}
+                        avatar={contributors[0].profileImageUrl}
+                        className="shrink-0"
                     />
                     <div class="flex flex-col py-1 gap-1 max-w-md">
                         <div class="gap-1">
-                            <span class="text-main-neutral2 small">{project.Contributor[0].name}</span>
-                            <span class="text-supporting-support detail">·</span>
+                            <span class="text-main-neutral2 small">{contributors[0].fullname}</span>
+                            <span class="text-supporting-support detail">Â·</span>
                             <span class="text-supporting-support detail">5 days ago</span> <!-- wait for mock data -->
                         </div>
-                        <p class="text-main-neutral2 detail break-words"> <!-- wait for mock data -->
+                        <p class="text-main-neutral2 detail warp-break-words"> <!-- wait for mock data -->
                             This is groundbreaking research! The methodology is particularly impressive and the results show significant improvement over existing approaches.
                         </p>
                     </div>
@@ -83,23 +98,33 @@ const { t, lang, project } = Astro.props;
         </div>
 
         <!-- Input Comment Card -->
-        <div class="simple-card !w-full px-5 py-5 gap-3">
+        <div class="simple-card w-full! px-5 py-5 gap-3">
             <h3 class="text-main-neutral2">What are your thoughts?</h3>
             <div class="flex flex-col gap-3">
                 <div class="flex items-start px-4 py-3 gap-4"> <!-- User Name and Avatar -->
                     <Avatar
-                        client:idle
-                        name={project.Contributor[0].name}
-                        avatar={project.Contributor[0].avatar}
+                        client:load
+                        name={contributors[0].fullname}
+                        avatar={contributors[0].profileImageUrl}
                     />
                     <div class="flex flex-col py-1 gap-3 flex-1">
                         <span class="text-main-neutral2 small">Your username</span>
                         <CommentInput
-                            client:load
-                            placeholder="Share your thoughts about this project..."
-                            onSubmit={(comment) => console.log('New comment:', comment)} 
-                        /> <!-- Add API here kub -->
-                    </ddiv>
+                                client:load
+                                placeholder="Share your thoughts about this project..."
+                                onSubmit={async (comment) => {
+                                    await fetch('/api/comments/', {
+                                        method: 'POST',
+                                        body: JSON.stringify({
+                                            projectId: project.id,
+                                            comment
+                                        })
+                                    });
+
+                                    window.location.reload(); // Refresh to show new comment
+                                }}
+                            />
+                    </div>
                 </div>
             </div>
         </div>

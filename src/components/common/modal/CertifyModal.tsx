@@ -160,12 +160,12 @@ export function ConfirmationModal({
               </button>
             </div>
             
-            {/* Success Content */}
+            Success Content
             <div className="mb-6 text-center">
               <div className="flex flex-col items-center gap-4 mb-4">
-                {successImage && (
+                {/* {successImage && (
                     <img src={successImage} alt="coolDuckImage" width="240" className="mx-auto" />
-                )}
+                )} */}
                 <CheckCircle className="w-6 h-6 text-main-secondary" />
                 <span className="large text-main-neutral2 mb-2">Project Certified Successfully!</span>
                 <div>
