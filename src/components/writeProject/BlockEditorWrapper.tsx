@@ -2,7 +2,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import BlockEditor, { type BlockEditorRef } from '../common/BlockEditor';
+import BlockEditor, { type BlockEditorRef } from '../common/BlockNote/BlockEditor';
 
 interface BlockEditorWrapperProps {
   currentLang: string;

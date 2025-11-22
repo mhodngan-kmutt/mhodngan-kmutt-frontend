@@ -5,7 +5,7 @@ import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { forwardRef, useImperativeHandle, useState, useEffect, useRef, useCallback } from "react"; // 💡 เพิ่ม useCallback และ useRef
+import { forwardRef, useImperativeHandle, useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner"
 
