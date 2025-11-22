@@ -218,3 +218,26 @@ export async function getCurrentUser(token: string): Promise<Contributor> {
   const data: Contributor = await response.json();
   return data;
 }
+
+export async function sendComment(params: {projectId: string; message: string; token: string;}): Promise<any> {
+  const { projectId, message, token } = params;
+
+  const response = await fetch(`${API_BASE_URL}/comment`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      project_id: projectId,
+      message: message,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Failed to post comment: ${response.status}`);
+  }
+
+  return await response.json();
+}

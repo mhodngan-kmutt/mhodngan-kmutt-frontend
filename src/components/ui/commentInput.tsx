@@ -39,48 +39,33 @@ export function CommentInput({
   const canSubmit = value.trim() && !isDisabled;
 
   return (
-    <div class="w-full">
+    <div className="w-full">
       <form onSubmit={handleSubmit}>
-        <div class="relative">
+        <div className="relative">
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
             rows={3}
             placeholder={placeholder}
             disabled={isDisabled}
-            class="subtle w-full min-h-20 max-h-48 resize-y rounded-md bg-white px-4 py-3 pr-12 border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500"
+            className="subtle w-full min-h-20 max-h-48 resize-y rounded-md bg-white px-4 py-3 pr-12 border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500"
           />
           
           {canSubmit ? (
-            <button
-              type="submit"
-              class="btn-secondary absolute bottom-3 right-3 w-8 h-8 rounded-md"
-            >
-              {isSubmitting ? (
-                <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
+            <button type="submit" className="btn-secondary absolute bottom-3 right-3 rounded-md flex items-center justify-center">
+              <Send className="w-4 h-4 text-main-white"/>
             </button>
           ) : (
-            <button
-              type="submit"
-              disabled
-              class="btn-locked absolute bottom-3 right-3 w-8 h-8 rounded-md"
-            >
-              <Send className="w-4 h-4" />
+            <button type="submit" disabled className="btn-locked absolute bottom-3 right-3 rounded-md flex items-center justify-center">
+              <Send className="w-4 h-4 text-supporting-ghost"/>
             </button>
           )}
         </div>
       </form>
       
       {error && (
-        <p class="detail text-supporting-error">{error}</p>
+        <p className="detail text-supporting-error">{error}</p>
       )}
-      
-      <p class="detail text-supporting-ghost">
-        Press Ctrl+Enter to submit
-      </p>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 ---
-import { MessageCircle, Heart, Download, CornerDownRight } from "lucide-react";
+import { MessageCircle, CornerDownRight } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
 import ContributorActionBar from "./ContributorActionBar.astro";
-import { CommentInput } from "../ui/commentInput";
 import { formatDate } from "@/lib/dateFormat";
+import CommentInputSection from "./CommentInputSection";
 
 const { t, lang, project, userContext } = Astro.props;
 
@@ -17,91 +17,74 @@ const comments = Array.isArray(project.comments)
   ? project.comments 
   : project.comments ? [project.comments] : [];
 
-const userFullName = userContext.name;
-const userProfile = userContext.avatar;
-const userLiked = userContext.userLiked;
+const userLiked = userContext.userLiked || false;
 ---
 
 <section id="CommentProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
-    <div class="flex flex-col px-3 gap-3">
+  <div class="flex flex-col px-3 gap-3">
 
-        <!-- Contributor and Buttons Card -->
-        <div class="simple-card w-full! px-5 py-5">
-            <ContributorActionBar
-                contributors={contributors}
-                projectId={projectId}
-                likeCount={likeCount}
-                userLiked={userLiked}
-                createdAt={createdAt}
-            />
-        </div>
-
-        <!-- Display Comments Card -->
-        <div class="simple-card w-full! px-5 py-5">
-            <div class="flex items-center gap-2">
-                <MessageCircle className=" w-5 h-5 text-main-neutral2"/>
-                <h3 class="text-main-neutral2">Comments</h3>
-                {(comments.length > 0) && (
-                    <h3 class="text-main-neutral2">({comments.length})</h3>
-                )}
-            </div>
-            <div class="flex flex-col gap-3">
-                <div class="flex items-start px-4 py-3 gap-4">
-                    {comments.map((commentator: any)=>(
-                        <Avatar
-                            client:load
-                            name={commentator.user.fullname}
-                            avatar={commentator.user.profileImageUrl}
-                            className="shrink-0"
-                        />
-                        <div class="flex flex-col py-1 gap-1 max-w-md">
-                            <div class="gap-1">
-                                <span class="text-main-neutral2 small">{commentator.user.fullname}</span>
-                                <span class="text-supporting-support detail">Â·</span>
-                                <span class="text-supporting-support detail">{formatDate(commentator.commentedAt)}</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <CornerDownRight className="w-3 h-3 text-main-neutral2"/>
-                                <p class="text-main-neutral2 detail warp-break-words">
-                                    {commentator.message}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>  
-        </div>
-
-        <!-- Input Comment Card -->
-        <div class="simple-card w-full! px-5 py-5 gap-3">
-            <h3 class="text-main-neutral2">What are your thoughts?</h3>
-            <div class="flex flex-col gap-3">
-                <div class="flex items-start px-4 py-3 gap-4"> <!-- User Name and Avatar -->
-                    <Avatar
-                        client:load
-                        name={contributors[0].fullname}
-                        avatar={contributors[0].profileImageUrl}
-                    />
-                    <div class="flex flex-col py-1 gap-3 flex-1">
-                        <span class="text-main-neutral2 small">Your username</span>
-                        <CommentInput
-                                client:load
-                                placeholder="Share your thoughts about this project..."
-                                onSubmit={async (comment) => {
-                                    await fetch('/api/comments/', {
-                                        method: 'POST',
-                                        body: JSON.stringify({
-                                            projectId: project.id,
-                                            comment
-                                        })
-                                    });
-
-                                    window.location.reload(); // Refresh to show new comment
-                                }}
-                            />
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Contributor and Buttons Card (remains the same) -->
+    <div class="simple-card w-full! px-5 py-5">
+      <ContributorActionBar
+        contributors={contributors}
+        projectId={projectId}
+        likeCount={likeCount}
+        userLiked={userLiked}
+        createdAt={createdAt}
+      />
     </div>
+
+    <!-- Display Comments Card (remains the same) -->
+    <div class="simple-card w-full! px-5 py-5">
+      <div class="flex items-center gap-2">
+        <MessageCircle className="w-5 h-5 text-main-neutral2"/>
+        <h3 class="text-main-neutral2">Comments</h3>
+        {comments.length > 0 && (
+          <h3 class="text-main-neutral2">({comments.length})</h3>
+        )}
+      </div>
+      <div class="flex flex-col">
+        {comments.length > 0 ? (
+          comments.map((commentator: any) => (
+            <div class="flex items-start px-4 py-3 gap-4">
+              <Avatar
+                client:load
+                name={commentator.user.fullname}
+                avatar={commentator.user.profileImageUrl}
+                className="shrink-0"
+              />
+              <div class="flex flex-col py-1 gap-1 max-w-md">
+                <div class="gap-1">
+                  <span class="text-main-neutral2 small">{commentator.user.fullname}</span>
+                  <span class="text-supporting-support detail">·</span>
+                  <span class="text-supporting-support detail">
+                    {formatDate(commentator.commentedAt)}
+                  </span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <CornerDownRight className="w-3 h-3 text-main-neutral2 shrink-0 mt-1"/>
+                  <p class="text-main-neutral2 detail warp-break-words">
+                    {commentator.message}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div class="text-center py-6 text-sm text-gray-500">
+            No comments yet. Be the first to share your thoughts!
+          </div>
+        )}
+      </div>  
+    </div>
+
+    <!-- Input Comment Card -->
+    <div class="simple-card w-full! px-5 py-5 gap-3">
+      <h3 class="text-main-neutral2">What are your thoughts?</h3>
+        <CommentInputSection 
+            client:load 
+            projectId={projectId} 
+        />
+    </div>
+  </div>
 </section>

@@ -14,11 +14,14 @@ import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
 import HeaderBar from '@/components/common/header/HeaderBar.astro';
 
-// Default context - will be updated client-side
+// empty user context, will be filled on client
 const userContext = {
+  userId: null,
   username: null,
   name: null,
   avatar: null,
+  role: null,
+  email: null,
   isAuthenticated: false,
   isProfessor: false,
   userLiked: false,
@@ -66,39 +69,3 @@ if (!project) {
   <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>
-
-<!-- <script>
-  import { getMyProfile } from '@/lib/api';
-  
-  async function initUserContext() {
-    try {
-      const user = await getMyProfile();
-      
-      if (user) {
-        // Update global context and UI here
-        globalThis.USER_CONTEXT = {
-          userId : user.uerId,
-          username: user.username,
-          name: user.fullname,
-          avatar: user.profileImageUrl,
-          role: user.role,
-          isAuthenticated: true,
-          isProfessor: user.role === 'professor',
-          userLiked: false, // Check this separately
-        };
-        
-        // Dispatch event for React components
-        window.dispatchEvent(new CustomEvent('userContextReady', {
-          detail: globalThis.USER_CONTEXT
-        }));
-      } else {
-        console.log('❌ No user found or not authenticated');
-      }
-    } catch (error) {
-      console.error('💥 Error initializing user context:', error);
-    }
-  }
-  
-  // Run when DOM is loaded
-  document.addEventListener('DOMContentLoaded', initUserContext);
-</script> -->
