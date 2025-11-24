@@ -5,9 +5,9 @@ import HeaderBar from '../common/header/HeaderBar.astro';
 import { Heart, Download } from 'lucide-react';
 import { LikeButton } from '../common/button/LikeButton';
 import { formatDate } from '../../lib/dateFormat';
-import ContributorActionBar from './ContributorActionBar.astro';
+import { ContributorActionBar } from "./ContributorActionBar";
 
-const { t, lang, project, userContext } = Astro.props;
+const { t, lang, project, token, userContext } = Astro.props;
 
 // Decompose project
 const projectId = project?.projectId || '';
@@ -18,9 +18,8 @@ const contributors = project?.contributors || [];
 const likeCount = project?.likeCount || 0;
 const files = project.files || [];
 const createdAt = formatDate(project?.createdAt || 'Unknown date');
+const isLiked = project.isLikedByCurrentUser || false;
 
-// Decompose user data
-const { userLiked } = userContext;
 ---
 
 <section id="HeroProjectDetail" class="flex w-full flex-col gap-4 pt-30 py-6 px-[150px]">
@@ -52,11 +51,13 @@ const { userLiked } = userContext;
 
   <!-- Contributor and buttons container -->
   <ContributorActionBar
+    client:load
     contributors={contributors}
     projectId={projectId}
     likeCount={likeCount}
-    userLiked={userLiked}
+    isLiked={isLiked}
     createdAt={createdAt}
     files={files}
+    token={token}
   />
 </section>
