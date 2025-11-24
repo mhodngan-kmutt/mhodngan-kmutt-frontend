@@ -87,7 +87,7 @@ export default function CancelButton({ onCancel }: CancelButtonProps) {
 
       // 3. Optional callback and page reload
       onCancel?.();
-      window.location.reload();
+      window.history.back();
     } catch (e) {
       console.error("❌ Cancel error:", e);
     }
@@ -122,7 +122,14 @@ export default function CancelButton({ onCancel }: CancelButtonProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="hover:bg-main-neutral small">Keep Drafting</AlertDialogCancel>
+          <AlertDialogCancel
+            onClick={() => {
+              window.history.back();
+            }}
+            className="hover:bg-main-neutral small"
+          >
+            Keep Drafting
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirmCancel}
             className="bg-main-primary hover:bg-supporting-dark-orange text-main-neutral small"
