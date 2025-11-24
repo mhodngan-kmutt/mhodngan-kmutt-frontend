@@ -22,15 +22,6 @@ export interface Contributor {
   role: string;
 }
 
-export interface Contributor {
-  userId: string;
-  username: string;
-  fullname: string;
-  email: string;
-  profileImageUrl: string;
-  role: string;
-}
-
 export interface Professor {
   userId: string;
   fullname: string;
@@ -189,4 +180,23 @@ export async function getCurrentUser(token: string): Promise<Contributor> {
 
   const data: Contributor = await response.json();
   return data;
+}
+
+export async function recordProjectView(user_id: string, project_id: string) {
+  const response = await fetch(`${API_BASE_URL}/view/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id,
+      project_id,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to log project view: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
 }

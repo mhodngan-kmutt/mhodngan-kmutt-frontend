@@ -12,8 +12,15 @@ export interface Contributor {
   role: string;
 }
 
+// Generic person type that works for both Contributor and Professor
+type Person = {
+  userId: string;
+  fullname: string;
+  profileImageUrl?: string;
+};
+
 export interface AvatarGroupProps {
-  contributors: Contributor[];
+  contributors: Person[];
   className?: string;
 }
 

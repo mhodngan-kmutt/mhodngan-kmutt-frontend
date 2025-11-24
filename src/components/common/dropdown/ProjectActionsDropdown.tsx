@@ -44,7 +44,10 @@ export function ProjectActionsDropdown({ projectId, token }: ProjectActionsDropd
   };
 
   return (
-    <>
+    <div onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <MoreHorizontal className="w-6 h-6 hover:text-[var(--color-supporting-support)] transition-colors duration-200" />
@@ -99,6 +102,6 @@ export function ProjectActionsDropdown({ projectId, token }: ProjectActionsDropd
           </AlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   );
 }
