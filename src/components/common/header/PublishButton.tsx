@@ -1,9 +1,10 @@
+// /components/writeProject/PublishButton.tsx
 'use client';
 
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
-// 💡 Local Storage Keys
+// ---------------- Local Storage Keys ----------------
 const TITLE_STORAGE_KEY = 'projectTitle';
 const CONTENT_STORAGE_KEY = 'projectContent';
 const BADGE_STORAGE_KEY = 'projectBadge';
@@ -15,7 +16,7 @@ const PROJECT_RESOURCES_KEY = 'projectResources';
 const DRAFT_ID_KEY = 'currentDraftId';
 const CATEGORY_SELECT_KEY = 'projectSelectedCategoryIds';
 
-// Interfaces
+// ---------------- Interfaces ----------------
 interface Collaborator {
   user_id: string;
   username: string;
@@ -34,7 +35,9 @@ interface UploadedResource {
   file_path: string;
 }
 
-// --- Check if content is empty ---
+// ---------------- Helper Functions ----------------
+
+// Check if content is empty
 function isContentEmpty(contentString: string | null): boolean {
   if (!contentString) return true;
   let blocks: any[];
@@ -44,17 +47,17 @@ function isContentEmpty(contentString: string | null): boolean {
     return true;
   }
   if (!Array.isArray(blocks) || blocks.length === 0) return true;
-  const hasMeaningfulContent = blocks.some(block => {
+
+  return !blocks.some(block => {
     if (!block || !block.type) return false;
     if (block.content && Array.isArray(block.content) && block.content.length > 0) return true;
     if (block.props && block.props.url) return true;
     if (block.type === 'table' || block.type === 'horizontalRule') return true;
     return false;
   });
-  return !hasMeaningfulContent;
 }
 
-// --- Clear all draft keys from Local Storage ---
+// Clear all draft keys from localStorage
 const clearAllDraftKeys = () => {
   if (typeof window !== 'undefined') {
     [
@@ -65,11 +68,13 @@ const clearAllDraftKeys = () => {
   }
 };
 
+// ---------------- PublishButton Component ----------------
 export default function PublishButton() {
+
   const handlePublish = async () => {
-    // 1. Get all data from Local Storage
+    // ---------------- Step 1: Get data from localStorage ----------------
     const draftId = typeof window !== 'undefined' ? localStorage.getItem(DRAFT_ID_KEY) : null;
-    // 💡 แก้ไข: ดึง user object
+
     const { data: userData } = await supabase.auth.getUser();
     const user = userData.user;
 
@@ -86,40 +91,65 @@ export default function PublishButton() {
     const externalLinksJson = localStorage.getItem(EXTERNAL_LINKS_KEY);
     const resourcesJson = localStorage.getItem(PROJECT_RESOURCES_KEY);
 
-    // 2. Validate inputs
+    // ---------------- Step 2: Validate inputs ----------------
     if (!title || title.trim() === "") { toast.warning("Please enter the title."); return; }
     if (isContentEmpty(content)) { toast.warning("Content is empty."); return; }
     if (!rawBadge) { toast.warning("Please select a Badge."); return; }
 
     const sanitizedBadge = rawBadge.trim().split(' ')[0];
 
-    // 3. Prepare project data
-    const projectUpdateData = {
-      project_id: draftId,
-      title,
-      content,
-      badge: sanitizedBadge,
-      short_description: shortDescription,
-      preview_image_url: previewImageUrl,
-      status: 'Published',
-      created_at: new Date().toISOString(),
-    };
-
     try {
       toast.loading("Publishing project...", { id: 'publish-status' });
-      console.log('📦 Badge before upsert:', sanitizedBadge);
 
-      // A. Upsert into `projects`
-      const { data: projectData, error: projectError } = await supabase
+      // ---------------- Step 3: Check if project exists ----------------
+      const { data: existingProject } = await supabase
         .from('projects')
-        .upsert(projectUpdateData)
-        .select('project_id')
+        .select('project_id, created_at')
+        .eq('project_id', draftId)
         .single();
 
-      if (projectError) throw projectError;
-      const finalProjectId = projectData.project_id;
+      let finalProjectId = draftId;
 
-      // B. Handle external links
+      if (existingProject) {
+        // Project exists → update it, only update updated_at
+        const { error: updateError } = await supabase
+          .from('projects')
+          .update({
+            title,
+            content,
+            badge: sanitizedBadge,
+            short_description: shortDescription,
+            preview_image_url: previewImageUrl,
+            status: 'Published',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('project_id', draftId);
+
+        if (updateError) throw updateError;
+
+      } else {
+        // Project does not exist → insert new project with created_at and updated_at
+        const { data: insertData, error: insertError } = await supabase
+          .from('projects')
+          .insert({
+            project_id: draftId,
+            title,
+            content,
+            badge: sanitizedBadge,
+            short_description: shortDescription,
+            preview_image_url: previewImageUrl,
+            status: 'Published',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .select('project_id')
+          .single();
+
+        if (insertError) throw insertError;
+        finalProjectId = insertData.project_id;
+      }
+
+      // ---------------- Step 4: Handle external links ----------------
       if (externalLinksJson) {
         const links: ExternalLink[] = JSON.parse(externalLinksJson);
         await supabase.from('project_external_links').delete().eq('project_id', draftId);
@@ -134,7 +164,7 @@ export default function PublishButton() {
         }
       }
 
-      // C. Handle files/resources
+      // ---------------- Step 5: Handle resources/files ----------------
       if (resourcesJson) {
         const resources: UploadedResource[] = JSON.parse(resourcesJson);
         await supabase.from('project_files').delete().eq('project_id', draftId);
@@ -149,40 +179,36 @@ export default function PublishButton() {
         }
       }
 
-      // D. Handle collaborators
+      // ---------------- Step 6: Handle collaborators ----------------
       let collaborators: Collaborator[] = collaboratorsJson ? JSON.parse(collaboratorsJson) : [];
-      
-      // --- START: เพิ่มผู้ใช้ปัจจุบันเป็น Collaborator อัตโนมัติ ---
-      const isCreatorAlreadyCollaborator = collaborators.some(
-        c => c.user_id === user.id
-      );
 
-      // ถ้าผู้สร้างไม่อยู่ในรายชื่อ ให้เพิ่มเข้าไป
+      // Ensure creator is always a collaborator
+      const isCreatorAlreadyCollaborator = collaborators.some(c => c.user_id === user.id);
       if (!isCreatorAlreadyCollaborator) {
-        // ใช้ username จาก user_metadata ซึ่งเป็นข้อมูลที่มาจาก Supabase Auth
-        const creatorUsername = user.user_metadata?.username || 'Unknown User'; 
-        
+        const creatorUsername = user.user_metadata?.username || 'Unknown User';
         collaborators.push({
           user_id: user.id,
-          username: creatorUsername, 
+          username: creatorUsername,
         });
-        console.log(`✅ Current user (ID: ${user.id}) added to collaborators.`);
       }
-      // --- END: เพิ่มผู้ใช้ปัจจุบันเป็น Collaborator อัตโนมัติ ---
-      
-      // ลบ collaborators เก่าออกก่อน
-      await supabase.from('project_collaborators').delete().eq('project_id', draftId);
 
       if (collaborators.length > 0) {
         const collabInserts = collaborators.map(c => ({
           project_id: finalProjectId,
           contributor_user_id: c.user_id,
         }));
-        const { error: collabError } = await supabase.from('project_collaborators').insert(collabInserts);
+
+        // Use upsert to avoid duplicates
+        const { error: collabError } = await supabase.from('project_collaborators')
+          .upsert(collabInserts, { 
+            onConflict: 'project_id, contributor_user_id',
+            ignoreDuplicates: true,
+          });
+
         if (collabError) throw collabError;
       }
 
-      // E. Handle categories
+      // ---------------- Step 7: Handle categories ----------------
       if (categoriesJson) {
         const categoryIds: string[] = JSON.parse(categoriesJson);
         await supabase.from('project_categories').delete().eq('project_id', draftId);
@@ -196,22 +222,21 @@ export default function PublishButton() {
           if (categoryError) throw categoryError;
         }
       }
-      
 
-      // 4. Clear all local storage data
+      // ---------------- Step 8: Clear localStorage ----------------
       clearAllDraftKeys();
 
       toast.success('Project published successfully!', { id: 'publish-status', duration: 5000 });
       window.location.href = `/en/project/${finalProjectId}`;
+
     } catch (e: any) {
-      const errorMessage = e.message || 'Unexpected error during publishing.';
       console.error('❌ Publish error:', e);
-      toast.error(errorMessage, { id: 'publish-status' });
+      toast.error(e.message || 'Unexpected error during publishing.', { id: 'publish-status' });
     }
   };
 
   return (
-    <button className="btn-primary" onClick={handlePublish} disabled={false}>
+    <button className="btn-primary" onClick={handlePublish}>
       <div className="small">Publish</div>
     </button>
   );

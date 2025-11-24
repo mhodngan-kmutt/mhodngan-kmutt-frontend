@@ -1,3 +1,4 @@
+// /components/common/dropdown/ProjectActionsDropdown.tsx
 'use client';
 
 import { useState } from 'react';
@@ -26,28 +27,37 @@ import { deleteProject } from '@/lib/api';
 
 type ProjectActionsDropdownProps = {
   projectId: string;
+  lang: string;   // "th" | "en"
   token: string;
 };
 
-export function ProjectActionsDropdown({ projectId, token }: ProjectActionsDropdownProps) {
+export function ProjectActionsDropdown({ projectId, lang, token }: ProjectActionsDropdownProps) {
   const [open, setOpen] = useState(false);
 
+  // --- Handler สำหรับ Delete ---
   const handleDelete = async () => {
     try {
       await deleteProject(projectId, token);
       toast.success('Project deleted successfully');
-      window.location.reload();
+      window.location.reload(); // หรือ redirect ไปหน้าอื่นถ้าต้องการ
     } catch (error) {
       console.error('Failed to delete project:', error);
       toast.error('Failed to delete project');
     }
   };
 
+  // --- Handler สำหรับ Edit ---
+  const handleEditNavigate = () => {
+    window.location.href = `/${lang}/project/edit/${projectId}`;
+  };
+
   return (
-    <div onClick={(e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    }}>
+    <div
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <MoreHorizontal className="w-6 h-6 hover:text-[var(--color-supporting-support)] transition-colors duration-200" />
@@ -57,14 +67,18 @@ export function ProjectActionsDropdown({ projectId, token }: ProjectActionsDropd
           className="w-auto bg-main-white border border-main-neutral"
           align="end"
         >
+          {/* Edit */}
           <DropdownMenuItem
-            onSelect={() => alert('Edit functionality not implemented yet')}
+            onSelect={(e) => {
+              e.preventDefault();
+              handleEditNavigate();
+            }}
             className="w-full cursor-pointer hover:bg-neutral-100"
           >
             Edit
           </DropdownMenuItem>
 
-          {/* Use AlertDialogTrigger inside menu */}
+          {/* Delete with confirmation */}
           <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
               <DropdownMenuItem
