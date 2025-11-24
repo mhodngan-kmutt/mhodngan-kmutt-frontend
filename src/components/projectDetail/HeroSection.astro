@@ -16,6 +16,7 @@ const projectPreviewImageUrl = project?.previewImageUrl || '/default-image.jpg';
 const projectCategories = project?.categories || [];
 const contributors = project?.contributors || [];
 const likeCount = project?.likeCount || 0;
+const files = project.files || [];
 const createdAt = formatDate(project?.createdAt || 'Unknown date');
 
 // Decompose user data
@@ -56,5 +57,6 @@ const { userLiked } = userContext;
     likeCount={likeCount}
     userLiked={userLiked}
     createdAt={createdAt}
+    files={files}
   />
 </section>

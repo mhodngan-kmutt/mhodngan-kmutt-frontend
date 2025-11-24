@@ -4,13 +4,15 @@ import Avatar from '../common/Avatar/Avatar';
 import { Download } from 'lucide-react';
 import { LikeButton } from '../common/button/LikeButton';
 import { formatDate } from '../../lib/dateFormat';
+import { DownloadButton } from '../common/button/DownLoadButton';
 
 const { 
   contributors = [], 
   projectId = '', 
   likeCount = 0, 
   userLiked = false,
-  createdAt = 'Unknown date'
+  createdAt = 'Unknown date',
+  files = []
 } = Astro.props;
 
 // Format the date
@@ -57,7 +59,7 @@ const formattedDate = formatDate(createdAt);
   </div>
 
   <!-- Action buttons -->
-  <div class="flex gap-2">
+  <div class="flex flex-col md:flex-row gap-2">
     <!-- Like button -->
     <LikeButton
       client:load
@@ -67,9 +69,9 @@ const formattedDate = formatDate(createdAt);
     />
 
     <!-- Download button -->
-    <button class="btn-primary">
-      <Download className='text-main-white w-5 h-5'/>
-      <span class="small text-main-white">Download Project Resource</span> 
-    </button>
+    <DownloadButton
+      client:load
+      files={files}
+    />
   </div>
 </div>

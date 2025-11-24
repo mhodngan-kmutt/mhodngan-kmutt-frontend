@@ -12,6 +12,7 @@ const projectId = project.projectId || '';
 const contributors = project.contributors || [];
 const createdAt = formatDate(project?.createdAt || 'Unknown date');
 const likeCount = project?.likeCount || 0;
+const files = project.files || [];
 
 const comments = Array.isArray(project.comments) 
   ? project.comments 
@@ -31,6 +32,7 @@ const userLiked = userContext.userLiked || false;
         likeCount={likeCount}
         userLiked={userLiked}
         createdAt={createdAt}
+        files={files}
       />
     </div>
 
