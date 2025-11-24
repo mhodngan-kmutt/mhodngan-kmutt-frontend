@@ -1,11 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { Project, Contributor, Professor } from '@/lib/api';
+import type { Project } from '@/lib/api';
 import { AdvanceSearch } from '../common/dropdown/AdvanceSearch';
-import { Heart, Eye } from 'lucide-react';
-import AvatarGroup from '../common/Avatar/AvatarGroup';
-import { ProjectActionsDropdown } from '../common/dropdown/ProjectActionsDropdown';
+import BigCard from '../common/previewCard/BigCard';
 
 interface Translations {
   certified: string;
@@ -17,74 +15,9 @@ interface ProjectListWrapperProps {
   lang: string;
   translations: Translations;
   searchQuery?: string;
-  pageTitle?: string; // Optional custom title (e.g., "My Projects")
-  showActions?: boolean; // Show edit/delete actions
-  token?: string; // Auth token for actions
-}
-
-interface BigCardProps {
-  project: Project;
-  lang: string;
-  translations: Translations;
+  pageTitle?: string;
   showActions?: boolean;
   token?: string;
-}
-
-function BigCard({ project, lang, translations, showActions, token }: BigCardProps) {
-  return (
-    <a href={`/${lang}/project/${project.projectId}`} className="block hover:shadow-lg transition-shadow rounded-xl">
-      <div className="w-[360px] flex flex-col gap-3 p-2.5 rounded-xl bg-main-white shadow-[0_0_16px_0_rgba(0,0,0,0.06)]">
-        <div className="relative h-[160px] w-full rounded-xl overflow-hidden flex items-center justify-center">
-          <img
-            src={project.previewImageUrl || '/images/mocks/ProjectImageMocks-2.png'}
-            alt={project.title}
-            className="w-full h-full object-cover object-center rounded-xl transition duration-300 hover:scale-105"
-            loading="lazy"
-          />
-        </div>
-        <div className="w-full pl-1.5 pr-4 overflow-hidden">
-          <h4 className="truncate">{project.title}</h4>
-        </div>
-        <div className="w-full pl-1.5 pr-4">
-          <div className="text-supporting-support h-[50px] line-clamp-2">{project.shortDescription}</div>
-        </div>
-        <div className="w-full flex justify-between items-center px-1.5">
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-1">
-              <Heart className="w-4 h-4" color="var(--color-supporting-light-orange)" />
-              <div className="subtle text-supporting-support">{project.likeCount}</div>
-            </div>
-            <div className="flex items-center gap-1">
-              <Eye className="w-4 h-4" color="var(--color-supporting-light-orange)" />
-              <div className="subtle text-supporting-support">{project.viewCount}</div>
-            </div>
-          </div>
-          <div className="flex gap-1 items-center">
-            {project.certifiedBy.length > 0 && (
-              <>
-                <div className="detail text-supporting-support">{translations.certified}</div>
-                <div className="flex justify-center -space-x-5">
-                  <AvatarGroup contributors={project.certifiedBy} className="w-5 h-5" />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-        <div className="flex px-4 py-3 rounded-xl border-2 border-main-background h-[72px]">
-          <div className="flex w-full gap-2.5">
-            <AvatarGroup contributors={project.contributors} />
-            <div className="w-full gap-1">
-              <div className="small">{translations.contributors}</div>
-              <div className="detail text-supporting-support">@cpe, kmutt</div>
-            </div>
-          </div>
-          {showActions && token && (
-            <ProjectActionsDropdown projectId={project.projectId} token={token} />
-          )}
-        </div>
-      </div>
-    </a>
-  );
 }
 
 export function ProjectListWrapper({ initialProjects, lang, translations, searchQuery, pageTitle, showActions, token }: ProjectListWrapperProps) {
@@ -157,12 +90,20 @@ export function ProjectListWrapper({ initialProjects, lang, translations, search
         <div className="flex flex-wrap gap-6 justify-center">
           {filteredProjects.map((project) => (
             <BigCard 
-              key={project.projectId} 
-              project={project} 
-              lang={lang} 
-              translations={translations}
+              key={project.projectId}
+              projectImage={project.previewImageUrl}
+              title={project.title}
+              explanation={project.shortDescription}
+              likes={project.likeCount}
+              views={project.viewCount}
+              professors={project.certifiedBy}
+              contributors={project.contributors}
+              link={`/${lang}/project/${project.projectId}`}
               showActions={showActions}
+              projectId={project.projectId}
               token={token}
+              certified={translations.certified}
+              contributorsLabel={translations.contributors}
             />
           ))}
         </div>
