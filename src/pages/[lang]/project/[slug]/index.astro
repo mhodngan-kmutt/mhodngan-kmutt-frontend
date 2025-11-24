@@ -24,7 +24,6 @@ const userContext = {
   email: null,
   isAuthenticated: false,
   isProfessor: false,
-  userLiked: false,
 };
 
 // generate paths
@@ -53,7 +52,10 @@ const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
 const t = i18n.t.bind(i18n);
 
-const project = await getProjectById(projectId);
+const { data: sessionData } = await Astro.locals.supabase.auth.getSession(); 
+const token = sessionData.session?.access_token;
+
+const project = await getProjectById(projectId, token);
 if (!project) {
   return Astro.redirect(`/${currentLang}/404`, 302);
 }
@@ -61,11 +63,11 @@ if (!project) {
 
 <Layout title={project.title}>
   <HeaderBar t={t} lang={lang} />
-  <HeroSection t={t} lang={lang} project={project} userContext={userContext}/>
+  <HeroSection t={t} lang={lang} project={project} token={token} userContext={userContext}/>
   <ContentSection t={t} lang={lang} project={project} />
   <ExternalLinksSection t={t} lang={lang} project={project} />
   <ContributorSection t={t} lang={lang} project={project} />
   <CertifySection t={t} lang={lang} project={project}/>
-  <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
+  <CommentSection t={t} lang={lang} project={project} token={token} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>

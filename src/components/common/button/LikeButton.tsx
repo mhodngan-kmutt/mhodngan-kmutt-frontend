@@ -1,64 +1,64 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Heart } from 'lucide-react';
+import { likeProject } from "@/lib/api";
+import { likeStore } from '@/store/likeStore';
 
 interface LikeButtonProps {
-  projectId: string | number;
+  projectId: string;
   initialLikes: number;
-  initialLiked?: boolean;
+  initialLiked: boolean;
+  token?: string;
 }
 
-export function LikeButton({ projectId, initialLikes, initialLiked = false }: LikeButtonProps) {
-  const [likes, setLikes] = useState(initialLikes);
-  const [liked, setLiked] = useState(initialLiked);
+export function LikeButton({
+  projectId,
+  initialLikes,
+  initialLiked,
+  token,
+}: LikeButtonProps) {
   const [loading, setLoading] = useState(false);
 
+  const likeState = likeStore(state => state.likes[projectId]);
+  const updateLike = likeStore(state => state.updateLike);
+
+  const currentLikes = likeState?.likes ?? initialLikes;
+  const currentLiked = likeState?.liked ?? initialLiked;
+
   const handleLike = async () => {
+    console.log("Liking project:", projectId);
     if (loading) return;
-    
     setLoading(true);
-    
+
     try {
-      const response = await fetch(`/api/projects/${projectId}/likes`, {  //what's your API what's your API~
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add auth header if needed
-          // 'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await likeProject({ projectId, token: token || "" });
+      console.log("Like response:", response);
+      const newLiked = response.liked;
+      const newLikes = newLiked ? currentLikes + 1 : currentLikes - 1;
 
-      if (!response.ok) throw new Error('Failed to update like');
-
-      const data = await response.json();
-      setLikes(data.likes);
-      setLiked(data.liked);
-      
-    } catch (error) {
-      console.error('Error updating like:', error);
-      // Revert optimistic update
-      setLikes(initialLikes);
-      setLiked(initialLiked);
+      updateLike(projectId, newLikes, newLiked);
+    } catch (err) {
+      console.error("Error liking project:", err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <button 
+    <button
       onClick={handleLike}
       disabled={loading}
-      className={`btn-tertiary ${liked ? 'bg-red-50 border-red-200' : ''} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-    >
-      <Heart 
-        className={`w-5 h-5 transition-colors ${
-          liked ? 'text-red-500 fill-red-500' : 'text-main-secondary'
+      className={`btn-tertiary ${currentLiked ? 'bg-red-50 border-red-200' : ''} ${loading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
+    >
+      <Heart
+        className={`w-5 h-5 transition-colors ${currentLiked ? 'text-red-500 fill-red-500' : 'text-main-secondary'
+          }`}
       />
-      <span className={`small ${liked ? 'text-red-500' : 'text-main-secondary'}`}>
-        {liked ? 'Liked' : 'Like'}
+      <span className={`small ${currentLiked ? 'text-red-500' : 'text-main-secondary'}`}>
+        {currentLiked ? 'Liked' : 'Like'}
       </span>
-      <span className={`small ${liked ? 'text-red-500' : 'text-main-secondary'}`}>
-        ({likes})
+      <span className={`small ${currentLiked ? 'text-red-500' : 'text-main-secondary'}`}>
+        ({currentLikes})
       </span>
     </button>
   );

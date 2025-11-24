@@ -38,18 +38,24 @@ export interface Project {
   title: string;
   badge: string;
   status: string;
-  previewImageUrl: string;
+  previewImageUrl: string | null;
   shortDescription: string;
   content: string;
+
   likeCount: number;
   viewCount: number;
   createdAt: string;
   updatedAt: string;
+
   categories: Category[];
   externalLinks: string[];
   files: File[];
   contributors: Contributor[];
   certifiedBy: Professor[];
+
+  comments: Comment[];
+  isLikedByCurrentUser: boolean;
+  likedByUsers: LikedUser[];
 }
 
 export interface ProjectListResponse {
@@ -80,6 +86,29 @@ export interface GetProjectsParams {
   include?: string;
   token?: string;
   isMyProject?: boolean;
+}
+
+export interface CommentUser {
+  userId: string;
+  username: string;
+  fullname: string;
+  email: string;
+  profileImageUrl: string | null;
+  role: string;
+}
+
+export interface Comment {
+  commentId: string;
+  message: string;
+  commentedAt: string;
+  user: CommentUser;
+}
+
+export interface LikedUser {
+  userId: string;
+  username: string;
+  fullname: string;
+  profileImageUrl: string | null;
 }
 
 // ---------- Utility ----------
@@ -130,9 +159,11 @@ export async function getProjects(params: GetProjectsParams = {}): Promise<Proje
 }
 
  // Fetch single project by ID from backend
-export async function getProjectById(id: string) {
+export async function getProjectById(id: string, token?: string): Promise<Project | undefined> {
   try {
-    const response = await fetch(`${API_BASE_URL}/project/${id}`);
+    const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch project: ${response.status}`);
@@ -237,6 +268,24 @@ export async function sendComment(params: {projectId: string; message: string; t
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || `Failed to post comment: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export async function likeProject(params: {projectId: string; token: string;}): Promise<any> {
+  const { projectId, token } = params;
+
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}/like`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Failed to like project: ${response.status}`);
   }
 
   return await response.json();

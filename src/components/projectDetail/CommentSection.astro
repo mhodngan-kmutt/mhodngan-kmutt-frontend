@@ -1,11 +1,11 @@
 ---
 import { MessageCircle, CornerDownRight } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
-import ContributorActionBar from "./ContributorActionBar.astro";
+import { ContributorActionBar } from "./ContributorActionBar";
 import { formatDate } from "@/lib/dateFormat";
 import CommentInputSection from "./CommentInputSection";
 
-const { t, lang, project, userContext } = Astro.props;
+const { t, lang, project, token, userContext } = Astro.props;
 
 // Decompose project
 const projectId = project.projectId || '';
@@ -13,12 +13,14 @@ const contributors = project.contributors || [];
 const createdAt = formatDate(project?.createdAt || 'Unknown date');
 const likeCount = project?.likeCount || 0;
 const files = project.files || [];
+const isLiked = project.isLikedByCurrentUser || false;
+console.log('CommentSection - isLiked:', isLiked);
+console.log('isLike:', project.isLikedByCurrentUser);
 
 const comments = Array.isArray(project.comments) 
   ? project.comments 
   : project.comments ? [project.comments] : [];
 
-const userLiked = userContext.userLiked || false;
 ---
 
 <section id="CommentProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
@@ -27,12 +29,14 @@ const userLiked = userContext.userLiked || false;
     <!-- Contributor and Buttons Card (remains the same) -->
     <div class="simple-card w-full! px-5 py-5">
       <ContributorActionBar
+        client:load
         contributors={contributors}
         projectId={projectId}
         likeCount={likeCount}
-        userLiked={userLiked}
+        isLiked={isLiked}
         createdAt={createdAt}
         files={files}
+        token={token}
       />
     </div>
 
