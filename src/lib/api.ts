@@ -22,15 +22,6 @@ export interface Contributor {
   role: string;
 }
 
-export interface Contributor {
-  userId: string;
-  username: string;
-  fullname: string;
-  email: string;
-  profileImageUrl: string;
-  role: string;
-}
-
 export interface Professor {
   userId: string;
   fullname: string;
