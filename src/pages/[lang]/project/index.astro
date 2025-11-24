@@ -1,9 +1,8 @@
 ---
 export const prerender = false;
 import Layout from '../../../layouts/Layout.astro';
-import BigCard from '@/components/common/previewCard/BigCard.astro';
 import HeaderBar from '../../../components/common/header/HeaderBar.astro';
-import { AdvanceSearch } from '../../../components/common/dropdown/AdvanceSearch';
+import { ProjectListWrapper } from '../../../components/project/ProjectListWrapper';
 import i18n from '../../../i18n/i18n';
 import { getProjects } from '../../../lib/api';
 
@@ -58,43 +57,17 @@ const { meta, data: projects } = await getProjects({
 <Layout title={t('home.month.topic')} class="overflow-y-scroll">
   <HeaderBar t={t} lang={lang} />
   <section class="flex w-full flex-col pt-30 py-6 px-16 gap-10">
-    <div class="flex flex-col gap-6">
-      <div class="flex w-full justify-between items-center">
-        <h2>
-          {q ? (
-            <>
-              <span>Result for </span>
-              <span class="text-main-primary">"{q}"</span>
-            </>
-          ) : (
-            <span>All Projects</span>
-          )}
-        </h2>
-        <AdvanceSearch client:load />
-      </div>
-
-      {projects.length === 0 ? (
-        <div class="flex flex-col items-center justify-center p-10">
-          <img src={'https://i.postimg.cc/v8xM1Ds5/dizzy-Duck-Image.png'} alt={'dizzyDuckImage'} width="300" />
-          <h3 class=" text-main-neutral2 mt-10">No results</h4>
-        </div>
-      ) : (
-        <div class="flex flex-wrap gap-6 justify-center">
-          {projects.map((p) => (
-            <BigCard
-              t={t}
-              projectImage={p.previewImageUrl}
-              title={p.title}
-              explanation={p.shortDescription}
-              likes={p.likeCount}
-              views={p.viewCount}
-              professors={p.certifiedBy}
-              contributors={p.contributors}
-              link={`/${currentLang}/project/${p.projectId}`}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    <ProjectListWrapper 
+      client:load 
+      initialProjects={projects} 
+      lang={currentLang} 
+      translations={{
+        certified: t('card.certified'),
+        contributors: t('card.contributors')
+      }}
+      searchQuery={q} 
+    />
   </section>
 </Layout>
+
+

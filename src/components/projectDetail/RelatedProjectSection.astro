@@ -1,6 +1,6 @@
 ---
 import { getProjects } from '@/lib/api';
-import BigCard from "../common/previewCard/BigCard.astro";
+import BigCard from '../common/previewCard/BigCard';
 
 const { t, lang } = Astro.props;
 const PAGE_SIZE = 8;
@@ -22,7 +22,7 @@ const { meta, data: projects } = await getProjects({
                 {
                   projects.map((p) => (
                       <BigCard
-                        t={t}
+                        client:load
                         projectImage={p.previewImageUrl}
                         title={p.title}
                         explanation={p.shortDescription}
@@ -31,6 +31,9 @@ const { meta, data: projects } = await getProjects({
                         professors={p.certifiedBy}
                         contributors={p.contributors}
                         link={`/${lang}/project/${p.projectId}`}
+                        projectId={p.projectId}
+                        certified={t('card.certified')}
+                        contributorsLabel={t('card.contributors')}
                       />
                     ))
                 }

@@ -170,14 +170,6 @@ export async function getCertifyByProjectId(id: string) {
   }
 }
 
-// น่าจะไม่ได้ใช้แล้วใช่ป่ะ
-// export async function getProjectBySlug(slug: string): Promise<Project> {
-//   await new Promise((r) => setTimeout(r, 100));
-//   const project = [...projects, ...projectsOfTheMonth].find((p) => p.slug === slug);
-//   if (!project) throw new Error(`Project not found: ${slug}`);
-//   return project;
-// }
-
 export async function deleteProject(id: string, token: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/project/${id}`, {
     method: 'DELETE',
@@ -206,6 +198,25 @@ export async function getCurrentUser(token: string): Promise<Contributor> {
 
   const data: Contributor = await response.json();
   return data;
+}
+
+export async function recordProjectView(user_id: string, project_id: string) {
+  const response = await fetch(`${API_BASE_URL}/view/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id,
+      project_id,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to log project view: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
 }
 
 export async function sendComment(params: {projectId: string; message: string; token: string;}): Promise<any> {
