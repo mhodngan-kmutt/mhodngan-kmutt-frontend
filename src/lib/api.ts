@@ -230,3 +230,26 @@ export async function sendComment(params: {projectId: string; message: string; t
 
   return await response.json();
 }
+
+export async function certifyProject(params: {projectId: string; professorUserId: string; token: string;}): Promise<any> {
+  const { projectId, professorUserId, token } = params;
+
+  const response = await fetch(`${API_BASE_URL}/api/certifications`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      projectId: projectId,
+      professorUserId: professorUserId
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Failed to certify project: ${response.status}`);
+  }
+
+  return await response.json();
+}

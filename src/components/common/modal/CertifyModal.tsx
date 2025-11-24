@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Shield, CheckCircle } from 'lucide-react';
-import successImage from '../../../assets/images/2.svg'; //why i can't import picture
+import { getSession } from '../../../lib/auth';
+import { certifyProject } from '../../../lib/api';
 
 interface ConfirmationModalProps {
   projectName: string;
@@ -37,7 +38,7 @@ export function ConfirmationModal({
       setError('');
       setIsLoading(false);
       setIsSuccess(false);
-      setCountdown(5);
+      setCountdown(10);
     };
 
     window.addEventListener('openCertificationModal', handleOpenModal as EventListener);
@@ -103,21 +104,27 @@ export function ConfirmationModal({
     setError('');
 
     try {
-      const response = await fetch(`/api/projects/${projectId}/certify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+      const session = await getSession();
+      const token = session?.access_token;
+      const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+      const isProfessor = userData?.role === 'professor';
+
+      if (!token || !isProfessor) {
+        throw new Error('Authentication error. Please log in again.');
+      }
+
+      const professorUserId = userData?.userId;
+
+      await certifyProject({
+        projectId: projectId,
+        professorUserId: professorUserId,
+        token: token,
       });
 
-      if (response.ok) {
-        // Success - show success state
-        setIsLoading(false);
-        setIsSuccess(true);
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to certify project');
-      }
+      // Success - show success state
+      setIsLoading(false);
+      setIsSuccess(true);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setIsLoading(false);
@@ -160,12 +167,10 @@ export function ConfirmationModal({
               </button>
             </div>
             
-            Success Content
+            {/* Success Content */}
             <div className="mb-6 text-center">
               <div className="flex flex-col items-center gap-4 mb-4">
-                {/* {successImage && (
-                    <img src={successImage} alt="coolDuckImage" width="240" className="mx-auto" />
-                )} */}
+                <img src={"https://i.postimg.cc/Y08rR0R6/cool-Duck.png"} alt="Success" width="240" className="mx-auto" />
                 <CheckCircle className="w-6 h-6 text-main-secondary" />
                 <span className="large text-main-neutral2 mb-2">Project Certified Successfully!</span>
                 <div>
