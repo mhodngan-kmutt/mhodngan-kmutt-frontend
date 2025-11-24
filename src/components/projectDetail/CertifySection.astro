@@ -91,8 +91,21 @@ const isCertified = certifiedBy.length > 0;
 </section>
 
 <script>
+    interface Professor {
+        userId: string;
+        fullname: string;
+        profile_image_url: string;
+        position?: string;
+        faculty?: string;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const wrapper = document.getElementById('certification-wrapper');
+        if (!wrapper) {
+            console.error('Certification wrapper not found!');
+            return;
+        }
+
         const professorActionArea = document.getElementById('professor-action-area');
         const certifyContainer = document.getElementById('certify-container');
         const alreadyCertifiedBadge = document.getElementById('already-certified-by-user-badge');
@@ -111,7 +124,7 @@ const isCertified = certifiedBy.length > 0;
 
             if (awaitingMessage) awaitingMessage.classList.add('hidden');
 
-            const certifiedByList = JSON.parse(wrapper.dataset.certifiedBy || '[]');
+            const certifiedByList: Professor[] = JSON.parse(wrapper.dataset.certifiedBy || '[]');
             const currentUserId = userData.userId;
 
             const hasCurrentUserCertified = certifiedByList.some(prof => prof.userId === currentUserId);
