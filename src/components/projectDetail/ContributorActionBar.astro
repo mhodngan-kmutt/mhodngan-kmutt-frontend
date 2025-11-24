@@ -1,0 +1,77 @@
+---
+import AvatarGroup from '../common/Avatar/AvatarGroup';
+import Avatar from '../common/Avatar/Avatar';
+import { Download } from 'lucide-react';
+import { LikeButton } from '../common/button/LikeButton';
+import { formatDate } from '../../lib/dateFormat';
+import { DownloadButton } from '../common/button/DownLoadButton';
+
+const { 
+  contributors = [], 
+  projectId = '', 
+  likeCount = 0, 
+  userLiked = false,
+  createdAt = 'Unknown date',
+  files = []
+} = Astro.props;
+
+// Format the date
+const formattedDate = formatDate(createdAt);
+---
+
+<!-- Contributor and buttons container -->
+<div class="flex justify-between items-center">
+  <!-- Contributor information -->
+  <div class="flex flex-col gap-2">
+    <!-- Publisher avatar with safety check -->
+    {contributors && contributors.length > 0 ? (
+      <div class="flex items-center gap-4">
+        <Avatar
+          client:load
+          name={contributors[0]?.fullname || 'Unknown'}
+          avatar={contributors[0]?.profileImageUrl || ''}
+        />
+        <div class="text-supporting-ghost">
+          <span class="small">{contributors[0]?.fullname || 'Unknown Author'}</span>
+          <span class="detail"> | {formattedDate}</span>
+        </div>
+      </div>
+    ) : (
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+        <div class="text-supporting-ghost">
+          <span class="small">Unknown Author</span>
+          <span class="detail"> | {formattedDate}</span>
+        </div>
+      </div>
+    )}
+
+    <!-- Contributor avatars with safety check -->
+    {contributors && contributors.length > 0 && (
+      <div class="flex items-center gap-4">
+        <AvatarGroup
+          client:load
+          contributors={contributors}
+          className="w-6 h-6 -space-x-7"
+        />
+      </div>
+    )}
+  </div>
+
+  <!-- Action buttons -->
+  <div class="flex flex-col md:flex-row gap-2">
+    <!-- Like button -->
+    <LikeButton
+      client:load
+      projectId={projectId}
+      initialLikes={likeCount}
+      initialLiked={userLiked}
+    />
+
+    <!-- Download button -->
+    <DownloadButton
+      client:load
+      files={files}
+    />
+  </div>
+</div>

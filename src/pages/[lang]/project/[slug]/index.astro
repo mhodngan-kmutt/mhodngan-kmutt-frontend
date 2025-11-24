@@ -4,6 +4,7 @@ export const prerender = false;
 import Layout from '../../../../layouts/Layout.astro';
 import { getProjects, getProjectById } from '../../../../lib/api';
 import i18n from '../../../../i18n/i18n';
+
 import ExternalLinksSection from '@/components/projectDetail/ExternalLinksSection.astro';
 import ContentSection from '@/components/projectDetail/ContentSection.astro';
 import HeroSection from '@/components/projectDetail/HeroSection.astro';
@@ -13,11 +14,14 @@ import CommentSection from '@/components/projectDetail/CommentSection.astro';
 import RelatedProjectSection from '@/components/projectDetail/RelatedProjectSection.astro';
 import HeaderBar from '@/components/common/header/HeaderBar.astro';
 
-// Default context - will be updated client-side
+// empty user context, will be filled on client
 const userContext = {
+  userId: null,
   username: null,
   name: null,
   avatar: null,
+  role: null,
+  email: null,
   isAuthenticated: false,
   isProfessor: false,
   userLiked: false,
@@ -61,7 +65,7 @@ if (!project) {
   <ContentSection t={t} lang={lang} project={project} />
   <ExternalLinksSection t={t} lang={lang} project={project} />
   <ContributorSection t={t} lang={lang} project={project} />
-  <!-- <CertifySection t={t} lang={lang} project={project} certification={certification} userContext={userContext}/> -->
+  <CertifySection t={t} lang={lang} project={project}/>
   <CommentSection t={t} lang={lang} project={project} userContext={userContext}/>
   <RelatedProjectSection t={t} lang={lang} project={project} />
 </Layout>

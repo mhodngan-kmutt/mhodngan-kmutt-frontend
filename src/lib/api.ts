@@ -152,6 +152,24 @@ export async function getProjectById(id: string) {
   }
 }
 
+// Fetch certification info. by project Id
+export async function getCertifyByProjectId(id: string) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/projects/${id}/certifications`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch certification info: ${response.status}`);
+    }
+
+    const certification = await response.json();
+    
+    return certification;
+
+  } catch (error) {
+    console.error(`Error fetching certification info. of project ${id}:`, error);
+  }
+}
+
 export async function deleteProject(id: string, token: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/project/${id}`, {
     method: 'DELETE',
@@ -196,6 +214,52 @@ export async function recordProjectView(user_id: string, project_id: string) {
 
   if (!response.ok) {
     throw new Error(`Failed to log project view: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
+}
+
+export async function sendComment(params: {projectId: string; message: string; token: string;}): Promise<any> {
+  const { projectId, message, token } = params;
+
+  const response = await fetch(`${API_BASE_URL}/comment`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      project_id: projectId,
+      message: message,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Failed to post comment: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export async function certifyProject(params: {projectId: string; professorUserId: string; token: string;}): Promise<any> {
+  const { projectId, professorUserId, token } = params;
+
+  const response = await fetch(`${API_BASE_URL}/api/certifications`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      projectId: projectId,
+      professorUserId: professorUserId
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Failed to certify project: ${response.status}`);
   }
 
   return await response.json();

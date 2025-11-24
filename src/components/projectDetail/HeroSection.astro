@@ -5,6 +5,7 @@ import HeaderBar from '../common/header/HeaderBar.astro';
 import { Heart, Download } from 'lucide-react';
 import { LikeButton } from '../common/button/LikeButton';
 import { formatDate } from '../../lib/dateFormat';
+import ContributorActionBar from './ContributorActionBar.astro';
 
 const { t, lang, project, userContext } = Astro.props;
 
@@ -15,6 +16,7 @@ const projectPreviewImageUrl = project?.previewImageUrl || '/default-image.jpg';
 const projectCategories = project?.categories || [];
 const contributors = project?.contributors || [];
 const likeCount = project?.likeCount || 0;
+const files = project.files || [];
 const createdAt = formatDate(project?.createdAt || 'Unknown date');
 
 // Decompose user data
@@ -49,47 +51,12 @@ const { userLiked } = userContext;
   </div>
 
   <!-- Contributor and buttons container -->
-  <div class="flex justify-between items-center">
-    <!-- Contributor information -->
-    <div class="flex flex-col gap-2">
-      <!-- Publisher avatar -->
-      <div class="flex items-center gap-4">
-        <Avatar
-          client:load
-          name={contributors[0].fullname}
-          avatar={contributors[0].profileImageUrl}
-        />
-        <div class="text-supporting-ghost">
-          <span class="small">{contributors[0].fullname}</span>
-          <span class="detail"> | {createdAt}</span>
-        </div>
-      </div>
-
-      <!-- Contributor avatars -->
-      <div class="flex items-center gap-4">
-        <AvatarGroup
-          client:load
-          contributors={contributors}
-          className="w-6 h-6 -space-x-7"
-        />
-      </div>
-    </div>
-
-    <!-- Action buttons -->
-    <div class="flex gap-2">
-        <!-- Like button -->
-        <LikeButton
-          client:load
-          projectId={projectId}
-          initialLikes={likeCount}
-          initialLiked={userLiked}
-        />
-
-        <!-- Download button -->
-        <button class="btn-primary">
-            <Download className='text-main-white w-5 h-5'/>
-            <span class="small text-main-white">Download Project Resource</span> 
-        </button>
-    </div>
-  </div>
+  <ContributorActionBar
+    contributors={contributors}
+    projectId={projectId}
+    likeCount={likeCount}
+    userLiked={userLiked}
+    createdAt={createdAt}
+    files={files}
+  />
 </section>

@@ -1,66 +1,58 @@
 ---
-import { Award, CheckCircle, Shield, X } from "lucide-react";
+// filepath: d:\KMUTT\SE\App\mhodngan-kmutt-frontend\src\components\projectDetail\CertifySection.astro
+import { Award, CheckCircle, Shield } from "lucide-react";
 import Avatar from "../common/Avatar/Avatar";
 import { ConfirmationModal } from "../common/modal/CertifyModal";
 
-const { t, lang, project, certification, userContext } = Astro.props;
+const { t, lang, project } = Astro.props;
 
 // Decompose project
 const projectId = project.projectId || '';
 const projectTitle = project.title || '';
+const certifiedBy = Array.isArray(project.certifiedBy) 
+  ? project.certifiedBy 
+  : project.certifiedBy ? [project.certifiedBy] : [];
 
-// Decompose certification
-const certifyData = certification.data.data || [];
-// console.log(certification.data.data[0].professor.user.fullname);
-// console.log(certification.data.data[0].professor.faculty);
-
-const isCertified = certification.data.count > 0;
-
-// Decompose userContext
-// const { isProfessor } = userContext;
-
-// Debug
-// let isCertified = false;
-let isProfessor = true;
+const isCertified = certifiedBy.length > 0;
 ---
 
 <section id="CertifiedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
     <div class="flex px-3">
-        <div class="simple-card w-full! px-5 py-5">
+        {/* Pass the list of certifying professors to the client script via a data attribute */}
+        <div 
+            id="certification-wrapper"
+            class="simple-card w-full! px-5 py-5"
+            data-certified-by={JSON.stringify(certifiedBy)}
+        >
             <div class="flex items-center gap-2">
                 <Award className="text-main-neutral2"/>
                 <h3 class="text-main-neutral2">Certified by Professor</h3>
             </div>
             <div class="flex flex-col gap-3">
-                {isCertified && certifyData.map((data : any) => (
+                {isCertified ? certifiedBy.map((prof : any) => (
                     <div class="flex items-center gap-3">
                         <Avatar
                             client:load
-                            name={data.professor.user.fullname}
-                            avatar={data.professor.user.profile_image_url}
+                            name={prof.fullname}
+                            avatar={prof.profileImageUrl}
                         />
                         <div class="flex flex-col py-1">
-                            <span class="large">{data.professor.user.fullname}</span>
+                            <span class="large">{prof.fullname}</span>
                             <span class="detail text-supporting-ghost">
-                                {data.professor.position} | {data.professor.faculty}
+                                {prof.position} | {prof.faculty}
                             </span>
                         </div>
                     </div>
-                ))}
-
-                {/* Show certified badge if certified */}
-                {isCertified && (
-                    <button 
-                        class="btn-locked px-2! py-2! pointer-events-none" 
-                        style="background-color: var(--color-supporting-light-sky); border-color: var(--color-supporting-light-sky);">
-                        <CheckCircle className="w-5 h-5 text-supporting-dark-sky"/>
-                        <span class="small text-supporting-dark-sky">Certified Project</span>
-                    </button>
+                )) : (
+                    <div id="awaiting-certification-message" class="text-center py-4">
+                        <span class="text-neutral-500 italic">This project is awaiting certification</span>
+                    </div>
                 )}
 
-                {/* Show certify button if user is professor and project is not certified */}
-                {isProfessor && !isCertified && (
-                    <div class="flex flex-col items-center justify-center px-3 py-3 gap-5">
+                {/* This container holds the different actions for a professor, all hidden by default */}
+                <div id="professor-action-area" class="hidden">
+                    {/* State 1: Button to certify the project */}
+                    <div id="certify-container" class="hidden flex flex-col items-center justify-center px-3 py-3 gap-5">
                         <Shield className="w-16 h-16 text-supporting-support" />
                         <span class="subtle">This project is pending for your certification</span>
                         <button 
@@ -72,19 +64,21 @@ let isProfessor = true;
                             <span class="small text-white">Certify This Project</span>
                         </button>
                     </div>
-                )}
 
-                {/* Show message if not certified and user is not professor */}
-                {!isCertified && !isProfessor && (
-                    <div class="text-center py-4">
-                        <span class="text-neutral-500 italic">This project is awaiting certification</span>
+                    {/* State 2: Badge shown after the current user has certified it */}
+                    <div id="already-certified-by-user-badge" class="hidden">
+                        <button 
+                            class="btn-locked w-full px-2! py-2! pointer-events-none" 
+                            style="background-color: var(--color-supporting-light-sky); border-color: var(--color-supporting-light-sky);">
+                            <CheckCircle className="w-5 h-5 text-supporting-dark-sky"/>
+                            <span class="small text-supporting-dark-sky">You have certified this project</span>
+                        </button>
                     </div>
-                )}
+                </div>
             </div>  
         </div>
     </div>
 
-    <!-- Certify Confirmation Modal -->
     <ConfirmationModal
         client:load
         projectId={projectId}
@@ -97,19 +91,66 @@ let isProfessor = true;
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const certifyButton = document.getElementById('certify-button');
-    
-    if (certifyButton) {
-        certifyButton.addEventListener('click', () => {
-            // Trigger the React modal to open
-            window.dispatchEvent(new CustomEvent('openCertificationModal', {
-                detail: {
-                    projectId: certifyButton.getAttribute('data-project-id'),
-                    projectName: certifyButton.getAttribute('data-project-name')
-                }
-            }));
-        });
+    interface Professor {
+        userId: string;
+        fullname: string;
+        profile_image_url: string;
+        position?: string;
+        faculty?: string;
     }
-});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const wrapper = document.getElementById('certification-wrapper');
+        if (!wrapper) {
+            console.error('Certification wrapper not found!');
+            return;
+        }
+
+        const professorActionArea = document.getElementById('professor-action-area');
+        const certifyContainer = document.getElementById('certify-container');
+        const alreadyCertifiedBadge = document.getElementById('already-certified-by-user-badge');
+        const awaitingMessage = document.getElementById('awaiting-certification-message');
+        const certifyButton = document.getElementById('certify-button');
+
+        try {
+            const rawUserData = sessionStorage.getItem('userData');
+            if (!rawUserData) return; // Not logged in, do nothing
+
+            const userData = JSON.parse(rawUserData);
+            if (userData?.role !== 'professor') return; // Not a professor, do nothing
+
+            // User is a professor, show the action area
+            if (professorActionArea) professorActionArea.classList.remove('hidden');
+
+            if (awaitingMessage) awaitingMessage.classList.add('hidden');
+
+            const certifiedByList: Professor[] = JSON.parse(wrapper.dataset.certifiedBy || '[]');
+            const currentUserId = userData.userId;
+
+            const hasCurrentUserCertified = certifiedByList.some(prof => prof.userId === currentUserId);
+
+            if (hasCurrentUserCertified) {
+                // This professor has already certified the project, show the badge
+                if (alreadyCertifiedBadge) alreadyCertifiedBadge.classList.remove('hidden');
+            } else {
+                // This professor has NOT certified the project, show the button
+                if (certifyContainer) certifyContainer.classList.remove('hidden');
+            }
+
+        } catch (e) {
+            console.error("Error processing certification logic:", e);
+        }
+        
+        // Add event listener for the certify button
+        if (certifyButton) {
+            certifyButton.addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('openCertificationModal', {
+                    detail: {
+                        projectId: certifyButton.getAttribute('data-project-id'),
+                        projectName: certifyButton.getAttribute('data-project-name')
+                    }
+                }));
+            });
+        }
+    });
 </script>
