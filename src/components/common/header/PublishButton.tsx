@@ -1,4 +1,3 @@
-// /components/writeProject/PublishButton.tsx
 'use client';
 
 import { supabase } from '@/lib/supabase';
@@ -70,7 +69,9 @@ export default function PublishButton() {
   const handlePublish = async () => {
     // 1. Get all data from Local Storage
     const draftId = typeof window !== 'undefined' ? localStorage.getItem(DRAFT_ID_KEY) : null;
-    const user = (await supabase.auth.getUser()).data.user;
+    // 💡 แก้ไข: ดึง user object
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
 
     if (!user) { toast.error("User not authenticated."); return; }
     if (!draftId) { toast.error("Draft ID missing."); return; }
@@ -149,18 +150,36 @@ export default function PublishButton() {
       }
 
       // D. Handle collaborators
-      if (collaboratorsJson) {
-        const collaborators: Collaborator[] = JSON.parse(collaboratorsJson);
-        await supabase.from('project_collaborators').delete().eq('project_id', draftId);
+      let collaborators: Collaborator[] = collaboratorsJson ? JSON.parse(collaboratorsJson) : [];
+      
+      // --- START: เพิ่มผู้ใช้ปัจจุบันเป็น Collaborator อัตโนมัติ ---
+      const isCreatorAlreadyCollaborator = collaborators.some(
+        c => c.user_id === user.id
+      );
 
-        if (collaborators.length > 0) {
-          const collabInserts = collaborators.map(c => ({
-            project_id: finalProjectId,
-            contributor_user_id: c.user_id,
-          }));
-          const { error: collabError } = await supabase.from('project_collaborators').insert(collabInserts);
-          if (collabError) throw collabError;
-        }
+      // ถ้าผู้สร้างไม่อยู่ในรายชื่อ ให้เพิ่มเข้าไป
+      if (!isCreatorAlreadyCollaborator) {
+        // ใช้ username จาก user_metadata ซึ่งเป็นข้อมูลที่มาจาก Supabase Auth
+        const creatorUsername = user.user_metadata?.username || 'Unknown User'; 
+        
+        collaborators.push({
+          user_id: user.id,
+          username: creatorUsername, 
+        });
+        console.log(`✅ Current user (ID: ${user.id}) added to collaborators.`);
+      }
+      // --- END: เพิ่มผู้ใช้ปัจจุบันเป็น Collaborator อัตโนมัติ ---
+      
+      // ลบ collaborators เก่าออกก่อน
+      await supabase.from('project_collaborators').delete().eq('project_id', draftId);
+
+      if (collaborators.length > 0) {
+        const collabInserts = collaborators.map(c => ({
+          project_id: finalProjectId,
+          contributor_user_id: c.user_id,
+        }));
+        const { error: collabError } = await supabase.from('project_collaborators').insert(collabInserts);
+        if (collabError) throw collabError;
       }
 
       // E. Handle categories
