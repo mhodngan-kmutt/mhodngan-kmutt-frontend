@@ -1,0 +1,37 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import HeaderBar from '../../../../components/common/header/HeaderBar.astro';
+import i18n from '../../../../i18n/i18n';
+import BlockEditorEditWrapper from '../../../../components/common/editProject/BlockEditorEditWrapper.tsx';
+export const prerender = false;
+
+const { lang, projectID } = Astro.params as { lang: string; projectID: string };
+const currentLang = lang === 'th' ? 'th' : 'en';
+
+if (i18n.language !== currentLang) {
+    i18n.changeLanguage(currentLang);
+}
+
+if (!projectID) {
+    return Astro.redirect(`/${currentLang}/404`);
+}
+---
+
+<Layout title={`Edit Project: ${projectID}`}>
+    <main>
+        <HeaderBar 
+            t={i18n.t.bind(i18n)} 
+            lang={currentLang} 
+            mode="write" 
+        />
+        
+        {/* 3. Render BlockEditorEditWrapper */}
+        <div class="pt-20"> 
+            <BlockEditorEditWrapper 
+                client:load 
+                currentLang={currentLang} 
+                projectId={projectID} 
+            />
+        </div>
+    </main>
+</Layout>

@@ -3,54 +3,69 @@
 
 import React, { useState, useCallback, useEffect, useMemo, useRef, useLayoutEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Searchbar } from '@/components/ui/searchbar'; // ตรวจสอบเส้นทาง import นี้อีกครั้ง
+import { Searchbar } from '@/components/ui/searchbar';
 import { X, User, Plus } from 'lucide-react';
 
-// Interfaces สำหรับข้อมูลผู้ใช้และ collaborators
+// --------------------------- Interfaces ---------------------------
 interface UserProfile {
     user_id: string;
-    username: string; // 💡 ใช้คอลัมน์ username ตาม Interface
+    username: string;
 }
 
 interface Collaborator {
     user_id: string;
-    username: string; // 💡 ใช้คอลัมน์ username ตาม Interface
+    username: string;
 }
 
 interface CollaboratorSelectorProps {
-    projectId: string; // Project ID สำหรับบันทึกใน project_collaborators
+    projectId: string;
     currentLang: string;
 }
 
+// ------------------------ Local Storage Key ------------------------
 const COLLAB_STORAGE_KEY = 'projectCollaborators';
 
+// ---------------------- Main Component -----------------------------
 export default function CollaboratorSelector({ projectId, currentLang }: CollaboratorSelectorProps) {
+    // -------------------- States --------------------
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<UserProfile[]>([]);
     const [collaborators, setCollaborators] = useState<Collaborator[]>(() => {
-        // ... (Logic โหลด LocalStorage เดิม) ...
         if (typeof window !== 'undefined') {
-            const storedCollabs = localStorage.getItem(COLLAB_STORAGE_KEY);
-            // 💡 แก้ไขการ map เพื่อให้แน่ใจว่าได้ username
-            return storedCollabs ? JSON.parse(storedCollabs) : [];
+            const stored = localStorage.getItem(COLLAB_STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
         }
         return [];
     });
     const [loading, setLoading] = useState(false);
     const [searchError, setSearchError] = useState<string | null>(null);
 
-    // ... (useEffect บันทึก LocalStorage และ collaboratorIds useMemo เดิม) ...
+    // Store current user ID to exclude from search results
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+    // -------------------- Effects --------------------
+    // Fetch current user ID on mount
+    useEffect(() => {
+        async function fetchUserId() {
+            const user = (await supabase.auth.getUser()).data.user;
+            setCurrentUserId(user ? user.id : null);
+        }
+        fetchUserId();
+    }, []);
+
+    // Persist collaborators to localStorage
     useEffect(() => {
         if (typeof window !== 'undefined') {
             localStorage.setItem(COLLAB_STORAGE_KEY, JSON.stringify(collaborators));
         }
     }, [collaborators]);
 
+    // -------------------- Memoized Data --------------------
     const collaboratorIds = useMemo(() => new Set(collaborators.map(c => c.user_id)), [collaborators]);
 
-    // 💡 3. Debounced Search
+    // -------------------- Search Users --------------------
     const searchUsers = useCallback(async (query: string) => {
-        if (query.length < 3) {
+        if (query.length < 3 || !currentUserId) {
             setSearchResults([]);
             return;
         }
@@ -59,22 +74,25 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
         setSearchError(null);
 
         try {
-            const { data, error } = await supabase
+            // Query users matching the search term
+            let queryBuilder = supabase
                 .from('users')
-                .select('user_id, username') 
-                .ilike('username', `%${query}%`) 
+                .select('user_id, username')
+                .ilike('username', `%${query}%`)
                 .limit(10);
 
+            // Exclude current user
+            queryBuilder = queryBuilder.neq('user_id', currentUserId);
+
+            const { data, error } = await queryBuilder;
             if (error) throw error;
 
-            // 💡 แก้ไข: Mapping data ให้ตรงกับ UserProfile
             const users: UserProfile[] = (data as any[] || []).map(item => ({
                 user_id: item.user_id,
-                username: item.username, 
+                username: item.username,
             }));
 
             setSearchResults(users);
-
         } catch (err: any) {
             console.error('Search error:', err);
             setSearchError('Failed to search users.');
@@ -82,9 +100,9 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [currentUserId]);
 
-    // ... (Debounce effect เดิม) ...
+    // Debounce search
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             searchUsers(searchTerm);
@@ -93,75 +111,63 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
         return () => clearTimeout(timeoutId);
     }, [searchTerm, searchUsers]);
 
-    // 💡 4. เพิ่ม Collaborator
+    // -------------------- Handlers --------------------
+    // Add collaborator
     const addCollaborator = useCallback(async (user: UserProfile) => {
         if (collaboratorIds.has(user.user_id)) return;
 
-        // 💡 แก้ไข: ใช้ username
-        const newCollaborator: Collaborator = { user_id: user.user_id, username: user.username };
-
-        // อัปเดต State และ LocalStorage ทันที
-        setCollaborators(prev => [...prev, newCollaborator]);
+        const newCollab: Collaborator = { user_id: user.user_id, username: user.username };
+        setCollaborators(prev => [...prev, newCollab]);
 
         try {
             const { error } = await supabase.from('project_collaborators').insert([
                 { project_id: projectId, contributor_user_id: user.user_id }
             ]);
-            if (error) {
-                console.error("Failed to save collab to DB:", error);
-            }
+            if (error) console.error("Failed to save collab to DB:", error);
         } catch (e) {
             console.error(e);
         }
 
-        // ล้าง search state
         setSearchTerm('');
         setSearchResults([]);
     }, [collaboratorIds, projectId]);
 
-    // 💡 5. ลบ Collaborator
+    // Remove collaborator
     const removeCollaborator = useCallback(async (userId: string) => {
-        // อัปเดต State และ LocalStorage
         setCollaborators(prev => prev.filter(c => c.user_id !== userId));
 
-        // 💡 ลบออกจาก Supabase
         try {
             const { error } = await supabase.from('project_collaborators')
                 .delete()
                 .match({ project_id: projectId, contributor_user_id: userId });
 
-            if (error) {
-                console.error("Failed to delete collab from DB:", error);
-            }
+            if (error) console.error("Failed to delete collab from DB:", error);
         } catch (e) {
             console.error(e);
         }
     }, [projectId]);
 
-    // 1. Ref and state for width
+    // -------------------- Searchbar Width --------------------
     const searchbarRef = useRef<HTMLInputElement>(null);
     const [inputWidth, setInputWidth] = useState<number>();
-
-    // 2. Measure width after render
     useLayoutEffect(() => {
-        if (searchbarRef.current) {
-            setInputWidth(searchbarRef.current.clientWidth);
-        }
+        if (searchbarRef.current) setInputWidth(searchbarRef.current.clientWidth);
     }, [searchTerm]);
 
+    // -------------------- JSX --------------------
     return (
         <div className="flex flex-col gap-1.5">
             <h4>Collaborators</h4>
 
-            {/* Search Bar สำหรับค้นหาผู้ใช้ */}
+            {/* Search Bar */}
             <div className="relative">
                 <Searchbar
                     ref={searchbarRef}
                     placeholder="Add collaborators by username"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={e => setSearchTerm(e.target.value)}
                     componentsColor="white"
-                    onSubmit={(e) => e.preventDefault()}
+                    onSubmit={e => e.preventDefault()}
                     className={`
                         w-full 
                         [&_input]:!bg-main-white 
@@ -172,7 +178,7 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
                     lang={currentLang}
                 />
 
-                {/* กล่องแสดงผลการค้นหา */}
+                {/* Search Results */}
                 {searchTerm.length >= 3 && !loading && searchResults.length > 0 && (
                     <div
                         className="absolute z-10 mt-1 bg-white border border-main-neutral rounded-md shadow-lg max-h-48 overflow-y-auto"
@@ -190,7 +196,8 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
                         ))}
                     </div>
                 )}
-                {/* ... (No users found/Searching UI) ... */}
+
+                {/* No Results */}
                 {searchTerm.length >= 3 && !loading && searchResults.length === 0 && !searchError && (
                     <div 
                         className="absolute z-10 w-full mt-1 p-3 bg-white border border-main-neutral rounded-md shadow-lg small text-center text-supporting-support"
@@ -201,7 +208,7 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
                 )}
             </div>
 
-            {/* แสดงรายชื่อ Collaborators ที่ถูกเพิ่มแล้ว */}
+            {/* Added Collaborators */}
             <div className="flex flex-wrap gap-2 mt-2">
                 {collaborators.map(collab => (
                     <div
@@ -209,7 +216,6 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
                         className="flex items-center gap-2 p-2 large bg-main-neutral rounded-full shadow-sm"
                     >
                         <User size={16} className="text-supporting-support" />
-                        {/* 💡 แก้ไข: แสดงผล username */}
                         <span className="small font-medium">{collab.username}</span>
                         <button
                             onClick={() => removeCollaborator(collab.user_id)}
@@ -222,9 +228,9 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
                 ))}
             </div>
 
+            {/* Status Messages */}
             {searchError && <p className="detail text-supporting-error mt-1">{searchError}</p>}
             {loading && searchTerm.length >= 3 && <p className="detail text-supporting-support mt-1">Searching...</p>}
-
         </div>
     );
 }
