@@ -74,23 +74,22 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
         setSearchError(null);
 
         try {
-            // Query users matching the search term
-            let queryBuilder = supabase
-                .from('users')
-                .select('user_id, username')
-                .ilike('username', `%${query}%`)
+            const { data, error } = await supabase
+                .from('contributors')
+                .select(`
+                user_id,
+                users:user_id ( user_id, username )
+            `)
+                .ilike('users.username', `%${query}%`)
+                .neq('user_id', currentUserId)
                 .limit(10);
 
-            // Exclude current user
-            queryBuilder = queryBuilder.neq('user_id', currentUserId);
-
-            const { data, error } = await queryBuilder;
             if (error) throw error;
 
-            const users: UserProfile[] = (data as any[] || []).map(item => ({
-                user_id: item.user_id,
-                username: item.username,
-            }));
+            const users: UserProfile[] =
+                (data || [])
+                    .map((item: any) => item.users)
+                    .filter((u: any) => u != null);
 
             setSearchResults(users);
         } catch (err: any) {
@@ -199,7 +198,7 @@ export default function CollaboratorSelector({ projectId, currentLang }: Collabo
 
                 {/* No Results */}
                 {searchTerm.length >= 3 && !loading && searchResults.length === 0 && !searchError && (
-                    <div 
+                    <div
                         className="absolute z-10 w-full mt-1 p-3 bg-white border border-main-neutral rounded-md shadow-lg small text-center text-supporting-support"
                         style={inputWidth ? { width: inputWidth } : undefined}
                     >

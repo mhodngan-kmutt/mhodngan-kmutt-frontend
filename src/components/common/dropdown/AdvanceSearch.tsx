@@ -56,11 +56,11 @@ export function AdvanceSearch({ onCategoryChange, onYearChange, onCertificationC
       <DropdownMenuTrigger asChild>
         <button className="btn-icon" type="button" aria-label="Profile Menu">
             <Settings2Icon size={20} />
-            <span className="small">Advance search</span>
+            <span className="hidden sm:block small">Advance search</span>
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-[330px] h-[420px] bg-main-white border border-main-neutral p-3 flex flex-col gap-6" align="end">
+      <DropdownMenuContent className="w-[330px] max-w-[90vw] h-[420px] bg-main-white border border-main-neutral p-3 flex flex-col gap-6" align="end">
         <div className='flex items-center gap-3 justify-start'>
             <Settings2Icon size={20} />
             <h4>Advance search</h4>
