@@ -67,6 +67,9 @@
   "writeProject": {
     "title": "Write Project"
   },
+  "myProject": {
+    "title": "My Projects"
+  },
   "card": {
     "certified": "Certified by",
     "contributors": "Contributors"
