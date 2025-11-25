@@ -178,7 +178,7 @@ export default function BlockEditorWrapper({ currentLang }: BlockEditorWrapperPr
   
   return (
     <div 
-      className="flex flex-col items-center bg-main-background min-h-screen"
+      className="flex flex-col items-center bg-main-background min-h-screen px-[var(--padding-md)]"
     > 
       <div 
         className="flex flex-col gap-15 p-[120px_60px_24px_60px]" 

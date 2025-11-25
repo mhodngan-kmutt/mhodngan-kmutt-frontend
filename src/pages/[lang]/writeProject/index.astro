@@ -9,9 +9,10 @@ export const prerender = false;
 const { lang } = Astro.params as { lang: string };
 const currentLang = lang === 'th' ? 'th' : 'en';
 i18n.changeLanguage(currentLang);
+const t = i18n.t.bind(i18n);
 ---
 
-<Layout title="Write Project">
+<Layout title={t('writeProject.title')}>
   <HeaderBar t={i18n.t.bind(i18n)} lang={currentLang} mode="write" />
   <BlockEditorWrapper client:load currentLang={currentLang} />
 </Layout>

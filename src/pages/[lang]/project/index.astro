@@ -54,9 +54,9 @@ const { meta, data: projects } = await getProjects({
 });
 ---
 
-<Layout title={t('home.month.topic')} class="overflow-y-scroll">
+<Layout title={t('header.explore')} class="overflow-y-scroll">
   <HeaderBar t={t} lang={lang} />
-  <section class="flex w-full flex-col pt-30 py-6 px-16 gap-10">
+  <section class="flex w-full flex-col pt-30 py-6 px-[var(--padding-md)] gap-10">
     <ProjectListWrapper 
       client:load 
       initialProjects={projects} 

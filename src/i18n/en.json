@@ -64,6 +64,9 @@
     "explore": "Explore",
     "signin": "Sign in"
   },
+  "writeProject": {
+    "title": "Write Project"
+  },
   "card": {
     "certified": "Certified by",
     "contributors": "Contributors"

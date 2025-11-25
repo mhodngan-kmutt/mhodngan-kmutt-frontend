@@ -87,7 +87,7 @@ export function ProjectListWrapper({ initialProjects, lang, translations, search
           <h3 className=" text-main-neutral2 mt-10">No results</h3>
         </div>
       ) : (
-        <div className="flex flex-wrap gap-6 justify-center">
+          <div className="grid gap-6 justify-center grid-cols-[repeat(auto-fit,_minmax(250px,_360px))]">
           {filteredProjects.map((project) => (
             <BigCard 
               key={project.projectId}

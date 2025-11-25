@@ -20,7 +20,7 @@ export function DropdownProfile({ onLogout, name, avatarUrl, userRole }: Dropdow
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="btn-icon" type="button" aria-label="Profile Menu">
+        <button className="btn-icon profile" type="button" aria-label="Profile Menu">
           <Avatar className="w-10 h-10 md:w-6 md:h-6">
             <AvatarImage src={avatarUrl || ''} alt={name} />
             <AvatarFallback>{name.charAt(0)}</AvatarFallback>

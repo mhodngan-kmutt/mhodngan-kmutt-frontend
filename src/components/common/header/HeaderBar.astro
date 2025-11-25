@@ -27,7 +27,7 @@ const backgroundClass = backgroundClasses[backgroundColor] || 'bg-float-backgrou
     <a href="/" class="flex w-15 h-13 items-center">
       <img src={headerLogo.src} alt="Logo" />
     </a>
-    <a href="/en/project/" class="small hidden md:block">{t('header.explore')}</a>
+    <a href="/en/project/" class="small">{t('header.explore')}</a>
     <Searchbar className="hidden md:block" placeholder="Search..." componentsColor={componentsColor} client:load lang={lang} />
   </div>
   

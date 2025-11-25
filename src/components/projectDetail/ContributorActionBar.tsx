@@ -49,7 +49,7 @@ export function ContributorActionBar({
 
   return (
     // Contributor and buttons container
-    <div className="flex justify-between items-center">
+    <div className="flex gap-5 flex-col lg:flex-row lg:justify-between lg:items-center">
       {/* Contributor information */}
       <div className="flex flex-col gap-2">
         {/* Publisher avatar with safety check */}
@@ -86,7 +86,7 @@ export function ContributorActionBar({
       </div>
 
       {/* Action buttons */}
-      <div className="flex flex-col md:flex-row gap-2">
+      <div className="flex flex-row flex-wrap justify-end gap-2">
         {/* Like button */}
         <LikeButton
           projectId={projectId}

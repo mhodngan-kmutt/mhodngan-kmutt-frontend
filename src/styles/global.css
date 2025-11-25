@@ -31,19 +31,19 @@
 @layer base {
   h1 {
     /* Apply your desired Tailwind classes */
-    @apply font-sans text-5xl font-bold leading-[1.1667];
+    @apply font-sans !text-5xl font-bold leading-[1.1667];
   }
 
   h2 {
-    @apply font-sans text-3xl font-semibold leading-[1.2];
+    @apply font-sans !text-3xl font-semibold leading-[1.2];
   }
 
   h3 {
-    @apply font-sans text-2xl font-semibold leading-[1.3333];
+    @apply font-sans !text-2xl font-semibold leading-[1.3333];
   }
 
   h4 {
-    @apply font-sans text-xl font-semibold leading-[1.4];
+    @apply font-sans !text-xl font-semibold leading-[1.4];
   }
 
   .lead {
@@ -58,7 +58,7 @@
     @apply font-sans text-xl font-normal leading-[1.625];
   }
 
-  .code {
+  code {
     @apply font-mono text-sm font-bold leading-[1.4286];
   }
 
@@ -72,6 +72,38 @@
   
   .detail {
     @apply font-sans text-xs font-normal leading-[1.3333];
+  }
+}
+
+:root {
+  --padding-md: 24px;
+  --padding-xl: 24px
+}
+
+html {
+  font-size: 62.5%;
+}
+
+/* Padding Scale */
+/* Tablet (sm) */
+@media (min-width: 640px) {
+  :root {
+    --padding-md: 48px;
+    --padding-xl: 64px;
+  }
+  html {
+    font-size: 75%;
+  }
+}
+
+/* Desktop (lg) */
+@media (min-width: 1024px) {
+  :root {
+    --padding-md: 64px;
+    --padding-xl: 150px;
+  }
+  html {
+    font-size: initial;
   }
 }
 
@@ -163,34 +195,36 @@ button {
 }
 
 .btn-icon {
-  padding: 0px;
-  border-radius: calc(infinity * 1px);
-  border: 0.25px solid var(--main-neutral, #E5E5E5);
+  padding: 8px;
+  border-radius: 8px;
+  border-top: 0.25px solid var(--main-neutral, #E5E5E5);
+  border-right: 0.5px solid var(--main-neutral, #E5E5E5);
+  border-bottom: 2px solid var(--main-neutral, #E5E5E5);
+  border-left: 0.5px solid var(--main-neutral, #E5E5E5);
   background: var(--main-white, #FFF);
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
 
 .btn-icon:hover {
-  filter: brightness(0.9);
+  border-radius: 8px;
+  border-top: 0.25px solid var(--Supporting-Support, #404040);
+  border-right: 0.5px solid var(--Supporting-Support, #404040);
+  border-bottom: 2px solid var(--Supporting-Support, #404040);
+  border-left: 0.5px solid var(--Supporting-Support, #404040);
+  background: var(--Main-Neutral, #E5E5E5);
+  box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
-@media (width >=48rem) {
-  .btn-icon {
-    padding: 8px;
-    border-radius: 8px;
-    border-top: 0.25px solid var(--main-neutral, #E5E5E5);
-    border-right: 0.5px solid var(--main-neutral, #E5E5E5);
-    border-bottom: 2px solid var(--main-neutral, #E5E5E5);
-    border-left: 0.5px solid var(--main-neutral, #E5E5E5);
+
+@media (width <= 768px) {
+  .btn-icon.profile {
+    padding: 0px;
+    border-radius: calc(infinity * 1px);
+    border: 0.25px solid var(--main-neutral, #E5E5E5);
     background: var(--main-white, #FFF);
-    box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
   }
-  .btn-icon:hover {
-    border-radius: 8px;
-    border-top: 0.25px solid var(--Supporting-Support, #404040);
-    border-right: 0.5px solid var(--Supporting-Support, #404040);
-    border-bottom: 2px solid var(--Supporting-Support, #404040);
-    border-left: 0.5px solid var(--Supporting-Support, #404040);
-    background: var(--Main-Neutral, #E5E5E5);
-    box-shadow: 0 0 0 0.5px #E5E5E5, 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  
+  .btn-icon.profile:hover {
+    filter: brightness(0.9);
   }
 }
 
@@ -212,21 +246,31 @@ button {
   box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.06);
 }
 
+/* BlockNote Renderer Styles */
 .bn-default-styles p {
-  font-size: 20px !important;
+  font-size: 1.25rem !important;
 }
 
 .bn-editor [data-content-type=table] th p {
   font-weight: 700 !important;
 }
 
-/* BlockNote Renderer Styles */
 [data-content-type=divider] hr {
   border-color: var(--color-main-neutral) !important;
 }
 
 .blocknote-readonly input[type="checkbox"] {
   pointer-events: none !important;
+}
+
+.bn-editor {
+  padding-inline: 30px !important;
+}
+
+@media (min-width: 640px) {
+  .bn-editor {
+    padding-inline: 54px !important;
+  }
 }
 
 /* Modal backdrop blur effect */

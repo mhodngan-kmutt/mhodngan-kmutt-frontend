@@ -13,16 +13,27 @@ const { meta, data: projects } = await getProjects({
   order: ORDER,
 });
 const bestInList = projects[0];
+
+const now = new Date();
+
+const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const prevMonth = monthNames[prev.getMonth()];
+const prevYear = prev.getFullYear();
+
+const previousLabel = `${prevMonth}, ${prevYear}`;
 ---
 
-<section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-16 bg-main-neutral">
+<section id="HeroSection" class="flex w-full flex-col gap-4 py-6 px-[var(--padding-md)] bg-main-neutral">
   <!-- Project metadata -->
-  <div class="flex justify-center items-center gap-2">
+  <div class="flex flex-wrap justify-center items-center gap-2">
     <p>{t('home.hero.topic')}</p>
     <div
       class="flex justify-center items-center px-2 rounded-lg border border-supporting-light-orange"
     >
-      {bestInList.projectId.includes('month') ? bestInList.projectId : 'Nov, 2025'}
+      <p>{previousLabel}</p>
     </div>
     <p>
       {t('home.hero.view')}
