@@ -183,7 +183,7 @@ export default function BlockEditorWrapper({ currentLang }: BlockEditorWrapperPr
       <div 
         className="flex flex-col gap-15 p-[120px_60px_24px_60px]" 
       >
-        <h1>Write New Project</h1>
+        <h1 className='text-center'>Write New Project</h1>
       </div>
       <div className="flex flex-col gap-5 w-full max-w-[980px] pb-32"> 
         
@@ -201,7 +201,7 @@ export default function BlockEditorWrapper({ currentLang }: BlockEditorWrapperPr
           </div>
           
           {/* Dropdown Badge */}
-          <div className="flex flex-col gap-1.5 w-[200px] min-w-[150px]">
+          <div className="flex flex-col gap-1.5 w-[150px]">
             <h4>Badge<span className="text-main-primary">*</span></h4>
             <DropdownBadge
               selectedBadge={badge}

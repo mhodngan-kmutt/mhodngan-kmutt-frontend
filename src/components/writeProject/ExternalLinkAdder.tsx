@@ -90,9 +90,9 @@ const ExternalLinkAdder: React.FC<ExternalLinkAdderProps> = ({ initialLinks = []
         <button
           onClick={handleAddLink}
           disabled={!currentInput.trim()}
-          className="w-12 h-12 flex items-center border border-main-neutral bg-main-white rounded-md shadow-sm"
+          className="w-12 h-12 !p-2 flex items-center justify-center border border-main-neutral bg-main-white rounded-md shadow-sm"
         >
-          <Plus className="w-24 h-24 text-main-text" />
+          <Plus className="size-6" />
         </button>
       </div>
 
