@@ -19,7 +19,7 @@ const { meta, data: projects } = await getProjects({
   </div>
 
   <!-- List of Cards -->
-  <div class="flex flex-wrap gap-6 justify-center">
+  <div class="grid gap-6 justify-center grid-cols-[repeat(auto-fit,_minmax(250px,_360px))]">
     {
       projects.map((p) => (
           <BigCard

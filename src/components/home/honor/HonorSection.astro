@@ -16,7 +16,7 @@ const { meta, data: projects } = await getProjects({
 });
 ---
 
-<section id="HonorSection" class="flex w-full flex-col gap-5 py-6 px-16 pt-10 pb-5 bg-main-neutral">
+<section id="HonorSection" class="flex w-full flex-col gap-5 py-6 px-[var(--padding-md)] pt-10 pb-5 bg-main-neutral">
   <!-- Topic -->
   <div class="flex flex-col items-center gap-2 text-center">
     <h1>{t('home.honor.topic')}</h1>
@@ -24,7 +24,7 @@ const { meta, data: projects } = await getProjects({
   </div>
 
   <!-- List of Cards -->
-  <div class="flex flex-wrap gap-6 justify-center">
+  <div class="grid gap-6 justify-center grid-cols-[repeat(auto-fit,_minmax(250px,_360px))]">
     {
       projects.map((p) => (
           <BigCard

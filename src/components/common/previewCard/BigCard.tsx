@@ -9,7 +9,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import type { Professor, Contributor } from '@/lib/api';
 
 interface BigCardProps {
-  projectImage: string;
+  projectImage: string | null;
   title: string;
   explanation: string;
   likes: number;
@@ -20,6 +20,7 @@ interface BigCardProps {
   showActions?: boolean;
   projectId: string;
   token?: string;
+  lang?: string;
   certified: string;
   contributorsLabel: string;
 }
@@ -36,6 +37,7 @@ export default function BigCard({
   showActions = false,
   projectId,
   token,
+  lang = 'en',
   certified,
   contributorsLabel,
 }: BigCardProps) {
@@ -67,7 +69,7 @@ export default function BigCard({
       className="block hover:shadow-lg transition-shadow rounded-xl"
       onClick={handleClick}
     >
-      <div className="w-[360px] flex flex-col gap-3 p-2.5 rounded-xl bg-main-white shadow-[0_0_16px_0_rgba(0,0,0,0.06)]">
+      <div className="w-full max-w-[360px] flex flex-col gap-3 p-2.5 rounded-xl bg-main-white shadow-[0_0_16px_0_rgba(0,0,0,0.06)]">
         <div className="relative h-[160px] w-full rounded-xl overflow-hidden flex items-center justify-center">
           <img
             src={projectImage || '/images/mocks/ProjectImageMocks-2.png'}
@@ -113,7 +115,7 @@ export default function BigCard({
             </div>
           </div>
           {showActions && token && (
-            <ProjectActionsDropdown projectId={projectId} token={token} />
+            <ProjectActionsDropdown projectId={projectId} token={token} lang={lang} />
           )}
         </div>
       </div>

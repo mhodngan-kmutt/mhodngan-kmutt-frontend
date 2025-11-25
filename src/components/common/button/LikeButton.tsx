@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { likeProject } from "@/lib/api";
 import { likeStore } from '@/store/likeStore';
+import { toast } from 'sonner';
 
 interface LikeButtonProps {
   projectId: string;
@@ -25,13 +26,16 @@ export function LikeButton({
   const currentLiked = likeState?.liked ?? initialLiked;
 
   const handleLike = async () => {
-    console.log("Liking project:", projectId);
+    if (!token) {
+      toast.warning("Please sign in to like this project.");
+      return;
+    }
+
     if (loading) return;
     setLoading(true);
 
     try {
       const response = await likeProject({ projectId, token: token || "" });
-      console.log("Like response:", response);
       const newLiked = response.liked;
       const newLikes = newLiked ? currentLikes + 1 : currentLikes - 1;
 
@@ -47,17 +51,17 @@ export function LikeButton({
     <button
       onClick={handleLike}
       disabled={loading}
-      className={`btn-tertiary ${currentLiked ? 'bg-red-50 border-red-200' : ''} ${loading ? 'opacity-50 cursor-not-allowed' : ''
+      className={`btn-tertiary ${loading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
     >
       <Heart
-        className={`w-5 h-5 transition-colors ${currentLiked ? 'text-red-500 fill-red-500' : 'text-main-secondary'
+        className={`w-5 h-5 transition-colors ${currentLiked ? 'text-main-primary fill-main-primary' : 'text-main-secondary'
           }`}
       />
-      <span className={`small ${currentLiked ? 'text-red-500' : 'text-main-secondary'}`}>
+      <span className={`small ${currentLiked ? 'text-main-primary' : 'text-main-secondary'}`}>
         {currentLiked ? 'Liked' : 'Like'}
       </span>
-      <span className={`small ${currentLiked ? 'text-red-500' : 'text-main-secondary'}`}>
+      <span className={`small ${currentLiked ? 'text-main-primary' : 'text-main-secondary'}`}>
         ({currentLikes})
       </span>
     </button>

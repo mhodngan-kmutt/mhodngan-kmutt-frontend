@@ -27,7 +27,7 @@ export function Searchbar({
       {/* Clickable Search icon */}
       <button
         type="submit"
-        className="absolute inset-y-0 left-0 flex items-center justify-center my-2.5 text-muted-foreground hover:text-neutral-800"
+        className="absolute inset-y-0 left-0 flex items-center justify-center my-2.5 !px-3 lg:!px-4 text-muted-foreground hover:text-neutral-800"
       >
         <Search className="w-5 h-5 text-neutral-500 hover:text-neutral-800" />
       </button>

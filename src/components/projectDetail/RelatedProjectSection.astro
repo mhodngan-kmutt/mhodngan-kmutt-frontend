@@ -14,24 +14,24 @@ const { meta, data: projects } = await getProjects({
 });
 ---
 
-<section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[150px]">
+<section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[var(--padding-xl)]">
     <div class="flex px-3">
         <div class="simple-card w-full! px-5 py-5">
             <h3 class="text-main-neutral2">Related Projects</h3>
-            <div class="flex flex-wrap gap-6 justify-center">
+            <div class="grid gap-6 justify-center grid-cols-[repeat(auto-fit,_minmax(250px,_360px))]">
                 {
                   projects.map((p) => (
                       <BigCard
                         client:load
-                        projectImage={p.previewImageUrl}
-                        title={p.title}
+                        projectImage={p.previewImageUrl || ''}
+                        title={p.title || ''}
                         explanation={p.shortDescription}
                         likes={p.likeCount}
                         views={p.viewCount}
                         professors={p.certifiedBy}
                         contributors={p.contributors}
-                        link={`/${lang}/project/${p.projectId}`}
-                        projectId={p.projectId}
+                        link={`/${lang}/project/${p.projectId || ''}`}
+                        projectId={p.projectId || ''}
                         certified={t('card.certified')}
                         contributorsLabel={t('card.contributors')}
                       />
