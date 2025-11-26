@@ -1,17 +1,11 @@
 ---
-import { getProjects } from '@/lib/api';
 import BigCard from '../common/previewCard/BigCard';
 
-const { t, lang } = Astro.props;
+const { t, lang, project } = Astro.props;
 const PAGE_SIZE = 8;
-const ORDER_BY = 'monthly_like_count';
-const ORDER = 'desc';
 
-const { meta, data: projects } = await getProjects({
-  pageSize: PAGE_SIZE,
-  orderBy: ORDER_BY,
-  order: ORDER,
-});
+const relatedProjects = project?.relatedProjects?.slice(0, PAGE_SIZE) || [];
+console.log('Related Projects:', relatedProjects);
 ---
 
 <section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[var(--padding-xl)]">
@@ -20,7 +14,8 @@ const { meta, data: projects } = await getProjects({
             <h3 class="text-main-neutral2">Related Projects</h3>
             <div class="grid gap-6 justify-center grid-cols-[repeat(auto-fit,_minmax(250px,_360px))]">
                 {
-                  projects.map((p) => (
+                  relatedProjects.length > 0 
+                  ? relatedProjects.map((p: any) => (
                       <BigCard
                         client:load
                         projectImage={p.previewImageUrl || ''}
@@ -36,6 +31,9 @@ const { meta, data: projects } = await getProjects({
                         contributorsLabel={t('card.contributors')}
                       />
                     ))
+                  : <div class="text-center py-6 text-sm text-gray-500">
+                      No related projects found.
+                    </div>
                 }
             </div>
         </div>
