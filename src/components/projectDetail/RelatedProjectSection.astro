@@ -4,8 +4,7 @@ import BigCard from '../common/previewCard/BigCard';
 const { t, lang, project } = Astro.props;
 const PAGE_SIZE = 8;
 
-const relatedProjects = project?.relatedProjects?.slice(0, PAGE_SIZE) || [];
-console.log('Related Projects:', relatedProjects);
+const relatedProjects = (project?.relatedProjects ?? []).slice(0, PAGE_SIZE);
 ---
 
 <section id="RelatedProjectDetail" class="flex w-full flex-col gap-4 py-4 px-[var(--padding-xl)]">
@@ -20,11 +19,11 @@ console.log('Related Projects:', relatedProjects);
                         client:load
                         projectImage={p.previewImageUrl || ''}
                         title={p.title || ''}
-                        explanation={p.shortDescription}
-                        likes={p.likeCount}
-                        views={p.viewCount}
-                        professors={p.certifiedBy}
-                        contributors={p.contributors}
+                        explanation={p.shortDescription || ''}
+                        likes={p.likeCount || 0}
+                        views={p.viewCount || 0}
+                        professors={p.certifiedBy || []}
+                        contributors={p.contributors || []}
                         link={`/${lang}/project/${p.projectId || ''}`}
                         projectId={p.projectId || ''}
                         certified={t('card.certified')}
