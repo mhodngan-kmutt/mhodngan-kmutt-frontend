@@ -14,8 +14,6 @@ const createdAt = formatDate(project?.createdAt || 'Unknown date');
 const likeCount = project?.likeCount || 0;
 const files = project.files || [];
 const isLiked = project.isLikedByCurrentUser || false;
-console.log('CommentSection - isLiked:', isLiked);
-console.log('isLike:', project.isLikedByCurrentUser);
 
 const comments = Array.isArray(project.comments) 
   ? project.comments 
