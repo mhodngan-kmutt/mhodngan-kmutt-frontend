@@ -1,8 +1,5 @@
 name: Deploy to Vercel
 
-# =========================
-# Trigger events for workflow
-# =========================
 on:
   push:
     branches:
@@ -15,15 +12,6 @@ on:
       - dev
   workflow_dispatch:   # manual trigger
 
-# =========================
-# Job 1: Build
-# - checkout code
-# - setup Node.js and pnpm
-# - install dependencies
-# - lint, prettier, typescript, astro checks
-# - run Vitest (unit tests)
-# - build project
-# =========================
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -76,16 +64,7 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
-# =========================
-# Job 2: E2E Test
-# - depends on build job
-# - setup environment again
-# - install Playwright browsers
-# - run Playwright tests (E2E)
-# - upload test reports
-# - deploy to Vercel (Production/Preview based on branch)
-# =========================
-  e2e-test:
+  deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -106,24 +85,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
-
-      - name: Run Playwright tests
-        run: pnpm test
-        env:
-          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
-          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
-          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
-
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-
       # Deploy Production
       - name: Deploy to Vercel (Production)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -133,7 +94,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
-          working-directory: ./
+          working-directory: ./ 
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}

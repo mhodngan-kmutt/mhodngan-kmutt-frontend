@@ -54,7 +54,7 @@ export function AdvanceSearch({ onCategoryChange, onYearChange, onCertificationC
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="btn-icon" type="button" aria-label="Profile Menu">
+        <button className="btn-icon" type="button" aria-label="Advance search">
             <Settings2Icon size={20} />
             <span className="hidden sm:block small">Advance search</span>
         </button>
